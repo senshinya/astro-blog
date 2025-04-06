@@ -1,0 +1,352 @@
+---
+import initMemosRaw from "../../memos.json";
+import { marked } from "marked";
+import type { Tokens } from "marked";
+
+const renderer = new marked.Renderer();
+renderer.image = function ({ href }: Tokens.Image): string {
+  return `
+    <div class="img-container">
+        <img class="imgwrp" loading="lazy" src="${href}" />
+    </div>
+  `;
+};
+marked.use({
+  renderer: renderer,
+  breaks: true,
+  gfm: true,
+});
+
+const initMemos = (initMemosRaw as memosRes).data.map((memo) => ({
+  ...memo,
+  content: marked.parse(memo.content),
+  createTime: convertToLocalTime(memo.createTime),
+}));
+
+function convertToLocalTime(
+  dateString: string,
+  timeZone: string = "Asia/Shanghai",
+): string {
+  const date = new Date(dateString);
+  const options: Intl.DateTimeFormatOptions = {
+    timeZone: timeZone,
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    hour12: false,
+  };
+  const formatter = new Intl.DateTimeFormat("zh-CN", options);
+  const parts = formatter.formatToParts(date);
+  const year = parts.find((part) => part.type === "year")?.value;
+  const month = parts.find((part) => part.type === "month")?.value;
+  const day = parts.find((part) => part.type === "day")?.value;
+  const hour = parts.find((part) => part.type === "hour")?.value;
+  const minute = parts.find((part) => part.type === "minute")?.value;
+  const second = parts.find((part) => part.type === "second")?.value;
+  return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+}
+
+interface memosRes {
+  data: memo[];
+  hasMore: boolean;
+}
+
+interface memo {
+  uid: string;
+  createTime: string;
+  content: string;
+}
+---
+
+<div class="memos-container" id="memos-container">
+  <div id="memos-list">
+    {
+      initMemos.map((memo) => (
+        <div data-key={memo.uid}>
+          <div class="memo-card">
+            <div class="memo-header">
+              <span class="memo-time-text font-time">{memo.createTime}</span>
+            </div>
+            <div class="heti memo-content" set:html={memo.content} />
+          </div>
+        </div>
+      ))
+    }
+  </div>
+
+  <div class="memo-load-more">
+    <button class="memo-load-more-button" id="load-more-button">
+      <span id="load-more-button-text" class="font-navbar">再示诸般</span>
+      <span
+        id="loading-spinner"
+        class="memo-loading-spinner"
+        style="display: none;"></span>
+    </button>
+  </div>
+</div>
+
+<script>
+  import { marked } from "marked";
+  import type { Tokens } from "marked";
+
+  const renderer = new marked.Renderer();
+  renderer.image = function ({ href }: Tokens.Image): string {
+    return `
+    <div class="memo-img-container">
+        <img class="memo-imgwrp" loading="lazy" src="${href}" />
+    </div>
+  `;
+  };
+  marked.use({
+    renderer: renderer,
+    breaks: true,
+    gfm: true,
+  });
+
+  var isLoading = false;
+  var hasMoreMemos = true;
+  var currentOffset = 10;
+
+  var loadMoreButton = document.getElementById(
+    "load-more-button",
+  ) as HTMLButtonElement;
+  var loadMoreButtonText = document.getElementById("load-more-button-text");
+  var loadingSpinner = document.getElementById("loading-spinner");
+  var memosList = document.getElementById("memos-list");
+
+  function initMemos() {
+    isLoading = false;
+    hasMoreMemos = true;
+    currentOffset = 10;
+
+    loadMoreButton = document.getElementById(
+      "load-more-button",
+    ) as HTMLButtonElement;
+    loadMoreButtonText = document.getElementById("load-more-button-text");
+    loadingSpinner = document.getElementById("loading-spinner");
+    memosList = document.getElementById("memos-list");
+    loadMoreButton?.addEventListener("click", loadMoreMemos);
+
+    updateButtonState();
+  }
+
+  function updateButtonState() {
+    if (!hasMoreMemos) {
+      if (loadMoreButton) {
+        loadMoreButton.style.display = "none";
+      }
+      return;
+    }
+    if (isLoading) {
+      if (loadMoreButton) {
+        loadMoreButton.disabled = true;
+      }
+      if (loadMoreButtonText) {
+        loadMoreButtonText.style.display = "none";
+      }
+      if (loadingSpinner) {
+        loadingSpinner.style.display = "inline-block";
+      }
+    } else {
+      if (loadMoreButton) {
+        loadMoreButton.disabled = false;
+      }
+      if (loadMoreButtonText) {
+        loadMoreButtonText.style.display = "inline-block";
+      }
+      if (loadingSpinner) {
+        loadingSpinner.style.display = "none";
+      }
+    }
+  }
+
+  async function loadMoreMemos() {
+    if (!hasMoreMemos || isLoading) return;
+    isLoading = true;
+    updateButtonState();
+    try {
+      const url = `https://memos.shinya.click/api/memos?limit=10&offset=${currentOffset}`;
+      const response = await fetch(url);
+      const result: memosRes = await response.json();
+      const newMemos = result.data.map((memo) => ({
+        ...memo,
+        content: marked.parse(memo.content),
+        createTime: convertToLocalTime(memo.createTime),
+      }));
+      newMemos.forEach((memo, index) => {
+        const memoElement = document.createElement("div");
+        memoElement.setAttribute("data-key", memo.uid);
+        memoElement.style.opacity = "0";
+        memoElement.style.transform = "translateY(20px)";
+        memoElement.style.transition = "opacity 0.5s ease, transform 0.5s ease";
+        memoElement.innerHTML = `
+          <div class="memo-card">
+            <div class="memo-header">
+              <span class="memo-time-text font-time">${memo.createTime}</span>
+            </div>
+            <div class="heti memo-content">${memo.content}</div>
+          </div>
+        `;
+        memosList?.appendChild(memoElement);
+        setTimeout(() => {
+          memoElement.style.opacity = "1";
+          memoElement.style.transform = "translateY(0)";
+        }, 50 * index);
+      });
+      currentOffset += result.data.length;
+      hasMoreMemos = result.hasMore;
+    } catch (error) {
+      console.error("Failed to load memos:", error);
+    } finally {
+      isLoading = false;
+      updateButtonState();
+    }
+  }
+
+  function convertToLocalTime(
+    dateString: string,
+    timeZone: string = "Asia/Shanghai",
+  ): string {
+    const date = new Date(dateString);
+    const options: Intl.DateTimeFormatOptions = {
+      timeZone: timeZone,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: false,
+    };
+    const formatter = new Intl.DateTimeFormat("zh-CN", options);
+    const parts = formatter.formatToParts(date);
+    const year = parts.find((part) => part.type === "year")?.value;
+    const month = parts.find((part) => part.type === "month")?.value;
+    const day = parts.find((part) => part.type === "day")?.value;
+    const hour = parts.find((part) => part.type === "hour")?.value;
+    const minute = parts.find((part) => part.type === "minute")?.value;
+    const second = parts.find((part) => part.type === "second")?.value;
+    return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
+  }
+
+  interface memosRes {
+    data: memo[];
+    hasMore: boolean;
+  }
+
+  interface memo {
+    uid: string;
+    createTime: string;
+    content: string;
+  }
+
+  document.addEventListener("DOMContentLoaded", initMemos);
+  document.addEventListener("astro:page-load", initMemos);
+</script>
+
+<style is:global lang="scss">
+  .memo-card {
+    border-style: solid;
+    // margin-bottom: 0.25rem;
+    border-bottom: solid 0.5px;
+    position: relative;
+    border-color: oklch(var(--un-preset-theme-colors-primary) / 0.2);
+    padding-top: 0.75rem;
+    padding-bottom: 1.25rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+
+    .memo-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+
+      .memo-time-text {
+        display: inline-block;
+        margin-bottom: 0.25rem;
+        font-size: 0.875rem;
+        text-decoration: none;
+        color: oklch(var(--un-preset-theme-colors-primary) / 0.6);
+      }
+    }
+
+    .memo-content {
+      margin-top: 5px;
+      font-size: 1rem;
+      word-break: break-word;
+      color: oklch(var(--un-preset-theme-colors-secondary));
+
+      * {
+        margin: 0;
+      }
+
+      *:not(:first-child):not([hidden]) {
+        margin-top: 0.5rem;
+      }
+
+      .memo-img-container {
+        width: 40%;
+
+        .memo-imgwrp {
+          width: 100%;
+          height: 100%;
+        }
+      }
+    }
+  }
+
+  .memo-load-more {
+    text-align: center;
+    margin-top: 40px;
+    margin-bottom: 40px;
+
+    .memo-load-more-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 120px; // 固定宽度
+      height: 40px; // 固定高度
+      background-color: transparent;
+      color: oklch(var(--un-preset-theme-colors-primary) / 0.6);
+      border: 1px solid oklch(var(--un-preset-theme-colors-secondary) / 0.2);
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      outline: none;
+
+      &:hover:not(:disabled) {
+        color: oklch(var(--un-preset-theme-colors-primary));
+        border-color: oklch(var(--un-preset-theme-colors-secondary) / 0.5);
+      }
+
+      // &:active:not(:disabled) {
+      //   transform: translateY(1px);
+      // }
+
+      &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .memo-loading-spinner {
+        width: 14px;
+        height: 14px;
+        border: 2px solid oklch(var(--un-preset-theme-colors-primary) / 0.6);
+        border-radius: 50%;
+        border-top-color: oklch(var(--un-preset-theme-colors-primary) / 0.6);
+        animation: spin 0.8s linear infinite;
+      }
+    }
+  }
+
+  @keyframes spin {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+</style>
