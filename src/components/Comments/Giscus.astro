@@ -62,7 +62,12 @@ const {
 
   function changeGiscusTheme() {
     const iframe = document.querySelector("iframe.giscus-frame");
-    if (!iframe) return;
+    if (!iframe || iframe.classList.contains("giscus-frame--loading")) {
+      // 脚本未加载场景
+      console.log("Giscus iframe not found, reloading...");
+      loadGiscus();
+      return;
+    };
     const theme = document.documentElement.classList.contains("dark")
       ? host + "/css/giscus_dark.css"
       : host + "/css/giscus_light.css";

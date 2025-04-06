@@ -24,7 +24,7 @@ function getPostPath(post: Post) {
   // Prioritize abbrlink over slug
   const postPath = post.data.abbrlink || post.id
   // Add language prefix to URL if current page is in a language subdirectory and not the default language
-  return lang && lang !== defaultLocale ? `/${lang}/posts/${postPath}/` : `/posts/${postPath}/`
+  return lang && lang !== defaultLocale ? `/${lang}/${postPath}` : `/${postPath}`
 }
 ---
 

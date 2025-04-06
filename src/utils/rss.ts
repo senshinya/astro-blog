@@ -48,7 +48,7 @@ export async function generateRSS({ lang }: GenerateRSSOptions = {}) {
       title: post.data.title,
       // Generate URL with language prefix and abbrlink/slug
       link: new URL(
-        `${post.data.lang !== defaultLocale && post.data.lang !== '' ? `${post.data.lang}/` : ''}posts/${post.data.abbrlink || post.id}/`,
+        `${post.data.lang !== defaultLocale && post.data.lang !== '' ? `${post.data.lang}/` : ''}${post.data.abbrlink || post.id}/`,
         url,
       ).toString(),
       description: generateDescription(post, 'rss'),

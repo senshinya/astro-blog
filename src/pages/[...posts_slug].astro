@@ -63,7 +63,7 @@ export async function getStaticPaths() {
 
       if (lang === defaultLocale || lang === '') {
         paths.push({
-          params: { posts_slug: `posts/${slug}/` },
+          params: { posts_slug: `${slug}` },
           props: {
             post,
             lang: defaultLocale,
@@ -81,7 +81,7 @@ export async function getStaticPaths() {
       if ((import.meta.env.DEV || !post.data.draft) && (post.data.lang === lang || post.data.lang === '')) {
         const slug = post.data.abbrlink || post.id
         paths.push({
-          params: { posts_slug: `${lang}/posts/${slug}/` },
+          params: { posts_slug: `${lang}/${slug}` },
           props: {
             post,
             lang,
