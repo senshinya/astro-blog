@@ -30,7 +30,8 @@ const SubtitleTag = isPost ? 'div' : 'h2'
 <header
   class:list={[
     isPost ? 'mb-10.8' : 'mb-10.5',
-    'lg:(uno-desktop-column top-20)',
+    'lg:(uno-desktop-column top-20 text-left)',
+    'text-center'
   ]}
 >
   <TitleTag
@@ -39,6 +40,7 @@ const SubtitleTag = isPost ? 'div' : 'h2'
         ? `${postMarginBottom} mt-3.2 text-5.375 c-secondary lg:(mt-0 text-9 c-primary)`
         : `${marginBottom} text-8 w-75% c-primary lg:(text-9 w-full)`,
       'font-bold font-title',
+      'w-full'
     ]}
   >
     <!-- Fix text cropping issues during view transition on iOS by adding a div tag -->
@@ -61,7 +63,7 @@ const SubtitleTag = isPost ? 'div' : 'h2'
       class:list={[
         isPost
           ? `opacity-0 lg:opacity-100`
-          : 'w-75% lg:w-full',
+          : 'w-75% w-full',
         'c-secondary font-navbar text-3.5 lg:text-4',
       ]}
       aria-hidden={isPost}
