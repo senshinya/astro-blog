@@ -79,4 +79,12 @@ export default defineConfig({
   devToolbar: {
     enabled: false,
   },
+  server: {
+    headers: {
+      "Access-Control-Allow-Origin": "https://giscus.app"
+    }
+  },
+  security: {
+    checkOrigin: true,
+  }
 })

@@ -72,23 +72,17 @@ export const themeConfig: ThemeConfig = {
   comment: {
     // enable comment system
     enabled: true, // true, false
-    // waline comment system
-    // https://waline.js.org/en/
-    waline: {
-      // server url
-      serverURL: 'https://retypeset-comment.radishzz.cc',
-      // emoji url
-      emoji: [
-        'https://unpkg.com/@waline/emojis@1.2.0/tw-emoji',
-        // 'https://unpkg.com/@waline/emojis@1.2.0/bmoji',
-        // more emojis: https://waline.js.org/en/guide/features/emoji.html
-      ],
-      // gif search
-      search: false, // true, false
-      // image uploader
-      // bug: unable to hide image uploader icon
-      imageUploader: false, // true, false
-    },
+    provider: 'giscus',
+    giscus: {
+      repo: "senshinya/blog",
+      repoID: "R_kgDOLAV3QQ",
+      category: "Announcements",
+      categoryID: "DIC_kwDOLAV3Qc4CcKlC",
+      mapping: "pathname",
+      inputPosition: "top",
+      lang: "zh-CN",
+      loading: "lazy",
+    }
   },
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 

@@ -1,6 +1,6 @@
 ---
 // import Disqus from '@/components/Comments/Disqus.astro'
-// import Giscus from '@/components/Comments/Giscus.astro'
+import Giscus from '@/components/Comments/Giscus.astro'
 // import Twikoo from '@/components/Comments/Twikoo.astro'
 import Waline from '@/components/Comments/Waline.astro'
 import { themeConfig } from '@/config'
@@ -9,22 +9,22 @@ const enableComments = themeConfig.comment?.enabled ?? false
 
 // Disqus
 // const disqusShortname = themeConfig.comment?.disqus?.shortname || ''
-// const showDisqus = enableComments && disqusShortname.trim() !== ''
+// const showDisqus = enableComments && themeConfig.comment?.provider == 'disqus' && disqusShortname.trim() !== ''
 
 // Giscus
-// const giscusRepo = themeConfig.comment?.giscus?.repo || ''
-// const showGiscus = enableComments && giscusRepo.trim() !== ''
+const giscusRepo = themeConfig.comment?.giscus?.repo || ''
+const showGiscus = enableComments && themeConfig.comment?.provider == 'giscus' && giscusRepo.trim() !== ''
 
 // Twikoo
 // const twikooEnvId = themeConfig.comment?.twikoo?.envId || ''
-// const showTwikoo = enableComments && twikooEnvId.trim() !== ''
+// const showTwikoo = enableComments && themeConfig.comment?.provider == 'twikoo' && twikooEnvId.trim() !== ''
 
 // Waline
 const walineURL = themeConfig.comment?.waline?.serverURL || ''
-const showWaline = enableComments && walineURL.trim() !== ''
+const showWaline = enableComments && themeConfig.comment?.provider == 'waline' && walineURL.trim() !== ''
 ---
 
 <!-- {showDisqus && <Disqus />} -->
-<!-- {showGiscus && <Giscus />} -->
+{showGiscus && <Giscus />}
 <!-- {showTwikoo && <Twikoo />} -->
 {showWaline && <Waline />}
