@@ -23,7 +23,7 @@ const { isPost } = getPageInfo(Astro.url.pathname)
 const fontStyle = themeConfig.global.fontStyle === 'serif' ? 'font-serif' : 'font-sans'
 const MarginBottom = isPost && themeConfig.comment?.enabled
   ? 'mb-10' // Post page with comment system
-  : 'mb-12' // Other pages
+  : 'mb-12' // Other pages without comment system
 ---
 
 <html

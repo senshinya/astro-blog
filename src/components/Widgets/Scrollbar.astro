@@ -53,7 +53,7 @@ function setupScrollbar() {
     }, {
       scrollbars: {
         theme: 'scrollbar-widget',
-        autoHide: 'leave',
+        autoHide: 'never',
         autoHideDelay: 500,
       },
       overflow: {
@@ -89,17 +89,17 @@ document.addEventListener('astro:after-swap', setupScrollbar)
 }
 
 .scrollbar-widget {
-  --os-size: 0.35rem;
-  --os-padding-perpendicular: 0;
-  --os-padding-axis: 0;
+  --os-size: 0.6rem;
+  --os-padding-perpendicular: 0.1rem;
+  --os-padding-axis: 0.2rem;
   --os-handle-border-radius: 99rem;
   --os-handle-perpendicular-size: 75%;
   --os-handle-perpendicular-size-hover: 100%;
   --os-handle-perpendicular-size-active: 100%;
-  --os-handle-interactive-area-offset: 0.1rem;
+  --os-handle-interactive-area-offset: 0.2rem;
   --os-handle-bg: oklch(var(--un-preset-theme-colors-secondary) / 0.15);
-  --os-handle-bg-hover: oklch(var(--un-preset-theme-colors-secondary) / 0.25);
-  --os-handle-bg-active: oklch(var(--un-preset-theme-colors-secondary) / 0.25);
+  --os-handle-bg-hover: oklch(var(--un-preset-theme-colors-secondary) / 0.30);
+  --os-handle-bg-active: oklch(var(--un-preset-theme-colors-secondary) / 0.30);
   --os-handle-min-size: 12%;
 }
 

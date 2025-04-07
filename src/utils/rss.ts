@@ -27,11 +27,16 @@ export async function generateRSS({ lang }: GenerateRSSOptions = {}) {
       (!data.draft && (data.lang === lang || data.lang === '' || (lang === undefined && data.lang === defaultLocale))),
   )
 
+  // Sort posts by published date in descending order
+  const sortedPosts = [...posts].sort((a, b) =>
+    new Date(b.data.published).getTime() - new Date(a.data.published).getTime(),
+  )
+
   return rss({
     title: siteTitle,
     site: lang ? `${url}/${lang}` : url,
     description: siteDescription,
-    stylesheet: '/rss/rss-style.min.xsl',
+    stylesheet: '/rss/rss-style.xsl',
     customData: `
     <copyright>Copyright © ${new Date().getFullYear()} ${themeConfig.site.author}</copyright>
     <language>${lang || themeConfig.global.locale}</language>
@@ -44,7 +49,7 @@ export async function generateRSS({ lang }: GenerateRSSOptions = {}) {
         : ''
     }
   `.trim(),
-    items: posts.map((post: CollectionEntry<'posts'>) => ({
+    items: sortedPosts.map((post: CollectionEntry<'posts'>) => ({
       title: post.data.title,
       // Generate URL with language prefix and abbrlink/slug
       link: new URL(
