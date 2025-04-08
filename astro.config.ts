@@ -4,19 +4,23 @@ import sitemap from '@astrojs/sitemap'
 import compress from 'astro-compress'
 import robotsTxt from 'astro-robots-txt'
 import { defineConfig } from 'astro/config'
+import rehypeComponents from "rehype-components";
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
 import remarkMath from 'remark-math'
+import remarkDirective from "remark-directive";
 import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
+import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { remarkReadingTime } from './src/plugins/remark-reading-time'
+import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
+import { remarkAlert } from "remark-github-blockquote-alert";
 
 const url = themeConfig.site.url
 const locale = themeConfig.global.locale
 const linkPrefetch = themeConfig.preload.linkPrefetch
-const imageDomain = new URL(themeConfig.preload.imageHostURL as string).hostname
 
 export default defineConfig({
   site: url,
@@ -25,10 +29,6 @@ export default defineConfig({
   prefetch: {
     prefetchAll: true,
     defaultStrategy: linkPrefetch,
-  },
-  image: {
-    domains: [imageDomain],
-    remotePatterns: [{ protocol: 'https' }],
   },
   i18n: {
     locales: Object.entries(langMap).map(([path, codes]) => ({
@@ -55,6 +55,9 @@ export default defineConfig({
     remarkPlugins: [
       remarkMath,
       remarkReadingTime,
+      remarkAlert,
+      remarkDirective,
+      parseDirectiveNode,
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -67,6 +70,14 @@ export default defineConfig({
           protocols: ['http', 'https', 'mailto'],
         },
       ],
+      [
+        rehypeComponents,
+        {
+          components: {
+            github: GithubCardComponent,
+          },
+        },
+      ]
     ],
     shikiConfig: {
       // available themes: https://shiki.style/themes
