@@ -115,9 +115,9 @@ export const themeConfig: ThemeConfig = {
     // https://follow.is/
     follow: {
       // feed ID
-      feedID: '',
+      feedID: '132478415391950848',
       // user ID
-      userID: '',
+      userID: '132434919554075648',
     },
     // apiflash access key
     // automatically generate website screenshots for open graph images
