@@ -54,7 +54,6 @@ function setupScrollbar() {
       scrollbars: {
         theme: 'scrollbar-widget',
         autoHide: 'never',
-        autoHideDelay: 500,
       },
       overflow: {
         x: 'hidden',
@@ -89,9 +88,9 @@ document.addEventListener('astro:after-swap', setupScrollbar)
 }
 
 .scrollbar-widget {
-  --os-size: 0.6rem;
-  --os-padding-perpendicular: 0.1rem;
-  --os-padding-axis: 0.2rem;
+  --os-size: 0.4rem;
+  --os-padding-perpendicular: 0;
+  --os-padding-axis: 0.05rem;
   --os-handle-border-radius: 99rem;
   --os-handle-perpendicular-size: 75%;
   --os-handle-perpendicular-size-hover: 100%;
