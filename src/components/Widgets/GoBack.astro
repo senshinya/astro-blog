@@ -1,7 +1,7 @@
 <button
   id="back-button"
   class="hidden"
-  lg="block absolute c-secondary/25 left--10 top-1/2 aspect-square w-4.5 translate-y--1/2 transition-colors ease-out c-secondary active:scale-90 hover:c-primary/60"
+  lg="block absolute c-secondary/40 left--10 top-1/2 aspect-square w-4.5 translate-y--1/2 transition-colors ease-out c-secondary active:scale-90 hover:c-primary/80"
   aria-label="Back to home"
 >
   <svg
@@ -32,5 +32,5 @@ function setupBackButton() {
 }
 
 setupBackButton()
-document.addEventListener('astro:after-swap', setupBackButton)
+document.addEventListener('astro:page-load', setupBackButton)
 </script>

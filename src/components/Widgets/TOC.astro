@@ -32,7 +32,7 @@ const filteredHeadings = headings.filter(heading =>
     <div class="relative h-12 w-full bg-transparent">
       <label
         for="toc-toggle"
-        class="absolute inset-0 flex cursor-pointer items-center 2xl:(static h-max w-max flex c-secondary/25 transition-colors ease-out hover:c-secondary/60)"
+        class="absolute inset-0 flex cursor-pointer items-center 2xl:(static h-max w-max flex c-secondary/40 transition-colors ease-out hover:c-secondary/80)"
       >
         <span class="toc-title">
           {currentUI.toc}
@@ -232,6 +232,6 @@ function setupTOCHighlight() {
 }
 
 setupTOCHighlight()
-document.addEventListener('astro:after-swap', setupTOCHighlight)
+document.addEventListener('astro:page-load', setupTOCHighlight)
 </script>
 

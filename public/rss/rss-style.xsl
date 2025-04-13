@@ -12,7 +12,7 @@
         <style type="text/css">
         /* Basic styles */
         html{-ms-text-size-adjust:100%;-webkit-text-size-adjust:100%}
-        body{margin:0;font-family:ui-sans-serif,system-ui,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size:16px;line-height:1.5;word-wrap:break-word}
+        body{margin:0;font-family:ui-sans-serif,system-ui,sans-serif,'Apple Color Emoji','Segoe UI Emoji','Segoe UI Symbol','Noto Color Emoji';font-size:16px;line-height:1.5;word-wrap:break-word;color:oklch(25% 0.005 298)}
         *{box-sizing:border-box}
         p{margin-top:0;margin-bottom:16px}
         strong{font-weight:600}

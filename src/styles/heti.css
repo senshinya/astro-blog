@@ -19,7 +19,7 @@
 
 /* Links */
 .heti :where(a) {
-  --at-apply: 'underline decoration-secondary/40 underline-0.075em underline-offset-0.2em lg:underline-0.1em';
+  --at-apply: 'underline decoration-secondary/40 underline-0.075em underline-offset-0.14em lg:underline-0.1em';
   --at-apply: 'font-medium transition-colors tracking-0 hover:(c-primary decoration-secondary/80) ';
 }
 
