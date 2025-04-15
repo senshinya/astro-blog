@@ -2,6 +2,7 @@
 dist/
 .output/
 .astro/
+memos.json
 
 # dependencies
 node_modules/
