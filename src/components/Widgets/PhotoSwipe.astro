@@ -7,7 +7,7 @@ const pswp = import('photoswipe')
 
 function setupPhotoSwipe() {
   const bodyElement = document.body
-  if (!bodyElement.hasAttribute('data-photoswipe-initialized')) {
+  // if (!bodyElement.hasAttribute('data-photoswipe-initialized')) {
     lightbox = new PhotoSwipeLightbox({
       gallery: 'article.heti img',
       pswpModule: () => pswp,
@@ -43,12 +43,13 @@ function setupPhotoSwipe() {
 
     lightbox.init()
 
-    bodyElement.setAttribute('data-photoswipe-initialized', 'true')
-  }
+    // bodyElement.setAttribute('data-photoswipe-initialized', 'true')
+  // }
 }
 
 setupPhotoSwipe()
 document.addEventListener('astro:page-load', setupPhotoSwipe)
+document.addEventListener('memos-load', setupPhotoSwipe)
 </script>
 
 <style is:global>

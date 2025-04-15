@@ -6,8 +6,8 @@ import type { Tokens } from "marked";
 const renderer = new marked.Renderer();
 renderer.image = function ({ href }: Tokens.Image): string {
   return `
-    <div class="img-container">
-        <img class="imgwrp" loading="lazy" src="${href}" />
+    <div class="memo-img-container">
+        <img class="memo-imgwrp" loading="lazy" src="${href}" />
     </div>
   `;
 };
@@ -203,6 +203,7 @@ interface memo {
     } finally {
       isLoading = false;
       updateButtonState();
+      document.dispatchEvent(new Event('memos-load'));
     }
   }
 
