@@ -12,9 +12,9 @@ body {
   --at-apply: 'ios-flash-fix';
 }
 
-/* article img {
+article.heti img {
   --at-apply: 'cursor-zoom-in force-gpu';
-} */
+}
 
 /* View Transition with Theme Toggle >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 ::view-transition-new(theme-transition) {
