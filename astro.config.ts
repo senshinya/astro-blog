@@ -14,7 +14,8 @@ import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
-import { remarkReadingTime } from './src/plugins/remark-reading-time'
+import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
+import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { remarkAlert } from "remark-github-blockquote-alert";
 
@@ -29,9 +30,9 @@ const imageConfig = imageHostURL
       image: {
         domains: [imageHostURL],
         remotePatterns: [{ protocol: 'https' }],
-      }
+      },
     }
-  : {};
+  : {}
 
 export default defineConfig({
   site: url,
@@ -74,6 +75,7 @@ export default defineConfig({
     rehypePlugins: [
       rehypeSlug,
       rehypeKatex,
+      rehypeImgToFigure,
       [
         rehypeExternalLinks,
         {

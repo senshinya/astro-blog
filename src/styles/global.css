@@ -12,10 +12,6 @@ body {
   --at-apply: 'ios-flash-fix';
 }
 
-article.heti img {
-  --at-apply: 'cursor-zoom-in force-gpu';
-}
-
 /* View Transition with Theme Toggle >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 ::view-transition-new(theme-transition) {
   animation: reveal 1s cubic-bezier(0.4, 0, 0.2, 1);
