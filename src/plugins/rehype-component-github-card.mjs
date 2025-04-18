@@ -58,30 +58,46 @@ export function GithubCardComponent(properties, children) {
     `script#${cardUuid}-script`,
     { type: "text/javascript", defer: true },
     `
-      fetch('https://api.github.com/repos/${repo}', { referrerPolicy: "no-referrer" }).then(response => response.json()).then(data => {
-        if (data.description) {
-          document.getElementById('${cardUuid}-description').innerText = data.description.replace(/:[a-zA-Z0-9_]+:/g, '');
-        } else {
-          document.getElementById('${cardUuid}-description').innerText = "Description not set"
-        }
-        document.getElementById('${cardUuid}-language').innerText = data.language;
-        document.getElementById('${cardUuid}-forks').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.forks).replaceAll("\u202f", '');
-        document.getElementById('${cardUuid}-stars').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.stargazers_count).replaceAll("\u202f", '');
-        const avatarEl = document.getElementById('${cardUuid}-avatar');
-        avatarEl.style.backgroundImage = 'url(' + data.owner.avatar_url + ')';
-        avatarEl.style.backgroundColor = 'transparent';
-        if (data.license?.spdx_id) {
-          document.getElementById('${cardUuid}-license').innerText = data.license?.spdx_id
-        } else {
-          document.getElementById('${cardUuid}-license').innerText = "no-license"
-        };
+      // 定义加载函数以便可以重复调用
+      function loadGithubCard${cardUuid}() {
+        fetch('https://api.github.com/repos/${repo}', { referrerPolicy: "no-referrer" }).then(response => response.json()).then(data => {
+          if (data.description) {
+            document.getElementById('${cardUuid}-description').innerText = data.description.replace(/:[a-zA-Z0-9_]+:/g, '');
+          } else {
+            document.getElementById('${cardUuid}-description').innerText = "Description not set"
+          }
+          document.getElementById('${cardUuid}-language').innerText = data.language;
+          document.getElementById('${cardUuid}-forks').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.forks).replaceAll("\u202f", '');
+          document.getElementById('${cardUuid}-stars').innerText = Intl.NumberFormat('en-us', { notation: "compact", maximumFractionDigits: 1 }).format(data.stargazers_count).replaceAll("\u202f", '');
+          const avatarEl = document.getElementById('${cardUuid}-avatar');
+          avatarEl.style.backgroundImage = 'url(' + data.owner.avatar_url + ')';
+          avatarEl.style.backgroundColor = 'transparent';
+          if (data.license?.spdx_id) {
+            document.getElementById('${cardUuid}-license').innerText = data.license?.spdx_id
+          } else {
+            document.getElementById('${cardUuid}-license').innerText = "no-license"
+          };
           document.getElementById('${cardUuid}-card').classList.remove("fetch-waiting");
           console.log("[GITHUB-CARD] Loaded card for ${repo} | ${cardUuid}.")
-      }).catch(err => {
-        const c = document.getElementById('${cardUuid}-card');
-        c.classList.add("fetch-error");
-         console.warn("[GITHUB-CARD] (Error) Loading card for ${repo} | ${cardUuid}.")
-      })
+        }).catch(err => {
+          const c = document.getElementById('${cardUuid}-card');
+          c.classList.add("fetch-error");
+          console.warn("[GITHUB-CARD] (Error) Loading card for ${repo} | ${cardUuid}.")
+        })
+      }
+
+      // 初始加载
+      loadGithubCard${cardUuid}();
+
+      // 监听 Astro 页面切换事件
+      document.addEventListener('astro:page-load', function() {
+        // 检查元素是否存在，如果存在则重新加载
+        if (document.getElementById('${cardUuid}-card')) {
+          document.getElementById('${cardUuid}-card').classList.add("fetch-waiting");
+          document.getElementById('${cardUuid}-card').classList.remove("fetch-error");
+          loadGithubCard${cardUuid}();
+        }
+      });
     `,
   );
 
