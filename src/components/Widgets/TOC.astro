@@ -13,8 +13,7 @@ const currentUI = ui[currentLang as keyof typeof ui]
 const { headings = [] } = Astro.props
 const filteredHeadings = headings.filter(heading =>
   heading.depth >= 2
-  && heading.depth <= 4
-  && heading.text !== 'Footnotes',
+  && heading.depth <= 4,
 )
 ---
 
