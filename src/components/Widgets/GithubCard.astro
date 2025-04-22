@@ -1,0 +1,100 @@
+<script>
+  // Global GitHub Card Loader
+  function initGithubCards() {
+    const cards = document.querySelectorAll(".card-github");
+    console.log(cards)
+
+    cards.forEach((card) => {
+      const repo = card.getAttribute("repo");
+      const cardId = card.getAttribute("id")?.replaceAll("-card", "");
+
+      if (!repo || !cardId) return;
+
+      card.classList.add("fetch-waiting");
+      card.classList.remove("fetch-error");
+
+      loadGithubCardData(repo, cardId);
+    });
+  }
+
+  function loadGithubCardData(repo:string, cardId:string) {
+    fetch("https://api.github.com/repos/" + repo, {
+      referrerPolicy: "no-referrer",
+    })
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error("GitHub API response was not ok");
+        }
+        return response.json();
+      })
+      .then((data) => {
+        updateCardWithData(data, cardId);
+        document.getElementById(cardId + "-card")?.classList.remove("fetch-waiting");
+        console.log("[GITHUB-CARD] Loaded card for " + repo + " | " + cardId);
+      })
+      .catch((err) => {
+        const card = document.getElementById(cardId + "-card");
+        if (card) {
+          card.classList.add("fetch-error");
+          console.warn(
+            "[GITHUB-CARD] (Error) Loading card for " + repo + " | " + cardId,
+            err,
+          );
+        }
+      });
+  }
+
+  function updateCardWithData(data:any, cardId:string) {
+    // Description
+    const descEl = document.getElementById(cardId + "-description");
+    if (descEl) {
+      descEl.innerText = data.description
+        ? data.description.replace(/:[a-zA-Z0-9_]+:/g, "")
+        : "Description not set";
+    }
+
+    // Language
+    const langEl = document.getElementById(cardId + "-language");
+    if (langEl && data.language) {
+      langEl.innerText = data.language;
+    }
+
+    // Forks
+    const forksEl = document.getElementById(cardId + "-forks");
+    if (forksEl) {
+      forksEl.innerText = Intl.NumberFormat("en-us", {
+        notation: "compact",
+        maximumFractionDigits: 1,
+      })
+        .format(data.forks)
+        .replaceAll("\\u202f", "");
+    }
+
+    // Stars
+    const starsEl = document.getElementById(cardId + "-stars");
+    if (starsEl) {
+      starsEl.innerText = Intl.NumberFormat("en-us", {
+        notation: "compact",
+        maximumFractionDigits: 1,
+      })
+        .format(data.stargazers_count)
+        .replaceAll("\\u202f", "");
+    }
+
+    // Avatar
+    const avatarEl = document.getElementById(cardId + "-avatar");
+    if (avatarEl && data.owner && data.owner.avatar_url) {
+      avatarEl.style.backgroundImage = "url(" + data.owner.avatar_url + ")";
+      avatarEl.style.backgroundColor = "transparent";
+    }
+
+    // License
+    const licenseEl = document.getElementById(cardId + "-license");
+    if (licenseEl) {
+      licenseEl.innerText = data.license?.spdx_id || "no-license";
+    }
+  }
+
+  initGithubCards();
+  document.addEventListener("astro:page-load", initGithubCards);
+</script>
