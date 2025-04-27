@@ -45,7 +45,7 @@
     "@antfu/eslint-config": "^4.12.0",
     "@astrojs/check": "^0.9.4",
     "@types/markdown-it": "^14.1.2",
-    "@types/node": "^22.14.1",
+    "@types/node": "^22.15.2",
     "@types/sanitize-html": "^2.15.0",
     "@unocss/eslint-plugin": "66.1.0-beta.12",
     "@unocss/preset-attributify": "66.1.0-beta.12",

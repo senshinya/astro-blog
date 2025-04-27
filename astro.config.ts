@@ -8,13 +8,14 @@ import rehypeComponents from "rehype-components";
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
+import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
-import remarkDirective from "remark-directive";
 import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
 import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
+import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 import { remarkAlert } from "remark-github-blockquote-alert";
@@ -66,11 +67,13 @@ export default defineConfig({
   ],
   markdown: {
     remarkPlugins: [
+      remarkDirective,
       remarkMath,
       remarkReadingTime,
       remarkAlert,
       remarkDirective,
       parseDirectiveNode,
+      remarkAdmonitions,
     ],
     rehypePlugins: [
       rehypeSlug,
