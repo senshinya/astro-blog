@@ -148,7 +148,7 @@ export const themeConfig: ThemeConfig = {
       },
       {
         name: '♥️',
-        url: 'https://bpm.shinya.click/public-dashboards/bcdf2aee203943aebb35d635019467e6?from=now-24h&to=now&timezone=browser',
+        url: 'https://bpm.shinya.click/public-dashboards/33041330d429493d96a5fc576088030a?from=now-24h&to=now&timezone=browser',
       },
     ],
     // year of website start
