@@ -24,6 +24,10 @@ export function isMemosPage(path: string) {
   const clean = cleanPath(path)
   return clean.startsWith('memos') || moreLocales.some(lang => clean.startsWith(`${lang}/memos`))
 }
+export function isFriendsPage(path: string) {
+  const clean = cleanPath(path)
+  return clean.startsWith('friends') || moreLocales.some(lang => clean.startsWith(`${lang}/friends`))
+}
 export function isAboutPage(path: string) {
   const clean = cleanPath(path)
   return clean.startsWith('about') || moreLocales.some(lang => clean.startsWith(`${lang}/about`))
@@ -39,6 +43,7 @@ export function getPageInfo(path: string) {
     isPost: isPostPage(path),
     isTag: isTagPage(path),
     isMemos: isMemosPage(path),
+    isFriends: isFriendsPage(path),
     isAbout: isAboutPage(path),
     getLocalizedPath: (targetPath: string) => getLocalizedPath(targetPath, currentLang),
   }

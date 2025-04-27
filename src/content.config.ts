@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 
 const posts = defineCollection({
-  loader: glob({ pattern: ['**/*.{md,mdx}', '!**/about/**'], base: './src/content' }),
+  loader: glob({ pattern: ['**/*.{md,mdx}', '!**/about/**', '!**/friends/**'], base: './src/content' }),
   schema: z.object({
     // required
     title: z.string(),
@@ -31,4 +31,11 @@ const about = defineCollection({
   }),
 })
 
-export const collections = { posts, about }
+const friends = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/friends' }),
+  schema: z.object({
+    lang: z.enum(['', ...allLocales]).optional().default(''),
+  }),
+})
+
+export const collections = { posts, about, friends }

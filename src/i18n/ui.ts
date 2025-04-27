@@ -6,6 +6,7 @@ export const ui = {
     posts: '文章',
     tags: '标签',
     memos: '碎语',
+    friends: '友人',
     about: '关于',
     toc: '目录',
   }

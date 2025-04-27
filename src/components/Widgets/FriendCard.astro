@@ -1,0 +1,111 @@
+---
+interface Props {
+  name: string;
+  url: string;
+  avatar: string;
+  description: string;
+}
+
+const { name, url, avatar, description } = Astro.props;
+---
+
+<a href={url} target="_blank" rel="noopener noreferrer" class="friend-card">
+  <div class="friend-avatar">
+    <img src={avatar} alt={name} loading="lazy" />
+  </div>
+  <div class="friend-info">
+    <div class="friend-name">{name}</div>
+    <div class="friend-description">{description}</div>
+  </div>
+</a>
+
+<style>
+  .friend-card {
+    display: flex;
+    padding: 1.25rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 1.25rem;
+    border: 1px solid oklch(var(--un-preset-theme-colors-primary) / 0.1);
+    background-color: oklch(var(--un-preset-theme-colors-background) / 0.3);
+  }
+
+  .friend-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px oklch(var(--un-preset-theme-colors-primary) / 0.05);
+    border-color: oklch(var(--un-preset-theme-colors-primary) / 0.2);
+  }
+
+  .friend-avatar {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1.25rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+    transition: all 0.3s ease;
+    filter: grayscale(20%);
+  }
+
+  .friend-card:hover .friend-avatar {
+    filter: grayscale(0%);
+  }
+
+  .friend-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+  }
+
+  .friend-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .friend-name {
+    font-weight: 500;
+    font-size: 1.1rem;
+    margin-bottom: 0.35rem;
+    color: oklch(var(--un-preset-theme-colors-primary));
+    transition: all 0.3s ease;
+    letter-spacing: 0.02em;
+  }
+
+  .friend-description {
+    font-size: 0.9rem;
+    color: oklch(var(--un-preset-theme-colors-secondary));
+    line-height: 1.5;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+    letter-spacing: 0.01em;
+  }
+
+  .friend-card:hover .friend-description {
+    opacity: 1;
+  }
+
+  /* 响应式设计 */
+  @media (max-width: 640px) {
+    .friend-card {
+      padding: 1rem;
+    }
+    
+    .friend-avatar {
+      width: 3.5rem;
+      height: 3.5rem;
+      margin-right: 1rem;
+    }
+    
+    .friend-name {
+      font-size: 1rem;
+    }
+    
+    .friend-description {
+      font-size: 0.85rem;
+    }
+  }
+</style>

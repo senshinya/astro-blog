@@ -1,0 +1,102 @@
+---
+import { defaultLocale, moreLocales } from '@/config'
+import Comments from '@/components/Comments/index.astro'
+import Layout from '@/layouts/Layout.astro'
+import { getCollection, render } from 'astro:content'
+
+export async function getStaticPaths() {
+  type PathItem = {
+    params: { friends: string }
+    props: { lang: string }
+  }
+
+  const paths: PathItem[] = []
+
+  // Default locale
+  paths.push({
+    params: { friends: 'friends/' },
+    props: { lang: defaultLocale },
+  })
+
+  // More locales
+  moreLocales.forEach((lang: string) => {
+    paths.push({
+      params: { friends: `${lang}/friends/` },
+      props: { lang },
+    })
+  })
+
+  return paths
+}
+
+const { lang } = Astro.props
+
+// Get friends page content with different language
+const allFriendsEntries = await getCollection('friends')
+const friendsEntry = allFriendsEntries.find(entry => entry.data.lang === lang)
+  || allFriendsEntries.find(entry => entry.data.lang === '')
+const { Content } = friendsEntry ? await render(friendsEntry) : { Content: null }
+---
+
+<Layout>
+  <!-- Decorative Line -->
+  <div class="uno-decorative-line"></div>
+  <!-- Friends Page Content -->
+  <div class="heti">
+    {Content && <Content />}
+  </div>
+
+  <Comments />
+</Layout>
+
+<style>
+  /* 友链卡片样式 */
+  :global(.friend-card) {
+    display: flex;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    margin-bottom: 1rem;
+    border: 1px solid oklch(var(--un-preset-theme-colors-primary) / 0.2);
+  }
+
+  :global(.friend-card:hover) {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 8px oklch(var(--un-preset-theme-colors-primary) / 0.1);
+  }
+
+  :global(.friend-avatar) {
+    width: 4rem;
+    height: 4rem;
+    margin-right: 1rem;
+    border-radius: 50%;
+    overflow: hidden;
+    flex-shrink: 0;
+  }
+
+  :global(.friend-avatar img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  :global(.friend-info) {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  :global(.friend-name) {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+    color: oklch(var(--un-preset-theme-colors-primary));
+  }
+
+  :global(.friend-description) {
+    font-size: 0.9rem;
+    color: oklch(var(--un-preset-theme-colors-secondary));
+    line-height: 1.4;
+  }
+</style>
