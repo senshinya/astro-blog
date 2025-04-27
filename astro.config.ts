@@ -18,7 +18,6 @@ import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
 import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
-import { remarkAlert } from "remark-github-blockquote-alert";
 
 const url = themeConfig.site.url
 const locale = themeConfig.global.locale
@@ -70,7 +69,6 @@ export default defineConfig({
       remarkDirective,
       remarkMath,
       remarkReadingTime,
-      remarkAlert,
       remarkDirective,
       parseDirectiveNode,
       remarkAdmonitions,
