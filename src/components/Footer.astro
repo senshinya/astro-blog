@@ -30,7 +30,7 @@ const links = socialLinks.map((link) => {
   <p>
     {links.map((link, index) => (
       <>
-        <a class="transition-colors hover:c-primary" href={link.url}>
+        <a class="transition-colors hover:c-primary" href={link.url} target="_blank" rel="noopener noreferrer">
           {link.name}
         </a>
         {index < links.length - 1 && ' / '}
@@ -39,7 +39,7 @@ const links = socialLinks.map((link) => {
   </p>
 
   <p>
-    Powered by <a class="transition-colors hover:c-primary" href="https://astro.build/">Astro</a> and <a class="transition-colors hover:c-primary" href="https://github.com/radishzzz/astro-theme-retypeset">Retypeset</a>
+    Powered by <a class="transition-colors hover:c-primary" href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> and <a class="transition-colors hover:c-primary" href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
   </p>
 
   <p>

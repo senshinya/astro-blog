@@ -8,8 +8,10 @@ html {
   --at-apply: 'bg-background c-secondary antialiased';
 }
 
+/* Fix flash issue on iOS */
 body {
-  --at-apply: 'ios-flash-fix';
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
 }
 
 /* View Transition with Theme Toggle >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */

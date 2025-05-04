@@ -9,11 +9,12 @@ import GithubCard from '@/components/Widgets/GithubCard.astro'
 import themeConfig from '@/config'
 import Head from '@/layouts/Head.astro'
 import { getPageInfo } from '@/utils/page'
-import '@/styles/font.css'
 import '@/styles/global.css'
+import '@/styles/font.css'
 import '@/styles/alert.css'
 import '@/styles/github-card.css'
 import '@/styles/heti.css'
+import '@/styles/extend.css'
 
 interface Props {
   postTitle?: string
@@ -23,7 +24,7 @@ interface Props {
 }
 
 const { postTitle, postDescription, postSlug, supportedLangs = [] } = Astro.props
-const { isPost } = getPageInfo(Astro.url.pathname)
+const { isPost, isAbout } = getPageInfo(Astro.url.pathname)
 const fontStyle = themeConfig.global.fontStyle === 'serif' ? 'font-serif' : 'font-sans'
 const MarginBottom = isPost && themeConfig.comment?.enabled
   ? 'mb-10' // Post page with comment system
@@ -50,6 +51,7 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
       </main>
       <Footer />
     </div>
+    {(isPost || isAbout) && <GithubCard />}
     <Scrollbar />
     <Button supportedLangs={supportedLangs} />
     <PhotoSwipe />

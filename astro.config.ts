@@ -1,10 +1,8 @@
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
-import compress from 'astro-compress'
 import robotsTxt from 'astro-robots-txt'
 import { defineConfig } from 'astro/config'
-import rehypeComponents from "rehype-components";
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
@@ -13,11 +11,10 @@ import remarkMath from 'remark-math'
 import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
-import { parseDirectiveNode } from "./src/plugins/remark-directive-rehype.js";
 import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
 import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
+import { remarkGithubCard } from './src/plugins/remark-github-card.mjs'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
-import { GithubCardComponent } from "./src/plugins/rehype-component-github-card.mjs";
 
 const url = themeConfig.site.url
 const locale = themeConfig.global.locale
@@ -62,16 +59,14 @@ export default defineConfig({
     }),
     sitemap(),
     robotsTxt(),
-    compress(),
   ],
   markdown: {
     remarkPlugins: [
       remarkDirective,
       remarkMath,
-      remarkReadingTime,
-      remarkDirective,
-      parseDirectiveNode,
       remarkAdmonitions,
+      remarkGithubCard,
+      remarkReadingTime,
     ],
     rehypePlugins: [
       rehypeSlug,
@@ -85,14 +80,6 @@ export default defineConfig({
           protocols: ['http', 'https', 'mailto'],
         },
       ],
-      [
-        rehypeComponents,
-        {
-          components: {
-            github: GithubCardComponent,
-          },
-        },
-      ]
     ],
     shikiConfig: {
       // available themes: https://shiki.style/themes

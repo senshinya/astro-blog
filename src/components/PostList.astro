@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content'
 import PostDate from '@/components/PostDate.astro'
 import { defaultLocale } from '@/config'
 import { generateDescription } from '@/utils/description'
-import { isTagPage } from '@/utils/page'
+import { isHomePage } from '@/utils/page'
 
 type Post = CollectionEntry<'posts'> & {
   remarkPluginFrontmatter: {
@@ -12,7 +12,7 @@ type Post = CollectionEntry<'posts'> & {
 }
 
 const { posts, lang, pinned = false } = Astro.props
-const isTag = isTagPage(Astro.url.pathname)
+const isHome = isHomePage(Astro.url.pathname)
 
 export interface Props {
   posts: Post[]
@@ -32,14 +32,14 @@ function getPostPath(post: Post) {
   {posts.map(post => (
     <li
       class="mb-5.5"
-      lg={isTag ? '' : 'mb-10'}
+      lg={isHome ? 'mb-10' : ''}
     >
 
       {/* post title */}
       <h3 class="inline">
         <a
           class="hover:c-primary"
-          lg={isTag ? '' : 'font-medium text-4.5'}
+          lg={isHome ? 'font-medium text-4.5' : ''}
           href={getPostPath(post)}
           transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
           data-disable-transition-on-theme
@@ -82,7 +82,7 @@ function getPostPath(post: Post) {
       </div>
 
       {/* desktop post description */}
-      {!isTag && (
+      {isHome && (
         <div
           class="heti hidden"
           lg="mt-2 block"

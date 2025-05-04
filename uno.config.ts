@@ -51,19 +51,12 @@ export default defineConfig({
     'uno-tags-style': 'inline-block whitespace-nowrap border border-secondary/25 rounded-full px-3.2 py-0.7 c-secondary transition-colors hover:(border-secondary/75 text-primary)',
     'uno-decorative-line': 'h-0.25 w-10 bg-secondary/25 mb-4.5 lg:(w-11 mb-6)',
     'uno-tags-wrapper': 'flex flex-wrap gap-x-3 gap-y-3.2',
+    'uno-round-border': 'rounded border border-solid border-secondary/5',
   },
   rules: [
     ['scrollbar-hidden', {
       'scrollbar-width': 'none',
       '-ms-overflow-style': 'none',
-    }],
-    ['ios-flash-fix', {
-      'backface-visibility': 'hidden',
-      '-webkit-backface-visibility': 'hidden',
-    }],
-    ['force-gpu', {
-      'transform': 'translateZ(0)',
-      '-webkit-transform': 'translateZ(0)',
     }],
   ],
   transformers: [

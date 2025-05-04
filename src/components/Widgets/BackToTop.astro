@@ -36,10 +36,10 @@ function initBackToTop() {
   observer = new IntersectionObserver(
     ([entry]) => {
       if (entry.isIntersecting) {
-        backToTopButton?.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4')
+        backToTopButton?.classList.add('op-0', 'pointer-events-none', 'translate-y-4')
       }
       else {
-        backToTopButton?.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4')
+        backToTopButton?.classList.remove('op-0', 'pointer-events-none', 'translate-y-4')
       }
     },
     {

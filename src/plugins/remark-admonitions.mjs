@@ -37,7 +37,21 @@ export function remarkAdmonitions() {
       if (!ADMONITION_TYPES[type])
         return
 
-      const title = node.attributes?.title || ADMONITION_TYPES[type]
+      let title = ADMONITION_TYPES[type]
+      const firstChild = node.children?.[0]
+
+      // Use [title] syntax for custom title
+      if (firstChild?.data?.directiveLabel) {
+        if (firstChild.children?.length) {
+          title = firstChild.children
+            .map(child => child.type === 'text' ? child.value : '')
+            .join('')
+            .trim() || title
+        }
+
+        node.children.shift()
+      }
+
       createAdmonition(node, type, title)
     })
 
