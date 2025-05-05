@@ -70,12 +70,20 @@ document.addEventListener('astro:page-load', initWaline)
   --at-apply: 'mt-0 mr-3'
 }
 
+#waline .wl-avatar {
+  --at-apply: 'border-none'
+}
+
+#waline .wl-logout-btn {
+  --at-apply: 'z-99'
+}
+
 #waline .wl-login-nick:not(:has(img)) {
   --at-apply: 'leading-3.6 mt-1.4';
 }
 
 #waline .wl-panel {
-  --at-apply: 'm-0 rounded-lg border-secondary/25'
+  --at-apply: 'm-0 rounded border-secondary/25'
 }
 
 #waline .wl-header {
@@ -115,21 +123,31 @@ document.addEventListener('astro:page-load', initWaline)
   --at-apply: 'm-2';
 }
 
+#waline .wl-btn {
+  --at-apply: 'rounded';
+}
+
 #waline .wl-text-number,
 #waline .wl-action[title="Markdown Guide"],
 #waline .wl-sort,
-#waline .wl-emoji-popup .wl-tab-wrapper::-webkit-scrollbar,
 #waline .wl-gallery::-webkit-scrollbar {
   --at-apply: 'hidden';
 }
 
 #waline .wl-emoji-popup {
-  --at-apply: 'start-0 border-secondary/25';
+  --at-apply: 'start-0 rounded border-secondary/25';
 }
 
-#waline .wl-emoji-popup .wl-tab-wrapper,
-#waline .wl-gallery {
-  --at-apply: 'scrollbar-hidden';
+#waline .wl-emoji-popup .wl-tab-wrapper::-webkit-scrollbar {
+  --at-apply: 'w-1.2';
+}
+
+#waline .wl-emoji-popup .wl-tab-wrapper::-webkit-scrollbar-thumb {
+  background: oklch(var(--un-preset-theme-colors-secondary) / 0.25);
+}
+
+#waline .wl-emoji-popup .wl-tab-wrapper::-webkit-scrollbar-track-piece {
+  --at-apply: 'bg-transparent';
 }
 
 #waline .wl-gif-popup {
@@ -142,6 +160,10 @@ document.addEventListener('astro:page-load', initWaline)
 
 #waline .wl-gif-popup input::placeholder {
   --at-apply: 'c-secondary/30 text-3.5';
+}
+
+#waline .wl-gallery {
+  --at-apply: 'scrollbar-hidden';
 }
 
 #waline .wl-meta-head {
