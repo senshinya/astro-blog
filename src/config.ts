@@ -122,7 +122,7 @@ export const themeConfig: ThemeConfig = {
     // apiflash access key
     // automatically generate website screenshots for open graph images
     // get your access key at: https://apiflash.com/
-    apiflashKey: '',
+    apiflashKey: 'ff9b7afed894421fa9e862e15d5a306c',
   },
   // SEO SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 
