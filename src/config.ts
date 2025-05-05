@@ -110,7 +110,7 @@ export const themeConfig: ThemeConfig = {
     googleAnalyticsID: 'G-ME465W29KC',
     // umami analytics
     // https://cloud.umami.is
-    umamiAnalyticsID: '',
+    umamiAnalyticsID: 'e9e17f1b-5129-42b0-b638-0dc825a90916',
     // follow verification
     // https://follow.is/
     follow: {
