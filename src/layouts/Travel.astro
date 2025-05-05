@@ -1,0 +1,191 @@
+---
+import themeConfig from "@/config";
+
+const { title } = Astro.props
+const fontStyle =
+  themeConfig.global.fontStyle === "serif" ? "font-serif" : "font-sans";
+---
+
+<html
+  lang={Astro.currentLocale}
+  class:list={[fontStyle, { "scroll-smooth": false }]}
+  data-overlayscrollbars-initialize
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{title}</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Playfair+Display:wght@600;700&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline src="/js/tailwind.js"></script>
+    <script is:inline>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              primary: "#4361ee",
+              "primary-light": "#7b96ff",
+              secondary: "#f8f9fa",
+              "text-color": "#2b2d42",
+              "light-text": "#6c757d",
+              accent: "#f72585",
+              background: "#f0f2f5",
+              "card-bg": "#ffffff",
+            },
+            boxShadow: {
+              bento: "0 10px 30px rgba(0, 0, 0, 0.08)",
+            },
+            borderRadius: {
+              bento: "16px",
+            },
+            fontFamily: {
+              snell: [
+                "Snell-Black",
+                "EarlySummer",
+                "Playfair Display",
+                "serif",
+              ],
+              cormorant: [
+                "Snell-Black",
+                "EarlySummer",
+                "Cormorant Garamond",
+                "serif",
+              ],
+              sans: [
+                "Noto Sans",
+                "Segoe UI",
+                "-apple-system",
+                "BlinkMacSystemFont",
+                "sans-serif",
+              ],
+            },
+            transitionProperty: {
+              bento: "all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)",
+            },
+          },
+        },
+      };
+    </script>
+
+    <style>
+      @font-face {
+        font-family: "Snell-Black";
+        src: local("Snell Roundhand");
+        font-weight: 900;
+      }
+
+      @font-face {
+        font-family: "EarlySummer";
+        src: local("Early Summer");
+        font-weight: normal;
+      }
+
+      /* 卡片切换动画 */
+      .card-enter-left {
+        transform: translateX(-50px);
+        opacity: 0;
+      }
+
+      .card-enter-right {
+        transform: translateX(50px);
+        opacity: 0;
+      }
+
+      .card-exit {
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      /* 内容区域的过渡效果 */
+      .content-area.fade-out {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      .content-area.fade-in {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* 隐藏滚动条样式 */
+      .scrollbar-hide {
+        -ms-overflow-style: none; /* IE and Edge */
+        scrollbar-width: none; /* Firefox */
+      }
+
+      .scrollbar-hide::-webkit-scrollbar {
+        display: none; /* Chrome, Safari and Opera */
+      }
+
+      /* 确保在动画过渡期间也不显示滚动条 */
+      .card-exit::-webkit-scrollbar,
+      .card-enter-left::-webkit-scrollbar,
+      .card-enter-right::-webkit-scrollbar {
+        display: none;
+      }
+
+      /* 响应式布局优化 */
+      @media (max-width: 768px) {
+        .flex.w-screen.h-screen {
+          flex-direction: column;
+        }
+
+        #leftCard {
+          width: 100%;
+          height: 100%;
+        }
+
+        #leftCard {
+          order: 1;
+        }
+
+        #rightCard {
+          display: none;
+        }
+
+        #contentArea {
+          padding: 1rem;
+          padding-top: 1.5rem;
+        }
+      }
+    </style>
+  </head>
+  <div class="travel-container">
+    <slot />
+  </div>
+
+
+  <style>
+    .travel-container {
+      --primary: #4361ee;
+      --primary-light: #7b96ff;
+      --secondary: #f8f9fa;
+      --text-color: #2b2d42;
+      --light-text: #6c757d;
+      --accent: #f72585;
+      --background: #f0f2f5;
+      --card-bg: #ffffff;
+
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      position: relative;
+      background-color: var(--background);
+      color: var(--text-color);
+      font-family:
+        "Noto Sans",
+        "Segoe UI",
+        -apple-system,
+        BlinkMacSystemFont,
+        sans-serif;
+    }
+  </style>
+</html>

@@ -1,0 +1,21 @@
+---
+import { getCollection } from 'astro:content';
+import TravelLayout from '../layouts/Travel.astro';
+import TravelJourney from '../components/TravelJourney.astro';
+
+// 生成所有旅行游记的路径
+export async function getStaticPaths() {
+  const travelEntries = await getCollection('travels');
+  return travelEntries.map(entry => ({
+    params: { travels_slug: `travels/${entry.data.slug}/` },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const { title } = entry.data;
+---
+
+<TravelLayout title={`${title} | 旅行游记`}>
+  <TravelJourney slug={entry.data.slug} />
+</TravelLayout>

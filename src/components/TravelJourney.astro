@@ -1,0 +1,658 @@
+---
+import { getCollection } from 'astro:content';
+
+const { slug } = Astro.props;
+
+// 获取指定 slug 的旅行数据
+const allTravels = await getCollection('travels');
+const travel = allTravels.find(entry => entry.data.slug === slug);
+
+if (!travel) {
+  throw new Error(`找不到 slug 为 "${slug}" 的旅行记录`);
+}
+// const { title, subtitle, coverImage, introduction, days } = travel.data;
+---
+
+<div class="travel-journey">
+  <!-- 进度条 -->
+  <div id="progressBar" class="fixed top-0 left-0 h-1 bg-primary z-50 transition-all duration-300 ease-in-out"></div>
+
+  <!-- Bento Grid 布局 -->
+  <div class="flex w-screen h-screen p-5 gap-5 bg-background">
+    <!-- 左侧卡片 - 内容区域 -->
+    <div id="leftCard"
+      class="w-3/5 h-full bg-card-bg rounded-bento shadow-bento overflow-y-auto relative z-10 transition-all duration-500 ease-in-out scrollbar-hide">
+      <div id="contentArea" class="w-full h-full p-12 pt-24 transition-all duration-400 ease-in-out content-area">
+        <!-- 内容将通过JavaScript动态加载 -->
+      </div>
+
+      <!-- 照片查看模式 -->
+      <div id="photoViewMode"
+        class="absolute top-0 left-0 w-full h-full bg-secondary/98 flex flex-col z-50 opacity-0 invisible transition-all duration-300 ease-in-out rounded-bento">
+        <div class="flex-1 flex items-center justify-center relative overflow-hidden">
+          <img src="" alt="" id="photoViewImg" class="max-w-[90%] max-h-[80%] object-contain rounded-lg shadow-bento">
+          <div
+            class="absolute top-0 left-0 right-0 bottom-0 flex justify-between items-center px-5 pointer-events-none">
+            <div id="prevPhotoBtn"
+              class="w-[50px] h-[50px] flex items-center justify-center cursor-pointer transition-bento pointer-events-auto bg-transparent border-none">
+              <svg class="w-9 h-9 fill-text-color transition-bento hover:scale-110 hover:fill-primary"
+                viewBox="0 0 24 24">
+                <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+              </svg>
+            </div>
+            <div id="nextPhotoBtn"
+              class="w-[50px] h-[50px] flex items-center justify-center cursor-pointer transition-bento pointer-events-auto bg-transparent border-none">
+              <svg class="w-9 h-9 fill-text-color transition-bento hover:scale-110 hover:fill-primary"
+                viewBox="0 0 24 24">
+                <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+              </svg>
+            </div>
+          </div>
+          <div id="closePhotoBtn"
+            class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center cursor-pointer shadow-md transition-bento z-10 pointer-events-auto border-2 border-accent hover:bg-accent hover:scale-110">
+            <svg class="w-6 h-6 fill-accent transition-bento group-hover:fill-white" viewBox="0 0 24 24">
+              <path
+                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z">
+              </path>
+            </svg>
+          </div>
+        </div>
+        <div id="photoViewCaption"
+          class="p-6 bg-card-bg text-text-color text-base leading-relaxed max-h-[30%] overflow-y-auto border-t border-black/5">
+        </div>
+      </div>
+    </div>
+
+    <!-- 右侧卡片 - 地图/封面图区域 -->
+    <div id="rightCard"
+      class="w-2/5 h-full bg-card-bg rounded-bento shadow-bento relative overflow-hidden transition-all duration-500 ease-in-out">
+      <div class="map-container w-full h-full relative overflow-hidden rounded-bento" style="display: none;">
+        <div id="map" class="w-full h-full z-[1] rounded-bento"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 导航箭头 -->
+  <div
+    class="fixed top-[7%] w-full left-0 z-50 flex justify-between px-10 pointer-events-none transform -translate-y-1/2 transition-all duration-300 ease-in-out">
+    <div id="prevBtn"
+      class="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow-lg transition-bento pointer-events-auto hover:scale-110 hover:opacity-100">
+      <svg class="w-6 h-6 fill-primary transition-bento group-hover:fill-white" viewBox="0 0 24 24">
+        <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+      </svg>
+    </div>
+    <div id="nextBtn"
+      class="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow-lg transition-bento pointer-events-auto hover:scale-110 hover:opacity-100">
+      <svg class="w-6 h-6 fill-primary transition-bento group-hover:fill-white" viewBox="0 0 24 24">
+        <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+      </svg>
+    </div>
+  </div>
+
+  <script is:inline define:vars={{ travelData: travel.data }}>
+    // 全局变量
+    let currentSection = 0;
+    const totalSections = travelData.days.length + 1; // 封面 + 天数
+    let map;
+    let markers = [];
+    let currentPhotoItems = [];
+    let currentPhotoIndex = 0;
+
+    // 初始化函数
+    function init() {
+      // 初始化地图
+      initMap();
+
+      // 加载初始内容（封面）
+      loadSection(0);
+
+      // 设置导航箭头点击事件
+      document.getElementById('prevBtn').addEventListener('click', navigatePrev);
+      document.getElementById('nextBtn').addEventListener('click', navigateNext);
+
+      // 设置键盘导航
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+          navigateNext();
+        } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+          navigatePrev();
+        } else if (e.key === 'Escape') {
+          // 如果照片查看模式是活跃的，关闭它
+          if (document.getElementById('photoViewMode').classList.contains('active')) {
+            closePhotoView();
+          }
+        }
+      });
+
+      // 设置照片查看模式的导航按钮
+      document.getElementById('prevPhotoBtn').addEventListener('click', navigatePhotoPrev);
+      document.getElementById('nextPhotoBtn').addEventListener('click', navigatePhotoNext);
+
+      // 设置照片查看模式的关闭按钮
+      document.getElementById('closePhotoBtn').addEventListener('click', closePhotoView);
+
+      // 设置触摸导航
+      let touchStartY = 0;
+      document.addEventListener('touchstart', function (e) {
+        touchStartY = e.touches[0].clientY;
+      });
+
+      document.addEventListener('touchend', function (e) {
+        const touchEndY = e.changedTouches[0].clientY;
+        const diff = touchStartY - touchEndY;
+
+        if (Math.abs(diff) > 50) { // 最小滑动距离
+          if (diff > 0) {
+            navigateNext();
+          } else {
+            navigatePrev();
+          }
+        }
+      });
+
+      // 更新导航按钮状态
+      updateNavButtons();
+
+      // 更新进度条
+      updateProgressBar();
+    }
+
+    // 初始化地图
+    function initMap() {
+      // 创建地图实例，但不设置初始视图
+      map = L.map('map', {
+        zoomControl: false,
+        // 不要设置初始中心点和缩放级别
+      });
+
+      // 添加地图图层
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+      }).addTo(map);
+
+      // 添加缩放控制
+      L.control.zoom({
+        position: 'bottomright'
+      }).addTo(map);
+
+      // 设置默认视图为京都区域，但不立即应用
+      // 这会在首次切换到行程页面时被覆盖
+      map.setView([35.0116, 135.7681], 12, {
+        animate: false
+      });
+    }
+
+    // 加载指定部分的内容
+    function loadSection(index) {
+      const contentArea = document.getElementById('contentArea');
+      const container = document.querySelector('.flex.w-screen.h-screen');
+      const mapContainer = document.querySelector('.map-container');
+      // 添加退出动画
+      document.getElementById('leftCard').classList.add('card-exit');
+      document.getElementById('rightCard').classList.add('card-exit');
+      contentArea.classList.add('fade-out');
+      
+      // 立即隐藏地图容器，防止在过渡期间显示上一个地图
+      if (currentSection > 0) {
+        mapContainer.style.opacity = '0';
+      }
+
+      // 使用 setTimeout 来等待动画完成后再切换内容
+      setTimeout(() => {
+        // 清空当前内容
+        contentArea.innerHTML = '';
+
+        // 清除地图上的所有标记
+        clearMarkers();
+
+        if (index === 0) {
+          // 加载封面并应用封面模式
+          loadCover();
+          container.classList.add('cover-mode');
+
+          // 设置右侧面板背景为封面图片
+          const rightPanel = document.getElementById('rightCard');
+          rightPanel.style.backgroundImage = `url(${travelData.coverImage})`;
+          rightPanel.style.backgroundSize = 'cover';
+          rightPanel.style.backgroundPosition = 'center';
+          rightPanel.style.backgroundRepeat = 'no-repeat';
+          rightPanel.style.transition = 'transform 10s ease';
+
+          // 添加hover效果
+          rightPanel.addEventListener('mouseenter', function () {
+            this.style.transform = 'scale(1.03)';
+          });
+          rightPanel.addEventListener('mouseleave', function () {
+            this.style.transform = 'scale(1)';
+          });
+
+          // 明确隐藏地图容器
+          mapContainer.style.display = 'none';
+        } else {
+          // 移除封面模式
+          container.classList.remove('cover-mode');
+          const rightPanel = document.getElementById('rightCard');
+          rightPanel.style.backgroundImage = '';
+          rightPanel.style.transform = '';
+
+          // 移除hover事件
+          rightPanel.removeEventListener('mouseenter', function () { });
+          rightPanel.removeEventListener('mouseleave', function () { });
+
+          // 加载行程日
+          loadDay(index - 1);
+          
+          // 确保地图容器可见但透明
+          mapContainer.style.display = 'block';
+          mapContainer.style.opacity = '0';
+          
+          // 添加该天的所有标记
+          addDayMarkers(index - 1);
+        }
+
+        // 更新当前部分索引
+        currentSection = index;
+
+        // 更新导航按钮状态
+        updateNavButtons();
+
+        // 更新进度条
+        updateProgressBar();
+
+        // 添加进入动画
+        document.getElementById('leftCard').classList.add('card-enter-left');
+        document.getElementById('rightCard').classList.add('card-enter-right');
+
+        // 移除退出类，添加进入动画
+        setTimeout(() => {
+          document.getElementById('leftCard').classList.remove('card-exit', 'card-enter-left');
+          document.getElementById('rightCard').classList.remove('card-exit', 'card-enter-right');
+          contentArea.classList.remove('fade-out');
+          contentArea.classList.add('fade-in');
+
+          // 最后移除进入类
+          setTimeout(() => {
+            contentArea.classList.remove('fade-in');
+          }, 500);
+          
+          // 刷新地图大小以防止显示问题，并显示地图
+          if (index > 0) {
+            map.invalidateSize();
+            // 平滑显示地图
+            mapContainer.style.transition = 'opacity 0.3s ease-in-out';
+            mapContainer.style.opacity = '1';
+          }
+        }, 50);
+      }, 300); // 等待退出动画完成
+      return;
+    }
+
+    // 加载封面
+    function loadCover() {
+      const contentArea = document.getElementById('contentArea');
+
+      const coverHTML = `
+                <div class="flex flex-col justify-center h-full">
+                    <h1 class="font-snell text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-primary leading-tight -tracking-wider">${travelData.title}</h1>
+                    <h2 class="font-snell text-2xl md:text-3xl lg:text-4xl font-semibold mb-8 text-text-color -tracking-wide">${travelData.subtitle}</h2>
+                    <p class="text-lg text-light-text leading-relaxed max-w-xl">${travelData.introduction}</p>
+                </div>
+            `;
+
+      contentArea.innerHTML = coverHTML;
+    }
+
+    // 加载行程日
+    function loadDay(dayIndex) {
+      const day = travelData.days[dayIndex];
+      const contentArea = document.getElementById('contentArea');
+
+      let descriptionsHTML = '';
+      day.descriptions.forEach(desc => {
+        descriptionsHTML += `<p class="mb-10 text-light-text text-lg leading-relaxed">${desc}</p>`;
+      });
+
+      let photosHTML = '';
+      day.photos.forEach((photo, index) => {
+        photosHTML += `
+                    <div class="relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group" data-index="${index}">
+                        <img src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
+                        <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
+                    </div>
+                `;
+      });
+
+      const dayHTML = `
+                <div class="h-full overflow-y-auto scrollbar-hide">
+                    <h3 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-semibold mb-6 mt-8 pt-4 text-primary relative inline-block -tracking-wide after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:w-[100px] after:h-[3px] after:bg-accent after:rounded-md">${day.title}</h3>
+                    ${descriptionsHTML}
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-24 mb-8">
+                        ${photosHTML}
+                    </div>
+                </div>
+            `;
+
+      contentArea.innerHTML = dayHTML;
+
+      // 为照片添加点击事件
+      document.querySelectorAll('.group[data-index]').forEach(item => {
+        item.addEventListener('click', function () {
+          const index = parseInt(this.dataset.index);
+          openPhotoView(dayIndex, index);
+        });
+      });
+    }
+
+    // 清除地图上的所有标记
+    function clearMarkers() {
+      markers.forEach(marker => {
+        map.removeLayer(marker);
+      });
+      markers = [];
+    }
+
+    // 添加指定天的所有标记
+    function addDayMarkers(dayIndex) {
+      const day = travelData.days[dayIndex];
+
+      day.photos.forEach((photo, photoIndex) => {
+        if (photo.lat && photo.lng) {
+          const marker = L.marker([photo.lat, photo.lng], {
+            title: photo.alt
+          }).addTo(map);
+
+          // 创建自定义弹出窗口内容
+          const popupContent = `
+                        <div class="w-[200px] text-center">
+                            <img src="${photo.src}" alt="${photo.alt}" class="w-full rounded-lg mb-2">
+                            <div class="font-bold">${photo.alt}</div>
+                        </div>
+                    `;
+
+          marker.bindPopup(popupContent);
+
+          // 添加标记点击事件
+          marker.on('click', function () {
+            openPhotoView(dayIndex, photoIndex);
+          });
+
+          markers.push(marker);
+        }
+      });
+
+      // 调整地图视图以显示所有标记
+      if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        // 使用 setTimeout 确保地图已完全加载
+        setTimeout(() => {
+          map.invalidateSize();
+          map.fitBounds(group.getBounds().pad(0.1), {
+            animate: false // 禁用动画，避免初始加载时的跳动
+          });
+        }, 100);
+      }
+    }
+
+    // 打开照片查看模式
+    function openPhotoView(dayIndex, photoIndex) {
+      // 获取当前天的所有照片
+      currentPhotoItems = travelData.days[dayIndex].photos;
+      currentPhotoIndex = photoIndex;
+
+      // 隐藏导航箭头
+      const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
+      navArrows.style.opacity = '0';
+      navArrows.style.visibility = 'hidden';
+      navArrows.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+
+
+      // 隐藏行程描述内容
+      const contentArea = document.getElementById('contentArea');
+      contentArea.style.opacity = '0';
+      contentArea.style.visibility = 'hidden';
+      contentArea.style.transition = 'opacity 0.3s ease, visibility 0.3s ease';
+
+      // 更新照片查看视图
+      updatePhotoView();
+
+      // 显示照片查看模式
+      document.getElementById('photoViewMode').classList.add('active');
+      document.getElementById('photoViewMode').classList.remove('invisible');
+      document.getElementById('photoViewMode').classList.add('visible');
+      document.getElementById('photoViewMode').style.opacity = '1';
+
+      // 如果有关联的标记，缩放到标记位置
+      if (currentPhoto.lat && currentPhoto.lng) {
+        map.setView([currentPhoto.lat, currentPhoto.lng], 16);
+
+        // 查找并打开对应的标记弹出窗口
+        markers.forEach(marker => {
+          if (marker.getLatLng().lat === currentPhoto.lat && marker.getLatLng().lng === currentPhoto.lng) {
+            marker.openPopup();
+          }
+        });
+      }
+    }
+
+    // 关闭照片查看模式
+    function closePhotoView() {
+      // 隐藏照片查看模式
+      const photoViewMode = document.getElementById('photoViewMode');
+      photoViewMode.style.opacity = '0';
+
+      setTimeout(() => {
+        photoViewMode.classList.remove('active');
+        photoViewMode.classList.add('invisible');
+        photoViewMode.classList.remove('visible');
+      }, 300);
+
+      // 显示导航箭头
+      const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
+      setTimeout(() => {
+        navArrows.style.opacity = '1';
+        navArrows.style.visibility = 'visible';
+      }, 300); // 延迟显示，等待照片查看模式关闭动画完成
+
+      // 显示行程描述内容
+      const contentArea = document.getElementById('contentArea');
+      setTimeout(() => {
+        contentArea.style.opacity = '1';
+        contentArea.style.visibility = 'visible';
+      }, 300);
+
+      // 调整地图视图以显示所有标记
+      if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        map.fitBounds(group.getBounds().pad(0.1));
+      }
+    }
+
+    // 更新照片查看视图
+    function updatePhotoView() {
+      const photoViewImg = document.getElementById('photoViewImg');
+      const photoViewCaption = document.getElementById('photoViewCaption');
+      const prevPhotoBtn = document.getElementById('prevPhotoBtn');
+      const nextPhotoBtn = document.getElementById('nextPhotoBtn');
+
+      const currentPhoto = currentPhotoItems[currentPhotoIndex];
+
+      photoViewImg.src = currentPhoto.src;
+      photoViewImg.alt = currentPhoto.alt;
+      photoViewCaption.textContent = currentPhoto.caption;
+
+      // 更新照片导航按钮状态
+      if (currentPhotoIndex === 0) {
+        prevPhotoBtn.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        prevPhotoBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+
+      if (currentPhotoIndex === currentPhotoItems.length - 1) {
+        nextPhotoBtn.classList.add('opacity-0', 'pointer-events-none');
+      } else {
+        nextPhotoBtn.classList.remove('opacity-0', 'pointer-events-none');
+      }
+
+      // 更新地图视图
+      if (currentPhoto.lat && currentPhoto.lng) {
+        map.setView([currentPhoto.lat, currentPhoto.lng], 16);
+
+        // 查找并打开对应的标记弹出窗口
+        markers.forEach(marker => {
+          if (marker.getLatLng().lat === currentPhoto.lat && marker.getLatLng().lng === currentPhoto.lng) {
+            marker.openPopup();
+          }
+        });
+      }
+    }
+
+    // 导航到上一张照片
+    function navigatePhotoPrev() {
+      if (currentPhotoIndex > 0) {
+        currentPhotoIndex--;
+        updatePhotoView();
+      }
+    }
+
+    // 导航到下一张照片
+    function navigatePhotoNext() {
+      if (currentPhotoIndex < currentPhotoItems.length - 1) {
+        currentPhotoIndex++;
+        updatePhotoView();
+      }
+    }
+
+    // 导航到上一部分
+    function navigatePrev() {
+      if (currentSection > 0) {
+        loadSection(currentSection - 1);
+      }
+    }
+
+    // 导航到下一部分
+    function navigateNext() {
+      if (currentSection < totalSections - 1) {
+        loadSection(currentSection + 1);
+      }
+    }
+
+    // 更新导航按钮状态
+    function updateNavButtons() {
+      const prevBtn = document.getElementById('prevBtn');
+      const nextBtn = document.getElementById('nextBtn');
+
+      // 在第一个部分隐藏上一个按钮
+      if (currentSection === 0) {
+        prevBtn.classList.add('opacity-0', 'pointer-events-none');
+        prevBtn.classList.remove('opacity-70');
+      } else {
+        prevBtn.classList.remove('opacity-0', 'pointer-events-none');
+        prevBtn.classList.add('opacity-70');
+      }
+
+      // 在最后一个部分隐藏下一个按钮
+      if (currentSection === totalSections - 1) {
+        nextBtn.classList.add('opacity-0', 'pointer-events-none');
+        nextBtn.classList.remove('opacity-70');
+      } else {
+        nextBtn.classList.remove('opacity-0', 'pointer-events-none');
+        nextBtn.classList.add('opacity-70');
+      }
+    }
+
+    // 更新进度条
+    function updateProgressBar() {
+      const progress = ((currentSection + 1) / totalSections) * 100;
+      document.getElementById('progressBar').style.width = `${progress}%`;
+    }
+
+    // 当页面加载完成后初始化
+    window.addEventListener('load', init);
+  </script>
+
+  <style is:global>
+    @font-face {
+      font-family: 'Snell-Black';
+      src: local('Snell Roundhand');
+      font-weight: 900;
+    }
+
+    @font-face {
+      font-family: 'EarlySummer';
+      src: local('Early Summer');
+      font-weight: normal;
+    }
+
+    /* 卡片切换动画 */
+    .card-enter-left {
+      transform: translateX(-50px);
+      opacity: 0;
+    }
+
+    .card-enter-right {
+      transform: translateX(50px);
+      opacity: 0;
+    }
+
+    .card-exit {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    /* 内容区域的过渡效果 */
+    .content-area.fade-out {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    .content-area.fade-in {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* 隐藏滚动条样式 */
+    .scrollbar-hide {
+      -ms-overflow-style: none;  /* IE and Edge */
+      scrollbar-width: none;  /* Firefox */
+    }
+    
+    .scrollbar-hide::-webkit-scrollbar {
+      display: none;  /* Chrome, Safari and Opera */
+    }
+    
+    /* 确保在动画过渡期间也不显示滚动条 */
+    .card-exit::-webkit-scrollbar,
+    .card-enter-left::-webkit-scrollbar,
+    .card-enter-right::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* 响应式布局优化 */
+    @media (max-width: 768px) {
+      .flex.w-screen.h-screen {
+        flex-direction: column;
+      }
+      
+      #leftCard {
+        width: 100%;
+        height: 100%;
+      }
+      
+      #leftCard {
+        order: 1;
+      }
+      
+      #rightCard {
+        display: none;
+      }
+      
+      #contentArea {
+        padding: 1rem;
+        padding-top: 1.5rem;
+      }
+    }
+  </style>
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
+</div>

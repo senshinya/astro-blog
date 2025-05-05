@@ -3,7 +3,7 @@ import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
 
 const posts = defineCollection({
-  loader: glob({ pattern: ['**/*.{md,mdx}', '!**/about/**', '!**/friends/**'], base: './src/content' }),
+  loader: glob({ pattern: ['**/*.{md,mdx}', '!**/about/**', '!**/friends/**', '!**/travels/**'], base: './src/content' }),
   schema: z.object({
     // required
     title: z.string(),
@@ -31,6 +31,32 @@ const about = defineCollection({
   }),
 })
 
+const travels = defineCollection({
+  loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/travels' }),
+  schema: z.object({
+    title: z.string(),
+    subtitle: z.string(),
+    slug: z.string(),
+    coverImage: z.string(),
+    introduction: z.string(),
+    days: z.array(
+      z.object({
+        title: z.string(),
+        descriptions: z.array(z.string()),
+        photos: z.array(
+          z.object({
+            src: z.string(),
+            alt: z.string(),
+            lat: z.number().optional(),
+            lng: z.number().optional(),
+            caption: z.string()
+          })
+        )
+      })
+    )
+  })
+})
+
 const friends = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/friends' }),
   schema: z.object({
@@ -38,4 +64,4 @@ const friends = defineCollection({
   }),
 })
 
-export const collections = { posts, about, friends }
+export const collections = { posts, about, travels, friends }
