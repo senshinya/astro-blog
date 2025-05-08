@@ -14,7 +14,9 @@ export function isHomePage(path: string) {
 }
 export function isPostPage(path: string) {
   const clean = cleanPath(path)
-  return clean.startsWith('posts') || moreLocales.some(lang => clean.startsWith(`${lang}/posts`))
+  const categories = ['daily', 'fiddling', 'notes', 'projects']
+  return categories.some(category => clean.startsWith(category)) || 
+         moreLocales.some(lang => categories.some(category => clean.startsWith(`${lang}/${category}`)))
 }
 export function isTagPage(path: string) {
   const clean = cleanPath(path)

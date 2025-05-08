@@ -3,11 +3,9 @@
   --uno-colors-secondary: theme('colors.secondary');
   --uno-colors-background: theme('colors.background');
 }
-
 html {
   --at-apply: 'bg-background c-secondary antialiased';
 }
-
 /* Fix flash issue on iOS */
 body {
   backface-visibility: hidden;
@@ -20,12 +18,10 @@ body {
   clip-path: inset(0 0 0 0);
   z-index: 99;
 }
-
 ::view-transition-old(theme-transition) {
   animation: none;
   z-index: -1;
 }
-
 @keyframes reveal {
   from {
     clip-path: inset(var(--from));
@@ -35,7 +31,6 @@ body {
 html.dark {
   --from: 0 0 100% 0;
 }
-
 html:not(.dark) {
   --from: 100% 0 0 0;
 }
@@ -52,15 +47,13 @@ html[data-theme-transition] [data-disable-transition-on-theme] {
   }
 }
 
-/* Import Custom Fonts >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-/* Snell Roundhand Static Font */
+/* Snell Roundhand Static Font >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 @font-face {
   font-family: "Snell-Bold";
   src: url("/font/Snell-Bold.woff2") format("woff2");
   font-display: swap;
   unicode-range: U+0030-0039,U+0041-005A,U+0061-007A,U+00C1,U+00C9,U+00CD,U+00D3,U+00DA,U+00DC,U+00D1,U+00E1,U+00E9,U+00ED,U+00F3,U+00FA,U+00FC,U+00F1,U+0410-044F,U+0401,U+0451,U+0021-002F,U+003A-0040,U+00A9;
 }
-
 @font-face {
   font-family: "Snell-Black";
   src: url("/font/Snell-Black.woff2") format("woff2");
@@ -76,7 +69,6 @@ html[data-theme-transition] [data-disable-transition-on-theme] {
   font-weight: 400 700;
   unicode-range: U+0030-0039,U+0041-005A,U+0061-007A,U+00C1,U+00C9,U+00CD,U+00D3,U+00DA,U+00DC,U+00D1,U+00E1,U+00E9,U+00ED,U+00F3,U+00FA,U+00FC,U+00F1,U+0410-044F,U+0401,U+0451,U+0021-002F,U+003A-0040,U+00A9;
 }
-
 @font-face {
   font-family: "STIX-Italic";
   src: url("/font/STIX-Italic.woff2") format("woff2-variations");

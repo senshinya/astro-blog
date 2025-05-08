@@ -22,7 +22,7 @@ const linkPrefetch = themeConfig.preload.linkPrefetch
 const imageHostURL = themeConfig.preload.imageHostURL
 const imageConfig = imageHostURL
   ? {
-      // Configure domains and remotePatterns to optimize remote images in Markdown files using ![alt](src) syntax (adds width and height)
+      // Configure domains and remotePatterns to optimize remote images in Markdown files using ![alt](src) syntax
       // Docs: https://docs.astro.build/en/guides/images/#authorizing-remote-images
       image: {
         domains: [imageHostURL],
@@ -82,7 +82,7 @@ export default defineConfig({
       ],
     ],
     shikiConfig: {
-      // available themes: https://shiki.style/themes
+      // Available themes: https://shiki.style/themes
       themes: {
         light: 'github-light',
         dark: 'github-dark',

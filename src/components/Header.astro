@@ -5,23 +5,10 @@ import { getPageInfo } from '@/utils/page'
 
 const { currentLang, getLocalizedPath, isPost } = getPageInfo(Astro.url.pathname)
 const { title, subtitle, i18nTitle } = themeConfig.site
-const { titleGap } = themeConfig.global
 
 const currentUI = ui[currentLang as keyof typeof ui]
 const headerTitle = i18nTitle ? currentUI.title : title
 const headerSubtitle = i18nTitle ? currentUI.subtitle : subtitle
-
-const marginBottom = {
-    1: 'mb-0.9',
-    2: 'mb-1.8',
-    3: 'mb-2.7',
-  }[titleGap] || 'mb-1.8 '
-
-const postMarginBottom = {
-  1: 'mb-1.9 lg:mb-0.9',
-  2: 'mb-2.8 lg:mb-1.8',
-  3: 'mb-3.7 lg:mb-2.7',
-}[titleGap] || 'mb-2.8 lg:mb-1.8'
 
 const TitleTag = isPost ? 'h2' : 'h1'
 const SubtitleTag = isPost ? 'div' : 'h2'
@@ -37,8 +24,8 @@ const SubtitleTag = isPost ? 'div' : 'h2'
   <TitleTag
     class:list={[
       isPost
-        ? `${postMarginBottom} mt-3.2 text-5.375 c-secondary lg:(mt-0 text-9 c-primary)`
-        : `${marginBottom} text-8 w-75% c-primary lg:(text-9 w-full)`,
+        ? `mb-2.8 mt-3.2 text-5.375 c-secondary lg:(mb-1.8 mt-0 text-9 c-primary)`
+        : `mb-1.8 w-75% text-8 c-primary lg:(w-full text-9)`,
       'font-bold font-title',
       'w-full'
     ]}
@@ -64,7 +51,7 @@ const SubtitleTag = isPost ? 'div' : 'h2'
         isPost
           ? `op-0 lg:op-100`
           : 'w-75% lg:w-full',
-        'c-secondary font-navbar text-3.5 lg:text-4',
+        'text-3.5 c-secondary font-navbar lg:text-4',
       ]}
       aria-hidden={isPost}
     >

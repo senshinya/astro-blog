@@ -21,7 +21,7 @@ const { mode, light: { background: lightMode }, dark: { background: darkMode } }
 const { katex } = themeConfig.global
 const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalyticsID = '', apiflashKey = '' } = themeConfig.seo ?? {}
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
-const { commentURL = '', imageHostURL = '', customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
+const { commentURL = '', customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
 
 const initMetaTheme = mode === 'dark' ? darkMode : lightMode
 const siteTitle = i18nTitle ? currentUI.title : title
@@ -51,14 +51,12 @@ const pageImage = postSlug
 <meta name="theme-color" content={initMetaTheme} />
 
 <!-- Preload -->
-<link rel="preload" href="/font/Snell-Black.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/font/EarlySummer-Subset.woff2" as="font" type="font/woff2" crossorigin />
+<link rel="preload" href="/font/Snell-Black.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/font/Snell-Bold.woff2" as="font" type="font/woff2" crossorigin />
 {katex && <link rel="stylesheet" href={katexCSS} />}
 {commentURL && <link rel="preconnect" href={commentURL} crossorigin />}
 {commentURL && <link rel="dns-prefetch" href={commentURL} />}
-{imageHostURL && <link rel="preconnect" href={imageHostURL} crossorigin />}
-{imageHostURL && <link rel="dns-prefetch" href={imageHostURL} />}
 <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="RSS Feed" />
 <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom Feed" />
 <link rel="sitemap" href="/sitemap-index.xml" />
@@ -73,19 +71,14 @@ const pageImage = postSlug
   />
 ))}
 
-<!-- Facebook Open Graph -->
+<!-- Open Graph -->
 <meta property="og:type" content={postTitle ? 'article' : 'website'} />
 <meta property="og:url" content={Astro.url} />
 <meta property="og:title" content={pageTitle} />
 <meta property="og:description" content={pageDescription} />
 <meta property="og:image" content={pageImage} />
-
-<!-- Twitter Card -->
 <meta name="twitter:card" content="summary_large_image" />
 {twitterID && <meta name="twitter:site" content={twitterID} />}
-<!-- <meta name="twitter:title" content={pageTitle} />
-<meta name="twitter:description" content={pageDescription} />
-<meta name="twitter:image" content={pageImage} /> -->
 
 <!-- Site Verification -->
 {google && <meta name="google-site-verification" content={google} />}

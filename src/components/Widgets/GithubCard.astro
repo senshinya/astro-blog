@@ -4,54 +4,68 @@ function setupGithubCards() {
   if (githubCards.length === 0)
     return
 
-  githubCards.forEach(async (card) => {
-    const repo = (card as HTMLElement).dataset.repo
-    if (!repo)
-      return
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadCardData(entry.target as HTMLElement)
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { rootMargin: '200px' })
 
-    const avatarEl = card.querySelector('.gc-owner-avatar') as HTMLElement
-    const descEl = card.querySelector('.gc-repo-description') as HTMLElement
-    const starsEl = card.querySelector('.gc-stars-count') as HTMLElement
-    const forksEl = card.querySelector('.gc-forks-count') as HTMLElement
-    const licenseEl = card.querySelector('.gc-license-info') as HTMLElement
+  githubCards.forEach(card => observer.observe(card))
+}
 
-    try {
-      const response = await fetch(`https://api.github.com/repos/${repo}`)
-      if (response.ok) {
-        const data = await response.json()
+async function loadCardData(card: HTMLElement) {
+  const repo = card.dataset.repo
+  if (!repo)
+    return
 
-        if (avatarEl && data.owner?.avatar_url)
-          avatarEl.style.backgroundImage = `url(${data.owner.avatar_url})`
+  const avatarEl = card.querySelector('.gc-owner-avatar') as HTMLElement
+  const descEl = card.querySelector('.gc-repo-description') as HTMLElement
+  const starsEl = card.querySelector('.gc-stars-count') as HTMLElement
+  const forksEl = card.querySelector('.gc-forks-count') as HTMLElement
+  const licenseEl = card.querySelector('.gc-license-info') as HTMLElement
 
-        if (descEl && data.description)
+  try {
+    const response = await fetch(`https://api.github.com/repos/${repo}`)
+    if (response.ok) {
+      const data = await response.json()
+
+      if (avatarEl && data.owner?.avatar_url)
+        avatarEl.style.backgroundImage = `url(${data.owner.avatar_url})`
+
+      if (descEl)
+        if (data.description)
           descEl.textContent = data.description
+        else
+          descEl.textContent = 'No description.'
 
-        if (starsEl) {
-          starsEl.textContent = new Intl.NumberFormat('en', {
-            notation: 'compact',
-            maximumFractionDigits: 1,
-          }).format(data.stargazers_count)
-        }
-
-        if (forksEl) {
-          forksEl.textContent = new Intl.NumberFormat('en', {
-            notation: 'compact',
-            maximumFractionDigits: 1,
-          }).format(data.forks_count)
-        }
-
-        if (licenseEl)
-          licenseEl.textContent = data.license?.spdx_id || 'No License'
+      if (starsEl) {
+        starsEl.textContent = new Intl.NumberFormat('en', {
+          notation: 'compact',
+          maximumFractionDigits: 1,
+        }).format(data.stargazers_count)
       }
-      else {
-        if (descEl)
-          descEl.textContent = 'Loading failed.'
+
+      if (forksEl) {
+        forksEl.textContent = new Intl.NumberFormat('en', {
+          notation: 'compact',
+          maximumFractionDigits: 1,
+        }).format(data.forks_count)
       }
+
+      if (licenseEl)
+        licenseEl.textContent = data.license?.spdx_id || 'No License'
     }
-    catch {
-      console.error(`Failed to fetch ${repo}`)
+    else {
+      if (descEl)
+        descEl.textContent = 'Loading failed.'
     }
-  })
+  }
+  catch {
+    console.error(`Failed to fetch ${repo}`)
+  }
 }
 
 setupGithubCards()

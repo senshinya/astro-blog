@@ -24,7 +24,7 @@ interface Props {
 }
 
 const { postTitle, postDescription, postSlug, supportedLangs = [] } = Astro.props
-const { isPost, isAbout } = getPageInfo(Astro.url.pathname)
+const { isPost, isAbout, isMemos, isFriends } = getPageInfo(Astro.url.pathname)
 const fontStyle = themeConfig.global.fontStyle === 'serif' ? 'font-serif' : 'font-sans'
 const MarginBottom = isPost && themeConfig.comment?.enabled
   ? 'mb-10' // Post page with comment system
@@ -51,10 +51,9 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
       </main>
       <Footer />
     </div>
-    {(isPost || isAbout) && <GithubCard />}
-    <Scrollbar />
     <Button supportedLangs={supportedLangs} />
-    <PhotoSwipe />
-    <GithubCard />
+    <Scrollbar />
+    {(isPost || isAbout || isFriends) && <GithubCard />}
+    {(isPost || isAbout || isMemos) && <PhotoSwipe />}
   </body>
 </html>

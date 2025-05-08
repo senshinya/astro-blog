@@ -33,7 +33,6 @@ export interface ThemeConfig {
     moreLocales: typeof supportedLangs[number][]
     fontStyle: 'sans' | 'serif'
     dateFormat: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYYY' | 'MONTH DAY YYYY' | 'DAY MONTH YYYY'
-    titleGap: 1 | 2 | 3
     katex: boolean
   }
 

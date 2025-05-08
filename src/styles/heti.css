@@ -15,15 +15,7 @@
 
 /* Customized Post Title */
 .heti .post-title {
-  --at-apply: 'mb-2 text-8.6 font-bold leading-12 c-primary lg:text-9';
-}
-
-/* KaTeX Formula Overflow Fix */
-.heti .katex-display {
-  --at-apply: 'overflow-x-auto overflow-y-hidden scrollbar-hidden';
-}
-.heti .katex-display::-webkit-scrollbar {
-  display: none;
+  --at-apply: 'mb-2 text-8.6 c-primary font-bold leading-12 lg:text-9';
 }
 
 /* Headings */

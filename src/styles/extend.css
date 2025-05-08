@@ -4,7 +4,15 @@
  * 2. GitHub Card
  */
 
-/* Admonition */
+/* KaTeX Formula Overflow Fix */
+.katex-display {
+  --at-apply: 'overflow-x-auto overflow-y-hidden scrollbar-hidden';
+}
+.katex-display::-webkit-scrollbar {
+  display: none;
+}
+
+/* Admonition >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .admonition-title {
   --at-apply: 'flex items-center mb-4 font-semibold';
 }
@@ -121,6 +129,10 @@
 }
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+iframe {
+  --at-apply: 'mb-4 w-full aspect-video';
+}
+
 /* :where(details) {
   --at-apply: 'my-4 px-4 py-3 border border-solid border-secondary/25 rounded cursor-pointer';
 }

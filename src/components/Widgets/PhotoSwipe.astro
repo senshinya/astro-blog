@@ -7,49 +7,62 @@ const pswp = import('photoswipe')
 
 function setupPhotoSwipe() {
   const bodyElement = document.body
-  // if (!bodyElement.hasAttribute('data-photoswipe-initialized')) {
-    lightbox = new PhotoSwipeLightbox({
-      gallery: 'article.heti img',
-      pswpModule: () => pswp,
-      bgOpacity: 0.9,
-      padding: {
-        top: window.innerHeight * 0.1,
-        bottom: window.innerHeight * 0.1,
-        left: window.innerWidth * 0.073,
-        right: window.innerWidth * 0.073,
-      },
-      zoom: false,
-      close: false,
-      wheelToZoom: true,
-      imageClickAction: 'close',
-      tapAction: 'close',
-    })
+  if (bodyElement.hasAttribute('data-photoswipe-initialized'))
+    return
 
-    // Set image dimensions
-    lightbox.addFilter('domItemData', (itemData, element) => {
-      if (element instanceof HTMLImageElement) {
-        // Set image source
-        itemData.src = element.src
+  const images = document.querySelectorAll('article.heti img')
+  if (images.length === 0)
+    return
 
-        // Set dimensions with fallback to window size
-        itemData.w = Number(element.naturalWidth || window.innerWidth)
-        itemData.h = Number(element.naturalHeight || window.innerHeight)
+  lightbox = new PhotoSwipeLightbox({
+    gallery: 'article.heti img',
+    pswpModule: () => pswp,
+    bgOpacity: 0.9,
+    padding: {
+      top: window.innerHeight * 0.1,
+      bottom: window.innerHeight * 0.1,
+      left: window.innerWidth * 0.073,
+      right: window.innerWidth * 0.073,
+    },
+    zoom: false,
+    close: false,
+    wheelToZoom: true,
+    imageClickAction: 'close',
+    tapAction: 'close',
+  })
 
-        // Set thumbnail source
-        itemData.msrc = element.src
-      }
-      return itemData
-    })
+  // Set image dimensions
+  lightbox.addFilter('domItemData', (itemData, element) => {
+    if (element instanceof HTMLImageElement) {
+      // Set image source
+      itemData.src = element.src
 
-    lightbox.init()
+      // Set dimensions with fallback to window size
+      itemData.w = Number(element.naturalWidth || window.innerWidth)
+      itemData.h = Number(element.naturalHeight || window.innerHeight)
 
-    // bodyElement.setAttribute('data-photoswipe-initialized', 'true')
-  // }
+      // Set thumbnail source
+      itemData.msrc = element.src
+    }
+    return itemData
+  })
+
+  lightbox.init()
+
+  bodyElement.setAttribute('data-photoswipe-initialized', 'true')
 }
 
-setupPhotoSwipe()
-document.addEventListener('astro:page-load', setupPhotoSwipe)
-document.addEventListener('memos-load', setupPhotoSwipe)
+function lazySetupPhotoSwipe() {
+  if ('requestIdleCallback' in window) {
+    window.requestIdleCallback(() => setupPhotoSwipe(), { timeout: 1000 })
+  }
+  else {
+    setTimeout(setupPhotoSwipe, 100)
+  }
+}
+
+lazySetupPhotoSwipe()
+document.addEventListener('astro:page-load', lazySetupPhotoSwipe)
 </script>
 
 <style is:global>

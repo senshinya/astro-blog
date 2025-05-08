@@ -38,11 +38,8 @@ export const themeConfig: ThemeConfig = {
     },
     dark: {
       // primary color
-      // used for title, hover, etc
-      // oklch color picker: https://oklch.com/
       primary: 'oklch(92% 0.005 298)',
       // secondary color
-      // used for post text
       secondary: 'oklch(77% 0.005 298)',
       // background color
       background: 'oklch(22% 0.005 298)',
@@ -61,8 +58,6 @@ export const themeConfig: ThemeConfig = {
     fontStyle: 'sans', // sans, serif
     // date format for posts
     dateFormat: 'YYYY-MM-DD', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
-    // gap between title and subtitle
-    titleGap: 2, // 1, 2, 3
     // enable KaTeX for mathematical formulas rendering
     katex: true, // true, false
   },
