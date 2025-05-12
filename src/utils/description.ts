@@ -2,7 +2,7 @@ import type { CollectionEntry } from 'astro:content'
 import { defaultLocale } from '@/config'
 import MarkdownIt from 'markdown-it'
 
-type ExcerptScene = 'list' | 'meta' | 'og' | 'rss'
+type ExcerptScene = 'list' | 'meta' | 'og' | 'feed'
 
 const parser = new MarkdownIt()
 const isCJKLang = (lang: string) => ['zh', 'zh-tw', 'ja'].includes(lang)
@@ -24,7 +24,7 @@ const EXCERPT_LENGTHS: Record<ExcerptScene, {
     cjk: 70,
     other: 140,
   },
-  rss: {
+  feed: {
     cjk: 70,
     other: 140,
   },

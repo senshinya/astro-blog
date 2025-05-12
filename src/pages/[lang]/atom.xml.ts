@@ -1,6 +1,6 @@
 import type { APIContext } from 'astro'
 import { moreLocales } from '@/config'
-import { generateRSS } from '@/utils/rss'
+import { generateAtom } from '@/utils/feed'
 
 export function getStaticPaths() {
   return moreLocales.map(lang => ({
@@ -8,7 +8,6 @@ export function getStaticPaths() {
   }))
 }
 
-export async function GET({ params }: APIContext) {
-  const lang = params.lang as typeof moreLocales[number]
-  return generateRSS({ lang })
+export async function GET(context: APIContext) {
+  return generateAtom(context)
 }

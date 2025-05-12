@@ -1,4 +1,6 @@
 ---
+import LanguageSwitcherIcon from '@/assets/icons/language-switcher.svg'
+import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
 import { moreLocales, themeConfig } from '@/config'
 import { getNextGlobalLangPath, getNextSupportedLangPath } from '@/i18n/path'
 import { isPostPage, isTagPage } from '@/utils/page'
@@ -38,15 +40,10 @@ const nextUrl = useSupportedLangs
       class="aspect-square w-4 c-secondary active:scale-90 hover:c-primary"
       aria-label="Switch website language"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        viewBox="0 0 24 24"
+      <LanguageSwitcherIcon
         aria-hidden="true"
-        class="h-full w-full"
         fill="currentColor"
-      >
-        <path d="M19.1 21 12.4 2h-1.2L4.6 21l-2.5.2v.8h6.3v-.8L5.6 21l2-5.9h7.5l2 5.9-3.3.2v.8h8.1v-.8zM7.9 14.3l3.4-10.1 3.5 10.1z" />
-      </svg>
+      />
     </a>
   )}
 
@@ -55,14 +52,10 @@ const nextUrl = useSupportedLangs
     aria-label="Switch light/dark theme"
     class="button-theme-toggle aspect-square w-4.2 c-secondary active:scale-90 hover:c-primary"
   >
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
+    <ThemeToggleIcon
       aria-hidden="true"
       fill="currentColor"
-    >
-      <path d="M12 1C5.9 1 1 5.9 1 12s4.9 11 11 11 11-4.9 11-11S18.1 1 12 1m0 20c-5.8 0-10.5-4-10.5-9S6.2 3 12 3s10.5 4 10.5 9-4.7 9-10.5 9" />
-    </svg>
+    />
   </button>
 </div>
 

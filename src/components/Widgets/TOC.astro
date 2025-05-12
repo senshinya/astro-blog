@@ -1,5 +1,6 @@
 ---
 import type { MarkdownHeading } from 'astro'
+import TocIcon from '@/assets/icons/toc-icon.svg'
 import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
 
@@ -18,7 +19,7 @@ const filteredHeadings = headings.filter(heading =>
 ---
 
 {filteredHeadings.length > 0 && (
-  <div class="uno-round-border mb-4 bg-secondary/5 2xl:(fixed left-0 top-43.5 max-w-[min(calc(50vw-38rem),13rem)] border-none bg-transparent)">
+  <div class="mb-4 uno-round-border bg-secondary/5 2xl:(fixed left-0 top-43.5 max-w-[min(calc(50vw-38rem),13rem)] border-none bg-transparent)">
     <input
       type="checkbox"
       id="toc-toggle"
@@ -28,21 +29,17 @@ const filteredHeadings = headings.filter(heading =>
     <div class="relative h-12 w-full bg-transparent">
       <label
         for="toc-toggle"
-        class="absolute inset-0 flex cursor-pointer items-center 2xl:(static h-max w-max flex c-secondary/40 transition-colors ease-out hover:c-secondary/80)"
+        class="absolute inset-0 flex cursor-pointer items-center 2xl:(static flex c-secondary/40 transition-colors ease-out hover:c-secondary/80)"
       >
         <span class="toc-title">
           {currentUI.toc}
         </span>
 
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
+        <TocIcon
           aria-hidden="true"
-          fill="currentColor"
           class="ml-4 hidden aspect-square w-4.2 2xl:(mt-4 block origin-center active:scale-90)"
-        >
-          <path d="M22.2 2.3H1.8v1.6h19.8zM1.8 21.7h19.8l.6-1.6H1.8zM15.5 11.2H1.8v1.6h13.1z" />
-        </svg>
+          fill="currentColor"
+        />
       </label>
     </div>
 
@@ -85,11 +82,9 @@ const filteredHeadings = headings.filter(heading =>
 .toc-title {
   --at-apply: 'font-semibold ml-4 select-none 2xl:hidden';
 }
-
 .toc-list {
   --at-apply: 'list-none pl-0 space-y-2 mt-1 mb-4 2xl:space-y-1.2';
 }
-
 .toc-link-h2, .toc-link-h3, .toc-link-h4 {
   --at-apply: 'text-sm no-underline font-normal text-balance select-none 2xl:(text-3.2 c-secondary/60 transition-colors ease-in hover:(c-secondary font-medium))';
 }
@@ -98,7 +93,6 @@ const filteredHeadings = headings.filter(heading =>
 .accordion-wrapper {
   --at-apply: 'grid rows-[0fr] duration-300 ease-in-out';
 }
-
 .accordion-content {
   --at-apply: 'overflow-hidden max-h-66 2xl:(max-h-[calc(100vh-21.5rem)]) pl-4 pr-6';
 }
@@ -107,7 +101,6 @@ const filteredHeadings = headings.filter(heading =>
 .accordion-toggle:checked ~ .accordion-wrapper {
   grid-template-rows: 1fr;
 }
-
 .accordion-toggle:checked ~ .accordion-wrapper .accordion-content {
   --at-apply: 'overflow-y-auto';
 }
@@ -116,19 +109,15 @@ const filteredHeadings = headings.filter(heading =>
   .accordion-wrapper {
     grid-template-rows: 1fr;
   }
-
   .accordion-toggle:checked ~ .accordion-wrapper {
     grid-template-rows: 0fr;
   }
-
   .accordion-content {
     --at-apply: 'overflow-y-auto';
   }
-
   .accordion-toggle:checked ~ .accordion-wrapper .accordion-content {
     --at-apply: 'overflow-hidden';
   }
-
   .toc-link-active {
     --at-apply: 'c-secondary font-medium';
   }

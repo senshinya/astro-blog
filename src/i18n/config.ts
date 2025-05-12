@@ -4,7 +4,7 @@ export const langMap: Record<string, string[]> = {
 }
 
 // Waline Language Map
-// https://waline.js.org/guide/i18n.html
+// https://waline.js.org/en/guide/features/i18n.html
 export const walineLocaleMap: Record<string, string> = {
   'zh': 'zh-CN',
 }

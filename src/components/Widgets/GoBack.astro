@@ -1,17 +1,17 @@
+---
+import GoBackIcon from '@/assets/icons/go-back.svg';
+---
+
 <button
   id="back-button"
   class="hidden"
   lg="block absolute c-secondary/40 left--10 top-1/2 aspect-square w-4.5 translate-y--1/2 transition-colors ease-out c-secondary active:scale-90 hover:c-primary/80"
-  aria-label="Back to home"
+  aria-label="Go back"
 >
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    viewBox="0 0 24 24"
+  <GoBackIcon
     aria-hidden="true"
     fill="currentColor"
-  >
-    <path d="M17.9.6 4 12l13.8 11.4.7-.9L7.2 12 18.5 1.5l-.7-.9Z"></path>
-  </svg>
+  />
 </button>
 
 <!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
@@ -21,16 +21,9 @@ function setupBackButton() {
     if (window.history.length > 1) {
       window.history.back()
     }
-    else {
-      // Click site title link to trigger view transition when no history
-      const titleLink = document.getElementById('site-title-link') as HTMLAnchorElement
-      if (titleLink) {
-        titleLink.click()
-      }
-    }
   })
 }
 
 setupBackButton()
-document.addEventListener('astro:page-load', setupBackButton)
+document.addEventListener('astro:after-swap', setupBackButton)
 </script>

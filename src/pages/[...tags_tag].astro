@@ -1,9 +1,9 @@
 ---
 import PostList from '@/components/PostList.astro'
-import { allLocales, defaultLocale, moreLocales } from '@/config'
+import { defaultLocale, moreLocales } from '@/config'
 import { getTagPath } from '@/i18n/path'
 import Layout from '@/layouts/Layout.astro'
-import { getAllTags, getPostsByTag } from '@/utils/content'
+import { getAllTags, getPostsByTag, getTagSupportedLangs } from '@/utils/content'
 
 export async function getStaticPaths() {
   type PathItem = {
@@ -39,17 +39,7 @@ export async function getStaticPaths() {
 const { tag, lang } = Astro.props
 const posts = await getPostsByTag(tag, lang)
 const allTags = await getAllTags(lang)
-
-// Check if tag has posts in each language, return language code if exists, null if not
-const tagSupportedLangs = await Promise.all(
-  allLocales.map(async (locale) => {
-    const postsInLang = await getPostsByTag(tag, locale)
-    return postsInLang.length > 0 ? locale : null
-  }),
-)
-
-// Filter to get supported languages
-const supportedLangs = tagSupportedLangs.filter(Boolean) as string[]
+const supportedLangs = await getTagSupportedLangs(tag)
 ---
 
 <Layout supportedLangs={supportedLangs}>

@@ -5,7 +5,6 @@ import robotsTxt from 'astro-robots-txt'
 import { defineConfig } from 'astro/config'
 import rehypeExternalLinks from 'rehype-external-links'
 import rehypeKatex from 'rehype-katex'
-import rehypeSlug from 'rehype-slug'
 import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
 import UnoCSS from 'unocss/astro'
@@ -69,7 +68,6 @@ export default defineConfig({
       remarkReadingTime,
     ],
     rehypePlugins: [
-      rehypeSlug,
       rehypeKatex,
       rehypeImgToFigure,
       [

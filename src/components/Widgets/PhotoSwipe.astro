@@ -53,11 +53,13 @@ function setupPhotoSwipe() {
 }
 
 function lazySetupPhotoSwipe() {
-  if ('requestIdleCallback' in window) {
+  if (typeof window.requestIdleCallback === 'function') {
     window.requestIdleCallback(() => setupPhotoSwipe(), { timeout: 1000 })
   }
   else {
-    setTimeout(setupPhotoSwipe, 100)
+    requestAnimationFrame(() => {
+      setupPhotoSwipe()
+    })
   }
 }
 

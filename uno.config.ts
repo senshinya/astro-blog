@@ -33,6 +33,7 @@ export default defineConfig({
   theme: {
     colors: {
       ...light,
+      mark: 'oklch(0.93 0.195089 103.2532 / 0.5)', // rgba(255,235,0,0.5)
       note: 'oklch(48.8% 0.243 264.376 / 0.8)', // blue-700
       tip: 'oklch(50.8% 0.118 165.612 / 0.8)', // emerald-700
       important: 'oklch(49.6% 0.265 301.924 / 0.8)', // purple-700
@@ -46,6 +47,12 @@ export default defineConfig({
       serif: ['STIX', 'EarlySummer', 'Georgia', 'ui-serif', 'Georgia', 'Cambria', 'Times New Roman', 'Times', 'serif'],
     },
   },
+  rules: [
+    ['scrollbar-hidden', {
+      'scrollbar-width': 'none',
+      '-ms-overflow-style': 'none',
+    }],
+  ],
   shortcuts: {
     'uno-desktop-column': 'fixed w-14rem right-[max(5.625rem,calc(50vw-34.375rem))]',
     'uno-tags-style': 'inline-block whitespace-nowrap border border-secondary/25 rounded-full px-3.2 py-0.7 c-secondary transition-colors hover:(border-secondary/75 text-primary)',
@@ -53,11 +60,15 @@ export default defineConfig({
     'uno-tags-wrapper': 'flex flex-wrap gap-x-3 gap-y-3.2',
     'uno-round-border': 'rounded border border-solid border-secondary/5',
   },
-  rules: [
-    ['scrollbar-hidden', {
-      'scrollbar-width': 'none',
-      '-ms-overflow-style': 'none',
-    }],
+  variants: [
+    (matcher) => {
+      if (!matcher.startsWith('cjk:'))
+        return matcher
+      return {
+        matcher: matcher.slice(4),
+        selector: s => `${s}:is(:lang(zh), :lang(ja), :lang(ko))`,
+      }
+    },
   ],
   transformers: [
     transformerDirectives(),

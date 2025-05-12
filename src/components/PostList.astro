@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from 'astro:content'
+import PinIcon from '@/assets/icons/pin-icon.svg'
 import PostDate from '@/components/PostDate.astro'
 import { defaultLocale } from '@/config'
 import { generateDescription } from '@/utils/description'
@@ -38,7 +39,7 @@ function getPostPath(post: Post) {
       {/* post title */}
       <h3 class="inline">
         <a
-          class="hover:c-primary"
+          class="cjk:tracking-0.02em hover:c-primary"
           lg={isHome ? 'font-medium text-4.5' : ''}
           href={getPostPath(post)}
           transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
@@ -49,15 +50,11 @@ function getPostPath(post: Post) {
 
           {/* pinned icon */}
           {pinned && (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
+            <PinIcon
               aria-hidden="true"
               class="ml-1 inline-block aspect-square w-3.7 shrink-0 translate-y--0.45 lg:(ml-1.2 w-4.1)"
               fill="currentColor"
-            >
-              <path d="M16.5 23.6c.6-6.1 1.1-8.6 7.2-15.5L15.9.4C9 6.5 6.5 7 .4 7.5l7.4 7.4-6.4 7 .7.7 7-6.4zm-.8-21.3 6 6c-5 6.1-5.7 8.1-6.2 12.2L3.4 8.5C7.5 8 9.5 7.3 15.6 2.3Z" />
-            </svg>
+            />
           )}
       </h3>
 

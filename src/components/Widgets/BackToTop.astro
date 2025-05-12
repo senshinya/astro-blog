@@ -60,18 +60,6 @@ function initBackToTop() {
   })
 }
 
-function cleanup() {
-  // Cleanup observer
-  if (observer) {
-    observer.disconnect()
-    observer = null
-  }
-
-  // Remove event listeners
-  backToTopButton = null
-}
-
 // Handle page transitions
 document.addEventListener('astro:page-load', initBackToTop)
-document.addEventListener('astro:before-swap', cleanup)
 </script>

@@ -24,6 +24,24 @@ function setupScrollbar() {
     bodyElement.setAttribute('data-scrollbar-initialized', 'true')
   }
 
+  // Add scrollbar to TOC content
+  const tocElement = document.getElementById('toc-content')
+  if (tocElement && !tocElement.hasAttribute('data-scrollbar-initialized')) {
+    OverlayScrollbars({
+      target: tocElement,
+    }, {
+      scrollbars: {
+        theme: 'scrollbar-widget',
+        autoHide: 'never',
+      },
+      overflow: {
+        x: 'hidden',
+      },
+    })
+
+    tocElement.setAttribute('data-scrollbar-initialized', 'true')
+  }
+
   // Add scrollbar to code blocks
   const preElements = document.querySelectorAll('pre')
   preElements.forEach((pre) => {
@@ -44,24 +62,6 @@ function setupScrollbar() {
       pre.setAttribute('data-scrollbar-initialized', 'true')
     }
   })
-
-  // Add scrollbar to TOC content
-  const tocElement = document.getElementById('toc-content')
-  if (tocElement && !tocElement.hasAttribute('data-scrollbar-initialized')) {
-    OverlayScrollbars({
-      target: tocElement,
-    }, {
-      scrollbars: {
-        theme: 'scrollbar-widget',
-        autoHide: 'never',
-      },
-      overflow: {
-        x: 'hidden',
-      },
-    })
-
-    tocElement.setAttribute('data-scrollbar-initialized', 'true')
-  }
 }
 
 setupScrollbar()
