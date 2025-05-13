@@ -7,7 +7,7 @@
 
 /* Global Styles */
 .heti {
-  --at-apply: 'cjk:tracking-0.02em break-words leading-1.5em hyphens-auto';
+  --at-apply: 'break-words leading-1.5em hyphens-auto cjk:tracking-0.02em';
 }
 
 /* Customized Post Title */
@@ -25,7 +25,7 @@
   --at-apply: 'mt-6 mb-3 font-semibold';
 }
 .heti :where(h1) {
-  --at-apply: 'text-8 leading-12';
+  --at-apply: 'text-7 leading-12';
 }
 .heti :where(h2) {
   --at-apply: 'text-6 leading-9';
@@ -45,7 +45,7 @@
 .heti :where(h1),
 .heti :where(h2),
 .heti :where(h3) {
-  --at-apply: 'cjk:text-pretty cjk:tracking-0.05em text-balance';
+  --at-apply: 'text-balance cjk:text-pretty cjk:tracking-0.05em';
 }
 .heti :where(h1 + h2),
 .heti :where(h2 + h3),
@@ -57,7 +57,7 @@
 
 /* Paragraphs */
 .heti :where(p) {
-  --at-apply: 'cjk:text-justify mb-4 text-pretty';
+  --at-apply: 'mb-4 text-pretty cjk:text-justify';
 }
 
 /* Links */
@@ -92,7 +92,7 @@ html.dark .heti pre :where(span) {
 
 /* Inline Code */
 .heti :where(code) {
-  --at-apply: 'cjk:break-all px-0.4em py-0.2em text-0.85em tracking-0 uno-round-border bg-secondary/5';
+  --at-apply: 'px-0.4em py-0.2em text-0.85em tracking-0 uno-round-border bg-secondary/5 cjk:break-all';
   counter-reset: line;
 }
 .heti :where(code) span.line {

@@ -1,15 +1,28 @@
-/*!
- * Markdown Extended Features
- * 1. Admonition
- * 2. GitHub Card
- */
-
-/* KaTeX Formula Overflow Fix */
+/* KaTeX Overflow Fix */
 .katex-display {
   --at-apply: 'overflow-x-auto overflow-y-hidden scrollbar-hidden';
 }
 .katex-display::-webkit-scrollbar {
   display: none;
+}
+
+/* Heading Anchor Link */
+.heading-anchor-link {
+  --at-apply: 'inline-block translate-y-0.04em c-secondary/0';
+}
+h1:hover .heading-anchor-link,
+h2:hover .heading-anchor-link,
+h3:hover .heading-anchor-link,
+h4:hover .heading-anchor-link {
+  --at-apply: 'c-secondary/40';
+}
+.heading-anchor-link svg {
+  --at-apply: 'ml-0.4em aspect-square w-0.8em transition-colors active:scale-90 hover:c-secondary/80';
+}
+
+/* Video */
+iframe {
+  --at-apply: 'mb-4 w-full aspect-video';
 }
 
 /* Admonition >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -107,7 +120,7 @@
 }
 
 /* Repo Description */
-.gc-repo-description {
+.gc-repo-description.gc-repo-description {
   --at-apply: 'mt-2.45 mb-3.5 text-sm text-start lg:(mt-2.8 mb-4 text-base)';
 }
 
@@ -129,10 +142,6 @@
 }
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-iframe {
-  --at-apply: 'mb-4 w-full aspect-video';
-}
-
 /* :where(details) {
   --at-apply: 'my-4 px-4 py-3 border border-solid border-secondary/25 rounded cursor-pointer';
 }
