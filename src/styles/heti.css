@@ -22,7 +22,7 @@
 .heti :where(h4),
 .heti :where(h5),
 .heti :where(h6) {
-  --at-apply: 'mt-6 mb-3 font-semibold';
+  --at-apply: 'mb-3 mt-6 font-semibold';
 }
 .heti :where(h1) {
   --at-apply: 'text-7 leading-12';
@@ -62,7 +62,7 @@
 
 /* Links */
 .heti :where(a:not(.gc-container)) {
-  --at-apply: 'break-all font-medium tracking-0 underline decoration-secondary/40 underline-0.075em underline-offset-0.2em';
+  --at-apply: 'break-all font-medium tracking-0 underline underline-0.075em decoration-secondary/40 underline-offset-0.2em';
   --at-apply: 'transition-colors hover:(c-primary decoration-secondary/80) lg:underline-0.1em';
 }
 
@@ -81,10 +81,10 @@
 
 /* Code Blocks */
 .heti :where(pre) {
-  --at-apply: 'mb-4 px-4 py-3 overflow-auto uno-round-border bg-secondary/5!';
+  --at-apply: 'mb-4 overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';
 }
 .heti pre :where(code) {
-  --at-apply: 'p-0 border-none bg-transparent';
+  --at-apply: 'border-none bg-transparent p-0';
 }
 html.dark .heti pre :where(span) {
   --at-apply: 'text-[var(--shiki-dark)]!';
@@ -92,14 +92,14 @@ html.dark .heti pre :where(span) {
 
 /* Inline Code */
 .heti :where(code) {
-  --at-apply: 'px-0.4em py-0.2em text-0.85em tracking-0 uno-round-border bg-secondary/5 cjk:break-all';
+  --at-apply: 'uno-round-border bg-secondary/5 px-0.4em py-0.2em text-0.85em tracking-0 cjk:break-all';
   counter-reset: line;
 }
 .heti :where(code) span.line {
   --at-apply: 'relative pl-8';
 }
 .heti :where(code) span.line::before {
-  --at-apply: 'absolute left-0 w-4 leading-1.9em text-secondary/40';
+  --at-apply: 'absolute left-0 w-4 text-secondary/40 leading-1.9em';
   content: counter(line);
   counter-increment: line;
   direction: rtl;
@@ -107,7 +107,7 @@ html.dark .heti pre :where(span) {
 
 /* Blockquotes */
 .heti :where(blockquote) {
-  --at-apply: 'mb-4 px-4 py-0.5 c-secondary/80 border-l-4 border-solid border-secondary/25';
+  --at-apply: 'mb-4 border-l-4 border-secondary/25 border-solid px-4 py-0.5 c-secondary/80';
 }
 .heti blockquote[class*="admonition-"] {
   --at-apply: 'py-1.5 c-secondary';
@@ -124,14 +124,14 @@ html.dark .heti pre :where(span) {
 
 /* Tables */
 .heti :where(table) {
-  --at-apply: 'mb-4 block box-border table-fixed max-w-full overflow-x-auto scrollbar-hidden';
+  --at-apply: 'mb-4 box-border block max-w-full table-fixed overflow-x-auto scrollbar-hidden';
 }
 .heti :where(table)::-webkit-scrollbar {
   --at-apply: 'hidden';
 }
 .heti :where(th),
 .heti :where(td) {
-  --at-apply: 'px-3 pb-1.5 border-b border-b-secondary/25';
+  --at-apply: 'border-b border-b-secondary/25 px-3 pb-1.5';
 }
 .heti :where(tr td:first-child),
 .heti :where(tr th:first-child) {
@@ -157,7 +157,7 @@ html.dark .heti pre :where(span) {
 .heti ul :where(ol),
 .heti ol :where(ul),
 .heti ol :where(ol) {
-  --at-apply: 'mt-0 mb-0.25em';
+  --at-apply: 'mb-0.25em mt-0';
 }
 .heti :where(ul) {
   --at-apply: 'list-disc';
@@ -182,7 +182,7 @@ html.dark .heti pre :where(span) {
 /* Superscript and Subscript >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .heti :where(sub),
 .heti :where(sup) {
-  --at-apply: 'relative mx-0.1em text-0.75em leading-1 align-baseline';
+  --at-apply: 'relative mx-0.1em align-baseline text-0.75em leading-1';
 }
 .heti :where(sub) {
   --at-apply: 'bottom--0.25em';
@@ -193,15 +193,15 @@ html.dark .heti pre :where(span) {
 
 /* Abbreviations */
 .heti :where(abbr[title]) {
-  --at-apply: 'pb-0.25 no-underline border-b-1 border-dotted border-secondary cursor-help';
+  --at-apply: 'cursor-help border-b-1 border-secondary border-dotted pb-0.25 no-underline';
 }
 
 /* Wavy Underline */
 .heti :where(u) {
-  --at-apply: 'underline underline-offset-0.25em decoration-wavy decoration-red-400';
+  --at-apply: 'underline decoration-red-400 underline-offset-0.25em decoration-wavy';
 }
 html.dark .heti :where(u) {
-  --at-apply: 'decoration-red-400/80';
+  --at-apply: 'decoration-red-400/60';
 }
 
 /* Keyboard Input */
@@ -212,10 +212,7 @@ html.dark .heti :where(u) {
 
 /* Highlighted Text */
 .heti :where(mark) {
-  --at-apply: 'py-0.25 text-inherit bg-mark';
-}
-html.dark .heti :where(mark) {
-  --at-apply: 'text-background';
+  --at-apply: 'bg-mark py-0.65 text-inherit';
 }
 
 /* Footnotes */
@@ -227,12 +224,8 @@ html.dark .heti :where(mark) {
 .heti sup a:target {
   --at-apply: 'bg-mark';
 }
-html.dark .heti sup:target,
-html.dark .heti sup a:target {
-  --at-apply: 'text-background';
-}
 .heti .data-footnote-backref {
-  --at-apply: 'no-underline font-serif';
+  --at-apply: 'font-serif no-underline';
 }
 
 /* Horizontal Rules */

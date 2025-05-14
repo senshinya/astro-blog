@@ -1,6 +1,5 @@
 ---
 import type { CollectionEntry } from 'astro:content'
-import PinIconBold from '@/assets/icons/pin-icon-bold.svg'
 import PinIcon from '@/assets/icons/pin-icon.svg'
 import PostDate from '@/components/PostDate.astro'
 import { defaultLocale } from '@/config'
@@ -51,18 +50,11 @@ function getPostPath(post: Post) {
 
           {/* pinned icon */}
           {pinned && (
-            <>
-              <PinIcon
-                aria-hidden="true"
-                class="ml-0.25em inline-block aspect-square w-0.92em translate-y--0.1em lg:hidden"
-                fill="currentColor"
-              />
-              <PinIconBold
-                aria-hidden="true"
-                class="hidden lg:(ml-0.25em inline-block aspect-square w-1.05em translate-y--0.14em)"
-                fill="currentColor"
-              />
-            </>
+            <PinIcon
+              aria-hidden="true"
+              class="ml-0.25em inline-block aspect-square w-0.98em translate-y--0.1em lg:(w-1.05em translate-y--0.15em)"
+              fill="currentColor"
+            />
           )}
       </h3>
 

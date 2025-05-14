@@ -6,16 +6,31 @@
 html {
   --at-apply: 'bg-background c-secondary antialiased';
 }
-/* Fix flash issue on iOS */
+::selection {
+  --at-apply: 'bg-mark';
+}
+
+/* Fix Flash Issue On iOS */
 body {
   backface-visibility: hidden;
   -webkit-backface-visibility: hidden;
 }
-::selection {
-  --at-apply: 'bg-mark';
+
+/* Highlight Hover Animation */
+.highlight-static,
+.highlight-hover {
+  --at-apply: 'relative inline-block';
 }
-html.dark ::selection {
-  --at-apply: 'c-background';
+.highlight-static::after,
+.highlight-hover::after {
+  --at-apply: 'content-[""] absolute bottom-0.5em left-0 z--1 h-0.5em w-full bg-mark';
+}
+.highlight-static::after,
+.highlight-hover:hover::after {
+  --at-apply: 'origin-bottom-left scale-x-100';
+}
+.highlight-hover::after {
+  --at-apply: 'origin-bottom-right scale-x-0 transition-transform duration-300 ease-out';
 }
 
 /* View Transition with Theme Toggle >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */

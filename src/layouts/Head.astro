@@ -1,9 +1,9 @@
 ---
+import { ClientRouter } from 'astro:transitions'
+import katexCSS from 'katex/dist/katex.min.css?url'
 import { allLocales, defaultLocale, themeConfig } from '@/config'
 import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
-import { ClientRouter } from 'astro:transitions'
-import katexCSS from 'katex/dist/katex.min.css?url'
 
 interface Props {
   postTitle?: string

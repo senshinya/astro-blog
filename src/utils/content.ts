@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
 import { defaultLocale } from '@/config'
 import { memoize } from '@/utils/cache'
-import { getCollection, render } from 'astro:content'
 
 /**
  * Core Functions

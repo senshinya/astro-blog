@@ -8,7 +8,7 @@
 
 /* Heading Anchor Link */
 .heading-anchor-link {
-  --at-apply: 'inline-block translate-y-0.04em c-secondary/0';
+  --at-apply: 'inline-block translate-y-0.1em c-secondary/0';
 }
 h1:hover .heading-anchor-link,
 h2:hover .heading-anchor-link,
@@ -17,7 +17,7 @@ h4:hover .heading-anchor-link {
   --at-apply: 'c-secondary/40';
 }
 .heading-anchor-link svg {
-  --at-apply: 'ml-0.4em aspect-square w-0.8em transition-colors active:scale-90 hover:c-secondary/80';
+  --at-apply: 'ml-0.4em aspect-square w-0.9em transition-colors active:scale-90 hover:c-secondary/80';
 }
 
 /* Video */

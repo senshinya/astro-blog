@@ -1,3 +1,4 @@
+import type { Element } from 'hast'
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
@@ -9,6 +10,7 @@ import rehypeKatex from 'rehype-katex'
 import rehypeSlug from 'rehype-slug'
 import remarkDirective from 'remark-directive'
 import remarkMath from 'remark-math'
+import { visit } from 'unist-util-visit'
 import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
@@ -86,21 +88,29 @@ export default defineConfig({
                 type: 'element',
                 tagName: 'path',
                 properties: {
-                  d: 'm7.374 15.182 7.85-7.849 1.413 1.414-7.848 7.85z',
+                  d: 'M2.6 21.4c2 2 5.9 2.9 8.9 0l3.5-3.5-1-1-3.5 3.5c-1.4 1.4-4.2 1.9-6.4-.3s-1.8-5-.3-6.4l3.5-3.5-1-1-3.5 3.5c-3 3-2 6.9 0 8.9ZM21.4 2.6c2 2 2.9 5.9 0 8.9L17.9 15l-1-1 3.5-3.5c1.4-1.4 1.9-4.2-.3-6.4s-5-1.8-6.4-.3l-3.5 3.5-1-1 3.5-3.5c3-3 6.9-2 8.9 0Z',
                 },
               },
               {
                 type: 'element',
                 tagName: 'path',
                 properties: {
-                  d: 'M10.6 20c-1.8 1.8-4.7 1.8-6.5 0-.9-.9-1.4-2-1.4-3.3s.5-2.4 1.4-3.3l3.8-3.8-1.4-1.4-4.2 4.2c-2.5 2.5-2.5 6.7 0 9.3 1.3 1.3 3 1.9 4.6 1.9s3.4-.6 4.6-1.9l4.2-4.2-1.4-1.4-3.8 3.8ZM21.7 2.3C20.5 1.1 18.8.4 17.1.4s-3.4.7-4.6 1.9L8.3 6.5l1.4 1.4 3.8-3.8c1.8-1.8 4.7-1.8 6.5 0 .9.9 1.4 2 1.4 3.3s-.5 2.4-1.4 3.3l-3.8 3.8 1.4 1.4 4.2-4.2c1.2-1.2 1.9-2.9 1.9-4.6s-.7-3.4-1.9-4.6Z',
+                  d: 'm8.01 14.97 6.93-6.93 1.061 1.06-6.93 6.93z',
                 },
               },
             ],
           },
-          properties: {
-            className: ['heading-anchor-link'],
-            ariaLabel: 'Link to this section',
+          properties: (el: Element) => {
+            let text = ''
+            visit(el, 'text', (textNode) => {
+              text += textNode.value
+            })
+            return {
+              className: ['heading-anchor-link'],
+              ariaLabel: text
+                ? `Link to ${text.replace(/["']/g, char => char === '"' ? '&quot;' : '&#39;')}`
+                : undefined,
+            }
           },
         },
       ],

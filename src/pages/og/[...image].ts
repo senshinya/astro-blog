@@ -1,7 +1,7 @@
 import type { CollectionEntry } from 'astro:content'
-import { generateDescription } from '@/utils/description'
 import { OGImageRoute } from 'astro-og-canvas'
 import { getCollection } from 'astro:content'
+import { generateDescription } from '@/utils/description'
 
 // eslint-disable-next-line antfu/no-top-level-await
 const blogEntries = await getCollection('posts')

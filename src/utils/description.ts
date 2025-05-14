@@ -1,6 +1,6 @@
 import type { CollectionEntry } from 'astro:content'
-import { defaultLocale } from '@/config'
 import MarkdownIt from 'markdown-it'
+import { defaultLocale } from '@/config'
 
 type ExcerptScene = 'list' | 'meta' | 'og' | 'feed'
 

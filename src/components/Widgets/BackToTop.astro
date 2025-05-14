@@ -61,5 +61,5 @@ function initBackToTop() {
 }
 
 // Handle page transitions
-document.addEventListener('astro:page-load', initBackToTop)
+document.addEventListener('astro:after-swap', initBackToTop)
 </script>

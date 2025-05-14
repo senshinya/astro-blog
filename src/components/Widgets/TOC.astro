@@ -217,6 +217,6 @@ function setupTOCHighlight() {
 }
 
 setupTOCHighlight()
-document.addEventListener('astro:page-load', setupTOCHighlight)
+document.addEventListener('astro:after-swap', setupTOCHighlight)
 </script>
 

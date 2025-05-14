@@ -12,7 +12,7 @@ const isFriendsActive = isFriends
 const isAboutActive = isAbout
 
 function getNavItemClass(isActive: boolean) {
-  return isActive ? 'font-bold c-primary' : 'hover:(c-primary font-bold) transition-all'
+  return isActive ? 'font-bold c-primary highlight-static' : 'hover:(c-primary font-bold) transition-all highlight-hover'
 }
 
 const navItems = [
