@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import Comments from '@/components/Comments/index.astro'
 import PostDate from '@/components/PostDate.astro'
-import GoBack from '@/components/Widgets/GoBack.astro'
+import BackButton from '@/components/Widgets/BackButton.astro'
 import TOC from '@/components/Widgets/TOC.astro'
 import { allLocales, defaultLocale, moreLocales } from '@/config'
 import { getTagPath } from '@/i18n/path'
@@ -109,12 +109,12 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
   <article class="heti mb-12.6">
     <div class="relative">
       <!-- Go Back Button On Desktop -->
-      <GoBack />
+      <BackButton />
       <!-- Title -->
       <h1 class="post-title">
         <span
           transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
-          data-disable-transition-on-theme
+          data-disable-theme-transition
         >
           {post.data.title}
         </span>
@@ -123,9 +123,10 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
 
     <!-- Date -->
     <div
+      id="gsap-post-page-date"
       class="mb-16.3 block c-primary font-time"
       transition:name={`time-${post.data.abbrlink || post.id}-${lang}`}
-      data-disable-transition-on-theme
+      data-disable-theme-transition
     >
       <PostDate
         date={post.data.published}
@@ -136,21 +137,25 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
     <!-- TOC -->
     {post.data.toc && <TOC headings={headings} />}
     <!-- Content -->
-    <Content />
+     <div id="gsap-post-page-content">
+      <Content />
+    </div>
   </article>
 
   <!-- Tags -->
   {post.data.tags && post.data.tags.length > 0 && (
-    <div class="uno-decorative-line"></div>
-    <div class="uno-tags-wrapper">
-      {post.data.tags.map((tag: string) => (
-        <a
-          href={getTagPath(tag, lang)}
-          class="uno-tags-style"
-        >
-          {tag}
-        </a>
-      ))}
+    <div id="gsap-post-page-tags">
+      <div class="uno-decorative-line"></div>
+      <div class="uno-tags-wrapper">
+        {post.data.tags.map((tag: string) => (
+          <a
+            href={getTagPath(tag, lang)}
+            class="uno-tags-style"
+          >
+            {tag}
+          </a>
+        ))}
+      </div>
     </div>
   )}
   <!-- Comments -->

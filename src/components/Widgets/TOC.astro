@@ -19,38 +19,51 @@ const filteredHeadings = headings.filter(heading =>
 ---
 
 {filteredHeadings.length > 0 && (
-  <div class="mb-4 uno-round-border bg-secondary/5 2xl:(fixed left-0 top-43.5 max-w-[min(calc(50vw-38rem),13rem)] border-none bg-transparent)">
+  // TOC Container
+  <div
+    id="toc-container"
+    class="mb-4 uno-round-border bg-secondary/5 2xl:(fixed left-0 top-43.5 max-w-[min(calc(50vw-38rem),13rem)] border-none bg-secondary/0)"
+  >
+    {/* Hidden Checkbox */}
     <input
       type="checkbox"
       id="toc-toggle"
       class="accordion-toggle"
       hidden
     />
-    <div class="relative h-12 w-full bg-transparent">
+    {/* TOC Toggle */}
+    <div class="relative h-12 w-full">
       <label
         for="toc-toggle"
         class="absolute inset-0 flex cursor-pointer items-center 2xl:(static flex c-secondary/40 transition-colors ease-out hover:c-secondary/80)"
       >
+        {/* Title on Mobile */}
         <span class="toc-title">
           {currentUI.toc}
         </span>
 
+        {/* Icon on Desktop */}
         <TocIcon
+          id="toc-icon"
           aria-hidden="true"
-          class="ml-4 hidden aspect-square w-4.2 2xl:(mt-4 block origin-center active:scale-90)"
+          class="ml-1 hidden aspect-square w-4.2 2xl:(mt-4 block origin-center active:scale-90!)"
           fill="currentColor"
         />
       </label>
     </div>
 
-    {/* Expandable content wrapper */}
+    {/* Expandable Content Wrapper with Accordion Animation */}
     <div class="accordion-wrapper">
       <nav
         id="toc-content"
         class="accordion-content"
         aria-label="Table of Contents"
       >
-        <ul class="toc-list">
+        {/* TOC List */}
+        <ul
+          id="toc-list"
+          class="toc-list"
+        >
           {filteredHeadings.map(heading => (
             <li
               class:list={{
@@ -80,21 +93,21 @@ const filteredHeadings = headings.filter(heading =>
 <!-- Override heti default styles  >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <style>
 .toc-title {
-  --at-apply: 'font-semibold ml-4 select-none 2xl:hidden';
+  --at-apply: 'font-semibold ml-4 2xl:hidden';
 }
 .toc-list {
-  --at-apply: 'list-none pl-0 space-y-2 mt-1 mb-4 2xl:space-y-1.2';
+  --at-apply: 'list-none pb-3.3 pl-0 space-y-2 mt-1 mb-4 2xl:space-y-1.2';
 }
 .toc-link-h2, .toc-link-h3, .toc-link-h4 {
-  --at-apply: 'text-sm no-underline font-normal text-balance select-none 2xl:(text-3.2 c-secondary/60 transition-colors ease-in hover:(c-secondary font-medium))';
+  --at-apply: 'text-sm no-underline font-normal text-balance 2xl:(text-3.2 c-secondary/60 transition-colors transition-font-weight duration-300 ease-out hover:(c-secondary font-medium))';
 }
 
 /* Initial collapsed state with zero height grid row */
 .accordion-wrapper {
-  --at-apply: 'grid rows-[0fr] duration-300 ease-in-out';
+  --at-apply: 'grid rows-[0fr] transition-all duration-350 ease-in-out';
 }
 .accordion-content {
-  --at-apply: 'overflow-hidden max-h-66 2xl:(max-h-[calc(100vh-21.5rem)]) pl-4 pr-6';
+  --at-apply: 'max-h-66 overflow-hidden pl-4 pr-6 2xl:(max-h-[calc(100vh-26rem)] pl-1)';
 }
 
 /* When toggle is checked, expand the wrapper to show content */
@@ -103,6 +116,10 @@ const filteredHeadings = headings.filter(heading =>
 }
 .accordion-toggle:checked ~ .accordion-wrapper .accordion-content {
   --at-apply: 'overflow-y-auto';
+}
+#toc-content {
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.15) transparent;
 }
 
 @media (min-width: 1536px) {
@@ -121,6 +138,12 @@ const filteredHeadings = headings.filter(heading =>
   .toc-link-active {
     --at-apply: 'c-secondary font-medium';
   }
+  #toc-content {
+    --at-apply: 'scrollbar-hidden';
+  }
+  #toc-content::-webkit-scrollbar {
+    display: none;
+  }
 }
 </style>
 
@@ -131,7 +154,7 @@ function setupTOCHighlight() {
   if (!tocContent)
     return
 
-  const tocLinks = tocContent.querySelectorAll('a')
+  const tocLinks = tocContent.getElementsByTagName('a')
   if (tocLinks.length === 0)
     return
 
@@ -140,7 +163,7 @@ function setupTOCHighlight() {
 
   // Build mapping from heading IDs to TOC links
   const headingMap = new Map<string, HTMLAnchorElement>()
-  tocLinks.forEach((link) => {
+  Array.from(tocLinks).forEach((link) => {
     const id = link.getAttribute('href')?.substring(1)
     if (id)
       headingMap.set(id, link as HTMLAnchorElement)

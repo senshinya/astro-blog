@@ -54,7 +54,7 @@ const getOptimizedImageUrl = memoize(async (srcPath: string, baseUrl: string) =>
  */
 async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Promise<string> {
   const htmlDoc = htmlParser(htmlContent)
-  const images = htmlDoc.querySelectorAll('img')
+  const images = htmlDoc.getElementsByTagName('img')
   const imagePromises = []
 
   for (const img of images) {

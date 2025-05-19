@@ -1,0 +1,99 @@
+<script>
+import { gsap } from 'gsap'
+
+function setupPostPageAnimation() {
+  const allElements = Array.from(document.querySelectorAll('#gsap-post-page-content > *, #gsap-post-page-tags, #waline'))
+  const tocList = document.getElementById('toc-list')
+  const tocListChildren = tocList ? Array.from(tocList.children) : []
+  const dateElement = document.getElementById('gsap-post-page-date')
+  const backButton = document.getElementById('back-button')
+  const tocIcon = document.getElementById('toc-icon')
+  const tocContainer = document.getElementById('toc-container')
+
+  const isLargeScreen = window.matchMedia('(min-width: 1024px)').matches
+  const isSmallScreen = window.matchMedia('(max-width: 1535px)').matches
+
+  // Post Content + Tags + Comments
+  // First 15 elements
+  gsap.from(allElements.slice(0, 15), {
+    opacity: 0,
+    y: '2rem',
+    duration: 0.3,
+    delay: 0.1,
+    ease: 'power2.out',
+    stagger: 0.05,
+  })
+  // Rest elements as the 16 element
+  if (allElements.length > 15) {
+    gsap.from(allElements.slice(15), {
+      opacity: 0,
+      y: '2rem',
+      duration: 0.3,
+      delay: 0.1 + 0.05 * 15,
+      ease: 'power2.out',
+    })
+  }
+
+  // Desktop Animations
+  if (isLargeScreen) {
+    // Post Date
+    if (dateElement) {
+      gsap.from(dateElement, {
+        opacity: 0,
+        y: '1rem',
+        duration: 0.3,
+        delay: 0.1,
+        ease: 'power2.out',
+      })
+    }
+
+    // TOC Icon
+    if (tocIcon) {
+      gsap.from(tocIcon, {
+        opacity: 0,
+        y: '0.5rem',
+        duration: 0.3,
+        delay: 0.125,
+        ease: 'power2.out',
+      })
+    }
+
+    // Toc List
+    if (tocListChildren.length > 0) {
+      gsap.from(tocListChildren, {
+        opacity: 0,
+        y: '1rem',
+        duration: 0.3,
+        delay: 0.15,
+        ease: 'power2.out',
+        stagger: 0.025,
+      })
+    }
+
+    // Back Button
+    if (backButton) {
+      gsap.from(backButton, {
+        opacity: 0,
+        x: '0.5rem',
+        duration: 0.3,
+        delay: 0.15,
+        ease: 'power2.out',
+      })
+    }
+  }
+
+  // Mobile Animation (for screens smaller than 1536px)
+  if (isSmallScreen && tocContainer) {
+    gsap.from(tocContainer, {
+      opacity: 0,
+      y: '2rem',
+      duration: 0.3,
+      delay: 0.1,
+      ease: 'power2.out',
+    })
+  }
+}
+
+setupPostPageAnimation()
+document.addEventListener('astro:after-swap', setupPostPageAnimation)
+</script>

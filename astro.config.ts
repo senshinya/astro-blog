@@ -2,6 +2,7 @@ import type { Element } from 'hast'
 import mdx from '@astrojs/mdx'
 import partytown from '@astrojs/partytown'
 import sitemap from '@astrojs/sitemap'
+import Compress from 'astro-compress'
 import robotsTxt from 'astro-robots-txt'
 import { defineConfig } from 'astro/config'
 import rehypeAutolinkHeadings from 'rehype-autolink-headings'
@@ -15,6 +16,7 @@ import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
 import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
+import { rehypeUnwrapImg } from './src/plugins/rehype-unwrap-img.mjs'
 import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
 import { remarkGithubCard } from './src/plugins/remark-github-card.mjs'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
@@ -57,6 +59,13 @@ export default defineConfig({
     }),
     sitemap(),
     robotsTxt(),
+    Compress({
+      CSS: false,
+      HTML: true, // Enable HTML compression only to remove comments
+      Image: false,
+      JavaScript: false,
+      SVG: false,
+    }),
   ],
   markdown: {
     remarkPlugins: [
@@ -70,6 +79,7 @@ export default defineConfig({
       rehypeKatex,
       rehypeSlug,
       rehypeImgToFigure,
+      rehypeUnwrapImg, // Must be after rehypeImgToFigure
       [
         rehypeAutolinkHeadings,
         {

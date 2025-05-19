@@ -37,13 +37,13 @@ function getPostPath(post: Post) {
     >
 
       {/* post title */}
-      <h3 class="inline">
+      <h3 class="inline transition-colors hover:c-primary">
         <a
-          class="hover:c-primary cjk:tracking-0.02em"
+          class="cjk:tracking-0.02em"
           lg={isHome ? 'font-medium text-4.5' : ''}
           href={getPostPath(post)}
           transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
-          data-disable-transition-on-theme
+          data-disable-theme-transition
         >
           {post.data.title}
         </a>
@@ -60,9 +60,9 @@ function getPostPath(post: Post) {
 
       {/* mobile post time */}
       <div
-        class="text-3.5 leading-6.875 font-time lg:hidden"
+        class="py-0.8 text-3.5 font-time lg:hidden"
         transition:name={`time-${post.data.abbrlink || post.id}-${lang}`}
-        data-disable-transition-on-theme
+        data-disable-theme-transition
       >
         <PostDate
           date={post.data.published}
@@ -71,7 +71,7 @@ function getPostPath(post: Post) {
       </div>
 
       {/* desktop post time */}
-      <div class="hidden text-3.65 leading-6.875 font-time lg:(ml-2.5 inline)">
+      <div class="hidden text-3.65 font-time lg:(ml-2.5 inline)">
         <PostDate
           date={post.data.published}
           minutes={post.remarkPluginFrontmatter.minutes}
@@ -82,7 +82,7 @@ function getPostPath(post: Post) {
       {isHome && (
         <div
           class="heti hidden"
-          lg="mt-2 block"
+          lg="mt-2.25 block"
         >
           <p>{generateDescription(post, 'list')}</p>
         </div>

@@ -1,9 +1,10 @@
 <script>
 function setupGithubCards() {
-  const githubCards = document.querySelectorAll('.gc-container')
+  const githubCards = document.getElementsByClassName('gc-container')
   if (githubCards.length === 0)
     return
 
+  // Create an intersection observer to lazy load GitHub repo data when cards enter viewport
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
@@ -13,7 +14,7 @@ function setupGithubCards() {
     })
   }, { rootMargin: '400px' })
 
-  githubCards.forEach(card => observer.observe(card))
+  Array.from(githubCards).forEach(card => observer.observe(card))
 }
 
 async function loadCardData(card: HTMLElement) {
@@ -21,11 +22,11 @@ async function loadCardData(card: HTMLElement) {
   if (!repo)
     return
 
-  const avatarEl = card.querySelector('.gc-owner-avatar') as HTMLElement
-  const descEl = card.querySelector('.gc-repo-description') as HTMLElement
-  const starsEl = card.querySelector('.gc-stars-count') as HTMLElement
-  const forksEl = card.querySelector('.gc-forks-count') as HTMLElement
-  const licenseEl = card.querySelector('.gc-license-info') as HTMLElement
+  const avatarEl = card.getElementsByClassName('gc-owner-avatar')[0] as HTMLElement
+  const descEl = card.getElementsByClassName('gc-repo-description')[0] as HTMLElement
+  const starsEl = card.getElementsByClassName('gc-stars-count')[0] as HTMLElement
+  const forksEl = card.getElementsByClassName('gc-forks-count')[0] as HTMLElement
+  const licenseEl = card.getElementsByClassName('gc-license-info')[0] as HTMLElement
 
   try {
     const response = await fetch(`https://api.github.com/repos/${repo}`)

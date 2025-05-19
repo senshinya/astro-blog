@@ -10,7 +10,8 @@ function setupPhotoSwipe() {
   if (bodyElement.hasAttribute('data-photoswipe-initialized'))
     return
 
-  const images = document.querySelectorAll('article.heti img')
+  const article = document.querySelector('article.heti')
+  const images = article ? article.getElementsByTagName('img') : []
   if (images.length === 0)
     return
 

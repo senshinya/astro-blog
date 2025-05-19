@@ -10,40 +10,47 @@ const year = Number(startYear) === currentYear
   ? startYear
   : `${startYear}-${currentYear}`
 
-// i18n RSS Path
+// i18n RSS Feed Path
 const currentLang = getLangFromPath(Astro.url.pathname)
 const links = socialLinks.map((link) => {
   if (link.name === 'RSS') {
     return {
       ...link,
-      url: currentLang === defaultLocale ? link.url : `/${currentLang}${link.url}`,
+      url: currentLang === defaultLocale
+        ? link.url
+        : `/${currentLang}${link.url}`,
+    }
+  }
+  if (link.name === 'Email') {
+    return {
+      ...link,
+      url: `mailto:${link.url}`,
     }
   }
   return link
 })
+
+const footerLinkClass = 'highlight-hover footer-highlight-position-fix py-0.8 transition-colors after:bottom-0.15em hover:c-primary'
 ---
 
 <footer
-  class="text-3 leading-4.75 font-navbar text-center lg:(text-3.5 text-left)"
+  class="mb-4 text-3 leading-1.25em font-navbar text-center lg:(mb-0 text-3.5 text-center)"
   lg="uno-desktop-column bottom-20"
 >
   <p>
     {links.map((link, index) => (
       <>
-        <a class="highlight-hover transition-colors hover:c-primary after:bottom-0!" href={link.url} target="_blank" rel="noopener noreferrer">
-          {link.name}
-        </a>
-        {index < links.length - 1 && ' / '}
+        <a class={footerLinkClass} href={link.url} target="_blank" rel="noopener noreferrer">{link.name}</a>&nbsp;{index < links.length - 1 && '/'}
       </>
     ))}
   </p>
 
   <p>
-    Powered by <a class="highlight-hover transition-colors hover:c-primary after:bottom-0!" href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> and <a class="highlight-hover transition-colors hover:c-primary after:bottom-0!" href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
+    © {year} {author}
   </p>
 
   <p>
-    © {year} {author}
+    Powered by <a class={footerLinkClass} href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> and <a class={footerLinkClass} href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
   </p>
 
   <p>

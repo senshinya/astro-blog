@@ -28,9 +28,9 @@ const nextUrl = useSupportedLangs
 
 <div
   class:list={[
-  'absolute flex gap-6 top-14.6 right-7.25vw min-[823px]:max-[1024px]:right-[calc(50vw-22rem)]',
+  'absolute right-7.25vw top-14.6 flex gap-6 min-[823px]:max-[1024px]:right-[calc(50vw-22rem)]',
   '[@supports(-webkit-touch-callout:none)]:top-13.6', // fix position issue on ios
-  'lg:(fixed w-14rem top-auto bottom-47 right-[max(5.625rem,calc(50vw-34.375rem))])',
+  'lg:(fixed bottom-47 right-[max(5rem,calc(50vw-35rem))] top-auto w-14rem)',
 ]}
 >
   <!-- Language Switcher -->
@@ -49,8 +49,9 @@ const nextUrl = useSupportedLangs
 
   <!-- Theme Toggle -->
   <button
+    id="theme-toggle-button"
     aria-label="Switch light/dark theme"
-    class="button-theme-toggle aspect-square w-4 c-secondary active:scale-90 hover:c-primary"
+    class="aspect-square w-4 c-secondary active:scale-90 hover:c-primary"
   >
     <ThemeToggleIcon
       aria-hidden="true"
@@ -69,7 +70,7 @@ function updateTheme() {
   // Get current theme
   const isDark = document.documentElement.classList.contains('dark')
   // Update meta theme color
-  const metaThemeColor = document.querySelector('meta[name="theme-color"]')
+  const metaThemeColor = document.head.querySelector('meta[name="theme-color"]')
   if (metaThemeColor) {
     metaThemeColor.setAttribute('content', isDark ? darkMode : lightMode)
   }
@@ -82,10 +83,10 @@ function updateTheme() {
 // Bind click event to the button
 function setupThemeToggle() {
   // Locate theme toggle button
-  const themeToggleButtons = document.querySelectorAll('.button-theme-toggle')
-  // Add click listener to each button
-  themeToggleButtons.forEach((button) => {
-    button.addEventListener('click', () => {
+  const themeToggleButton = document.getElementById('theme-toggle-button')
+  // Add click listener to the button
+  if (themeToggleButton) {
+    themeToggleButton.addEventListener('click', () => {
       // If browser doesn't support View Transitions API, update theme directly
       if (!document.startViewTransition) {
         updateTheme()
@@ -93,18 +94,18 @@ function setupThemeToggle() {
       }
 
       // Temporarily add markers during animation to implement view transition and disable CSS transitions
-      document.documentElement.style.setProperty('view-transition-name', 'theme-transition')
-      document.documentElement.setAttribute('data-theme-transition', '')
+      document.documentElement.style.setProperty('view-transition-name', 'animation-theme-toggle')
+      document.documentElement.setAttribute('data-theme-changing', '')
 
       // If browser supports View Transitions API, use it to update theme
       const themeTransition = document.startViewTransition(updateTheme)
       // Remove markers after animation
       themeTransition.finished.then(() => {
         document.documentElement.style.removeProperty('view-transition-name')
-        document.documentElement.removeAttribute('data-theme-transition')
+        document.documentElement.removeAttribute('data-theme-changing')
       })
     })
-  })
+  }
 }
 
 // Initialize click event (on first load or page transition)

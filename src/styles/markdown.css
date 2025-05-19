@@ -7,52 +7,41 @@
 
 /* Global Styles */
 .heti {
-  --at-apply: 'break-words leading-1.5em hyphens-auto cjk:tracking-0.02em';
+  --at-apply: 'break-words leading-normal hyphens-auto cjk:tracking-0.02em';
 }
 
 /* Customized Post Title */
 .heti .post-title {
-  --at-apply: 'mb-2 text-8.6 c-primary font-bold leading-12 lg:text-9';
+  --at-apply: 'mb-2 text-8.6 font-bold lg:text-9';
 }
 
 /* Headings */
-.heti :where(h1),
-.heti :where(h2),
-.heti :where(h3),
-.heti :where(h4),
-.heti :where(h5),
-.heti :where(h6) {
-  --at-apply: 'mb-3 mt-6 font-semibold';
+.heti :where(h1, h2, h3, h4, h5, h6) {
+  --at-apply: 'mb-4 font-semibold';
+}
+.heti :where(h1, h2, h3) {
+  --at-apply: 'text-balance leading-1.33em cjk:text-pretty cjk:tracking-0.05em';
 }
 .heti :where(h1) {
-  --at-apply: 'text-7 leading-12';
+  --at-apply: 'mt-9.6 text-7 text-primary';
 }
 .heti :where(h2) {
-  --at-apply: 'text-6 leading-9';
+  --at-apply: 'mt-9.6 text-6 text-primary';
 }
 .heti :where(h3) {
-  --at-apply: 'text-5 leading-9';
+  --at-apply: 'mt-6.5 text-5';
 }
 .heti :where(h4) {
-  --at-apply: 'text-4.5 leading-6';
+  --at-apply: 'mt-6 text-4.5';
 }
 .heti :where(h5) {
-  --at-apply: 'text-4 leading-6';
+  --at-apply: 'mt-6 text-4';
 }
 .heti :where(h6) {
-  --at-apply: 'text-3.5 leading-6';
+  --at-apply: 'mt-6 font-normal';
 }
-.heti :where(h1),
-.heti :where(h2),
-.heti :where(h3) {
-  --at-apply: 'text-balance cjk:text-pretty cjk:tracking-0.05em';
-}
-.heti :where(h1 + h2),
-.heti :where(h2 + h3),
-.heti :where(h3 + h4),
-.heti :where(h4 + h5),
-.heti :where(h5 + h6) {
-  --at-apply: 'mt-3';
+.heti :where(h1 + h2, h2 + h3, h3 + h4, h4 + h5, h5 + h6) {
+  --at-apply: 'mt-4';
 }
 
 /* Paragraphs */
@@ -62,26 +51,33 @@
 
 /* Links */
 .heti :where(a:not(.gc-container)) {
-  --at-apply: 'break-all font-medium tracking-0 underline underline-0.075em decoration-secondary/40 underline-offset-0.2em';
-  --at-apply: 'transition-colors hover:(c-primary decoration-secondary/80) lg:underline-0.1em';
+  --at-apply: 'break-all font-semibold tracking-0 underline underline-0.075em decoration-secondary/80 underline-offset-0.1em';
+  --at-apply: 'transition-colors ease-out hover:(c-primary decoration-primary/80) lg:underline-0.1em';
 }
 
 /* Images */
 .heti :where(img) {
-  --at-apply: 'mx-auto cursor-zoom-in';
-  transform: translateZ(0);
-  -webkit-transform: translateZ(0);
+  --at-apply: 'mb-4 mx-auto cursor-zoom-in';
 }
 .heti :where(figure) {
   --at-apply: 'mx-auto mb-4';
 }
+.heti figure img {
+  --at-apply: 'mb-0';
+}
 .heti :where(figcaption) {
-  --at-apply: 'mt-2 text-center text-sm text-secondary/80';
+  --at-apply: 'mt-3 text-center text-sm text-secondary/80';
 }
 
 /* Code Blocks */
 .heti :where(pre) {
   --at-apply: 'mb-4 overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0) transparent;
+  transition: scrollbar-color 0.3s ease-out;
+}
+.heti :where(pre:hover) {
+  scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.15) transparent;
 }
 .heti pre :where(code) {
   --at-apply: 'border-none bg-transparent p-0';
@@ -124,10 +120,13 @@ html.dark .heti pre :where(span) {
 
 /* Tables */
 .heti :where(table) {
-  --at-apply: 'mb-4 box-border block max-w-full table-fixed overflow-x-auto scrollbar-hidden';
+  --at-apply: 'mb-4 box-border block max-w-full table-fixed overflow-x-auto';
+  scrollbar-width: thin;
+  scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0) transparent;
+  transition: scrollbar-color 0.3s ease-out;
 }
-.heti :where(table)::-webkit-scrollbar {
-  --at-apply: 'hidden';
+.heti :where(table:hover) {
+  scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.15) transparent;
 }
 .heti :where(th),
 .heti :where(td) {
@@ -182,7 +181,7 @@ html.dark .heti pre :where(span) {
 /* Superscript and Subscript >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .heti :where(sub),
 .heti :where(sup) {
-  --at-apply: 'relative mx-0.1em align-baseline text-0.75em leading-1';
+  --at-apply: 'relative mx-0.1em align-baseline text-0.75em';
 }
 .heti :where(sub) {
   --at-apply: 'bottom--0.25em';
@@ -212,7 +211,7 @@ html.dark .heti :where(u) {
 
 /* Highlighted Text */
 .heti :where(mark) {
-  --at-apply: 'bg-mark py-0.65 text-inherit';
+  --at-apply: 'bg-highlight py-0.65 text-inherit';
 }
 
 /* Footnotes */
@@ -222,7 +221,7 @@ html.dark .heti :where(u) {
 }
 .heti sup:target,
 .heti sup a:target {
-  --at-apply: 'bg-mark';
+  --at-apply: 'bg-highlight';
 }
 .heti .data-footnote-backref {
   --at-apply: 'font-serif no-underline';
@@ -253,4 +252,3 @@ html.dark .heti :where(u) {
 .heti :where(q:is(:lang(zh), :lang(ja), :lang(ko))) {
   quotes: "「" "」" "『" "』";
 }
-

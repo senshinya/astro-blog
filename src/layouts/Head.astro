@@ -18,10 +18,11 @@ const langCode = currentLang === defaultLocale ? '' : `${currentLang}/`
 
 const { title, subtitle, description, author, url, favicon, i18nTitle } = themeConfig.site
 const { mode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
-const { katex } = themeConfig.global
+const { katex: katexEnabled } = themeConfig.global
+const { enabled: commentEnabled = false, waline: { serverURL: walineServerURL = '' } = {} } = themeConfig.comment ?? {}
 const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalyticsID = '', apiflashKey = '' } = themeConfig.seo ?? {}
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
-const { commentURL = '', customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
+const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
 
 const initMetaTheme = mode === 'dark' ? darkMode : lightMode
 const siteTitle = i18nTitle ? currentUI.title : title
@@ -54,9 +55,9 @@ const pageImage = postSlug
 <link rel="preload" href="/fonts/EarlySummer-Subset.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/Snell-Black.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/Snell-Bold.woff2" as="font" type="font/woff2" crossorigin />
-{katex && <link rel="stylesheet" href={katexCSS} />}
-{commentURL && <link rel="preconnect" href={commentURL} crossorigin />}
-{commentURL && <link rel="dns-prefetch" href={commentURL} />}
+<link rel="preload" href="/fonts/STIX-Italic.woff2" as="font" type="font/woff2" crossorigin />
+{commentEnabled && walineServerURL && <link rel="stylesheet" href="/assets/waline/waline.css" />}
+{katexEnabled && <link rel="stylesheet" href={katexCSS} />}
 <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="RSS Feed" />
 <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom Feed" />
 <link rel="sitemap" href="/sitemap-index.xml" />
@@ -111,7 +112,7 @@ function isCurrentDark() {
 function initTheme(doc = document) {
   const isDark = isCurrentDark()
   doc.documentElement.classList.toggle('dark', isDark)
-  const metaTheme = doc.querySelector('meta[name="theme-color"]')
+  const metaTheme = doc.head.querySelector('meta[name="theme-color"]')
   if (metaTheme) {
     metaTheme.setAttribute('content', isDark ? darkMode : lightMode)
   }

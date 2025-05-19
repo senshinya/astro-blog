@@ -12,7 +12,9 @@ const isFriendsActive = isFriends
 const isAboutActive = isAbout
 
 function getNavItemClass(isActive: boolean) {
-  return isActive ? 'font-bold c-primary highlight-static' : 'hover:(c-primary font-bold) transition-all highlight-hover'
+  return isActive
+    ? 'highlight-static c-primary font-bold after:bottom-0.5em'
+    : 'highlight-hover transition-colors transition-font-weight after:bottom-0.5em hover:(c-primary font-bold)'
 }
 
 const navItems = [
@@ -48,8 +50,8 @@ const navItems = [
   aria-label="Site Navigation"
   class:list={[
     isPost ? 'hidden lg:block' : '',
-    'mb-10.5 text-3.6 font-semibold leading-8.75 font-navbar',
-    'lg:(uno-desktop-column text-4 leading-9.72 bottom-50) cjk:tracking-0.02em',
+    'mb-10.5 text-3.6 font-semibold leading-2.45em font-navbar',
+    'lg:(uno-desktop-column text-4 bottom-50) cjk:tracking-0.02em',
   ]}
 >
   <ul lg="flex-col items-start text-4" flex="~ row gap-2 justify-center">
@@ -57,7 +59,7 @@ const navItems = [
       <li>
         <a
           href={getLocalizedPath(item.href)}
-          class={item.className}
+          class={`${item.className} navbar-highlight-position-fix`}
         >
           {item.label}
         </a>

@@ -1,6 +1,6 @@
-import { allLocales } from '@/config'
 import { glob } from 'astro/loaders'
 import { defineCollection, z } from 'astro:content'
+import { allLocales, themeConfig } from '@/config'
 
 const posts = defineCollection({
   loader: glob({ pattern: ['**/*.{md,mdx}', '!**/about/**', '!**/friends/**', '!**/travels/**'], base: './src/content' }),
@@ -15,7 +15,7 @@ const posts = defineCollection({
     // Advanced
     draft: z.boolean().optional().default(false),
     pin: z.number().int().min(0).max(99).optional().default(0),
-    toc: z.boolean().optional().default(true),
+    toc: z.boolean().optional().default(themeConfig.global.toc),
     lang: z.enum(['', ...allLocales]).optional().default(''),
     abbrlink: z.string().optional().default('').refine(
       abbrlink => !abbrlink || /^[a-z0-9\-]*$/.test(abbrlink),
