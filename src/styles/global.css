@@ -61,7 +61,7 @@ h4:hover .heading-anchor-link svg:hover {
   --at-apply: 'origin-bottom-left scale-x-100';
 }
 .highlight-hover::after {
-  --at-apply: 'origin-bottom-right scale-x-0 transition-transform ease-out lg:duration-250';
+  --at-apply: 'origin-bottom-right scale-x-0 transition-transform ease-out lg:duration-300';
 }
 
 /* Fix Highlight Position Issue on iOS */

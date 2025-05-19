@@ -52,5 +52,7 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
     <Button supportedLangs={supportedLangs} />
     <GithubCard />
     <PhotoSwipe />
+    <!-- Fix bottom space being cut off before page transition on mobile -->
+    <div class="fixed bottom-0 w-full"></div>
   </body>
 </html>
