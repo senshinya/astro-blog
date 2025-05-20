@@ -58,10 +58,12 @@ export const themeConfig: ThemeConfig = {
     fontStyle: 'sans', // sans, serif
     // date format for posts
     dateFormat: 'YYYY-MM-DD', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
-    // enable KaTeX for mathematical formulas rendering
-    katex: true, // true, false
     // enable table of contents for all posts by default
     toc: true, // true, false
+    // enable KaTeX for mathematical formulas rendering
+    katex: true, // true, false
+    // reduce animations and transitions to improve performance
+    reduceMotion: false, // true, false
   },
   // GLOBAL SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 

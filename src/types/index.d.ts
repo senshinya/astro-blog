@@ -33,8 +33,9 @@ export interface ThemeConfig {
     moreLocales: typeof supportedLangs[number][]
     fontStyle: 'sans' | 'serif'
     dateFormat: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYYY' | 'MONTH DAY YYYY' | 'DAY MONTH YYYY'
-    katex: boolean
     toc: boolean
+    katex: boolean
+    reduceMotion: boolean
   }
 
   comment: {

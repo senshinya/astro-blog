@@ -1,8 +1,15 @@
 /* GitHub Card */
 .gc-container {
-  --at-apply: 'block mb-4 px-5 py-4 overflow-x-auto uno-round-border bg-secondary/5';
+  --at-apply: 'block my-6 px-5 py-4 overflow-x-auto uno-round-border bg-secondary/5';
   --at-apply: 'transition-colors ease-out lg:(px-6 py-5) hover:(bg-secondary/10 c-primary)';
+  scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.15) transparent;
+}
+:is(h1, h2, h3, h4, h5, h6, .gc-container) + .gc-container {
+  --at-apply: 'mt-4';
+}
+.gc-container:has(+ .gc-container) {
+  --at-apply: 'mb-4';
 }
 
 /* Title Bar */

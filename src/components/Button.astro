@@ -10,6 +10,7 @@ interface Props {
 }
 
 const { light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
+const reduceMotion = themeConfig.global.reduceMotion
 
 const { supportedLangs } = Astro.props
 const currentPath = Astro.url.pathname
@@ -61,7 +62,10 @@ const nextUrl = useSupportedLangs
 </div>
 
 <!-- Theme Toggle Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-<script is:inline define:vars={{ lightMode, darkMode }}>
+<script
+  is:inline
+  define:vars={{ lightMode, darkMode, reduceMotion }}
+>
 // Update theme
 function updateTheme() {
   // Toggle website theme
@@ -82,13 +86,18 @@ function updateTheme() {
 
 // Bind click event to the button
 function setupThemeToggle() {
+  // Add reduce-motion class if enabled in config
+  if (reduceMotion) {
+    document.documentElement.classList.add('reduce-motion')
+  }
+
   // Locate theme toggle button
   const themeToggleButton = document.getElementById('theme-toggle-button')
   // Add click listener to the button
   if (themeToggleButton) {
     themeToggleButton.addEventListener('click', () => {
-      // If browser doesn't support View Transitions API, update theme directly
-      if (!document.startViewTransition) {
+      // If reduceMotion is enabled or browser doesn't support View Transitions API, update theme directly
+      if (reduceMotion || !document.startViewTransition) {
         updateTheme()
         return
       }

@@ -25,6 +25,7 @@ interface Props {
 const { postTitle, postDescription, postSlug, supportedLangs = [] } = Astro.props
 const { isPost } = getPageInfo(Astro.url.pathname)
 const fontStyle = themeConfig.global.fontStyle === 'serif' ? 'font-serif' : 'font-sans'
+const showAnimation = !themeConfig.global.reduceMotion
 const MarginBottom = isPost && themeConfig.comment?.enabled
   ? 'mb-10' // Post page with comments
   : 'mb-12' // Other pages without comments
@@ -48,11 +49,9 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
       </main>
       <Footer />
     </div>
-    <GsapAnimation />
+    {showAnimation && <GsapAnimation />}
     <Button supportedLangs={supportedLangs} />
     <GithubCard />
     <PhotoSwipe />
-    <!-- Fix bottom space being cut off before page transition on mobile -->
-    <div class="fixed bottom-0 w-full"></div>
   </body>
 </html>

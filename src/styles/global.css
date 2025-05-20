@@ -19,7 +19,7 @@ body::selection {
   --at-apply: 'bg-highlight';
 }
 
-/* Fix KaTeX Overflow Issue */
+/* Fix KaTeX Overflow with Hidden Scrollbar */
 .katex-display {
   --at-apply: 'overflow-x-auto overflow-y-hidden scrollbar-hidden';
 }
@@ -35,7 +35,7 @@ h1:hover .heading-anchor-link svg,
 h2:hover .heading-anchor-link svg,
 h3:hover .heading-anchor-link svg,
 h4:hover .heading-anchor-link svg {
-  --at-apply: 'op-80';
+  --at-apply: 'op-40';
 }
 .heading-anchor-link svg {
   --at-apply: 'ml-0.4em aspect-square w-0.9em op-0 transition-opacity ease-out active:scale-90';
