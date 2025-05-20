@@ -14,9 +14,6 @@ if (!travel) {
 ---
 
 <div class="travel-journey">
-  <!-- 进度条 -->
-  <div id="progressBar" class="fixed top-0 left-0 h-1 bg-primary z-50 transition-all duration-300 ease-in-out"></div>
-
   <!-- Bento Grid 布局 -->
   <div class="flex w-screen h-screen p-5 gap-5 bg-background">
     <!-- 左侧卡片 - 内容区域 -->
@@ -28,9 +25,9 @@ if (!travel) {
 
       <!-- 照片查看模式 -->
       <div id="photoViewMode"
-        class="absolute top-0 left-0 w-full h-full bg-secondary/98 flex flex-col z-50 opacity-0 invisible transition-all duration-300 ease-in-out rounded-bento">
+        class="absolute top-0 left-0 w-full h-full bg-secondary/20 flex flex-col z-50 opacity-0 invisible transition-all duration-300 ease-in-out rounded-bento">
         <div class="flex-1 flex items-center justify-center relative overflow-hidden">
-          <img src="" alt="" id="photoViewImg" class="max-w-[90%] max-h-[80%] object-contain rounded-lg shadow-bento">
+          <img src="" alt="" id="photoViewImg" class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-bento">
           <div
             class="absolute top-0 left-0 right-0 bottom-0 flex justify-between items-center px-5 pointer-events-none">
             <div id="prevPhotoBtn"
@@ -152,9 +149,6 @@ if (!travel) {
 
       // 更新导航按钮状态
       updateNavButtons();
-
-      // 更新进度条
-      updateProgressBar();
     }
 
     // 初始化地图
@@ -256,9 +250,6 @@ if (!travel) {
         // 更新导航按钮状态
         updateNavButtons();
 
-        // 更新进度条
-        updateProgressBar();
-
         // 添加进入动画
         document.getElementById('leftCard').classList.add('card-enter-left');
         document.getElementById('rightCard').classList.add('card-enter-right');
@@ -309,7 +300,7 @@ if (!travel) {
 
       let descriptionsHTML = '';
       day.descriptions.forEach(desc => {
-        descriptionsHTML += `<p class="mb-10 text-light-text text-lg leading-relaxed">${desc}</p>`;
+        descriptionsHTML += `<p class="mb-5 text-light-text text-lg leading-relaxed">${desc}</p>`;
       });
 
       let photosHTML = '';
@@ -444,6 +435,12 @@ if (!travel) {
         photoViewMode.classList.remove('active');
         photoViewMode.classList.add('invisible');
         photoViewMode.classList.remove('visible');
+
+        // 完全重置contentArea的样式
+        const contentArea = document.getElementById('contentArea');
+        contentArea.style.transition = '';
+        contentArea.style.visibility = '';
+        contentArea.style.opacity = '1';
       }, 300);
 
       // 显示导航箭头
@@ -459,6 +456,11 @@ if (!travel) {
         contentArea.style.opacity = '1';
         contentArea.style.visibility = 'visible';
       }, 300);
+
+      // 关闭所有marker的弹出窗口
+      markers.forEach(marker => {
+        marker.closePopup();
+      });
 
       // 调整地图视图以显示所有标记
       if (markers.length > 0) {
@@ -558,12 +560,6 @@ if (!travel) {
         nextBtn.classList.remove('opacity-0', 'pointer-events-none');
         nextBtn.classList.add('opacity-70');
       }
-    }
-
-    // 更新进度条
-    function updateProgressBar() {
-      const progress = ((currentSection + 1) / totalSections) * 100;
-      document.getElementById('progressBar').style.width = `${progress}%`;
     }
 
     // 当页面加载完成后初始化
