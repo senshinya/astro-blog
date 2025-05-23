@@ -131,7 +131,7 @@ export const themeConfig: ThemeConfig = {
     links: [
       {
         name: 'RSS',
-        url: 'https://rss.beauty/rss?url=https%3A%2F%2Fshinya.click%2Fatom.xml', // or /rss.xml
+        url: 'https://rss.beauty/rss?url=https%3a%2f%2fshinya.click%2frss.xml', // or /rss.xml
       },
       {
         name: 'GitHub',
