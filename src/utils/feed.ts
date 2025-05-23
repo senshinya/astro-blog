@@ -101,7 +101,7 @@ function generatePostUrl(post: CollectionEntry<'posts'>, baseUrl: string): strin
   const langPrefix = needsLangPrefix ? `${post.data.lang}/` : ''
   const postSlug = post.data.abbrlink || post.id
 
-  return new URL(`${langPrefix}posts/${postSlug}/`, baseUrl).toString()
+  return new URL(`${langPrefix}${postSlug}/`, baseUrl).toString()
 }
 
 /**
