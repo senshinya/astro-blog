@@ -17,25 +17,25 @@
 
 /* Headings */
 .heti :where(h1, h2, h3, h4, h5, h6) {
-  --at-apply: 'mb-4 font-semibold';
+  --at-apply: 'mb-4 mt-1.5em font-semibold';
 }
 .heti :where(h1) {
-  --at-apply: 'mt-9.6 text-7 text-primary';
+  --at-apply: 'text-7 text-primary';
 }
 .heti :where(h2) {
-  --at-apply: 'mt-9.6 text-6 text-primary';
+  --at-apply: 'text-6 text-primary';
 }
 .heti :where(h3) {
-  --at-apply: 'mt-7.5 text-5';
+  --at-apply: 'text-5';
 }
 .heti :where(h4) {
-  --at-apply: 'mt-6.75 text-4.5';
+  --at-apply: 'text-4.5';
 }
 .heti :where(h5) {
-  --at-apply: 'mt-6 text-4';
+  --at-apply: 'text-4';
 }
 .heti :where(h6) {
-  --at-apply: 'mt-6 font-normal';
+  --at-apply: 'font-normal';
 }
 .heti :where(h1, h2, h3) {
   --at-apply: 'text-balance leading-1.33em cjk:text-pretty cjk:tracking-0.05em';
@@ -66,7 +66,7 @@
   --at-apply: 'mx-auto my-6';
 }
 .heti :where(figcaption) {
-  --at-apply: 'mt-3 text-center text-sm text-secondary/80';
+  --at-apply: 'mt-2.5 text-center text-sm text-secondary/80';
 }
 .heti :is(h1, h2, h3, h4, h5, h6, img, figure) + :is(img, figure) {
   --at-apply: 'mt-4';
@@ -246,7 +246,11 @@ html.dark .heti :where(u) {
 
 /* Horizontal Rules */
 .heti :where(hr) {
-  --at-apply: 'my-9.6 border-t-2 border-secondary/5';
+  --at-apply: 'mb-8 mt-12 h-auto border-none text-center c-secondary/25 lg:(mb-10 mt-14)';
+}
+.heti :where(hr)::before {
+  content: "***";
+  --at-apply: 'text-6 tracking-0.8em';
 }
 
 /* Bold */

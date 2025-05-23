@@ -19,14 +19,6 @@ body::selection {
   --at-apply: 'bg-highlight';
 }
 
-/* Fix KaTeX Overflow with Hidden Scrollbar */
-.katex-display {
-  --at-apply: 'overflow-x-auto overflow-y-hidden scrollbar-hidden';
-}
-.katex-display::-webkit-scrollbar {
-  display: none;
-}
-
 /* Heading Anchor Link */
 .heading-anchor-link {
   --at-apply: 'inline-block translate-y-0.1em';
@@ -54,7 +46,8 @@ h4:hover .heading-anchor-link svg:hover {
 }
 .highlight-static::after,
 .highlight-hover::after {
-  --at-apply: 'content-[""] absolute left-0 z--1 h-0.5em w-full bg-highlight';
+  content: '';
+  --at-apply: 'absolute left-0 z--1 h-0.5em w-full bg-highlight';
 }
 .highlight-static::after,
 .highlight-hover:hover::after {

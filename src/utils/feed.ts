@@ -158,8 +158,15 @@ export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
     // Optimize content processing
     const postContent = post.body
       ? sanitizeHtml(
-          await fixRelativeImagePaths(markdownParser.render(post.body), url),
-          { allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']) },
+          await fixRelativeImagePaths(
+            // Remove HTML comments before rendering markdown
+            markdownParser.render(post.body.replace(/<!--[\s\S]*?-->/g, '')),
+            url,
+          ),
+          {
+            // Allow <img> tags in feed content
+            allowedTags: sanitizeHtml.defaults.allowedTags.concat(['img']),
+          },
         )
       : ''
 

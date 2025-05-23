@@ -131,7 +131,7 @@ export const themeConfig: ThemeConfig = {
     links: [
       {
         name: 'RSS',
-        url: '/rss.xml', // rss.xml, atom.xml
+        url: '/atom.xml', // or /rss.xml
       },
       {
         name: 'GitHub',
@@ -144,10 +144,6 @@ export const themeConfig: ThemeConfig = {
       {
         name: '开往',
         url: 'https://www.travellings.cn/go.html',
-      },
-      {
-        name: '♥️',
-        url: 'https://bpm.shinya.click/public-dashboards/33041330d429493d96a5fc576088030a?from=now-24h&to=now&timezone=browser',
       },
     ],
     // year of website start
