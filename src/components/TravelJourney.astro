@@ -14,13 +14,21 @@ if (!travel) {
 ---
 
 <div class="travel-journey">
+  <!-- 移动端提示 -->
+  <div id="mobileNotice" class="hidden fixed inset-0 bg-background z-50 flex-col items-center justify-center p-6 text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+    </svg>
+    <h2 class="text-2xl font-bold text-primary mb-3">请在电脑端访问</h2>
+    <p class="text-light-text mt-2">此页面需要更大的屏幕才能获得最佳体验。</p>
+  </div>
+
   <!-- Bento Grid 布局 -->
-  <div class="flex w-screen h-screen p-5 gap-5 bg-background">
+  <div id="mainContent" class="w-screen h-screen p-5 gap-5 bg-background">
+    <!-- 原有内容保持不变 -->
     <!-- 左侧卡片 - 内容区域 -->
-    <div
-      id="leftCard"
-      class="w-3/5 h-full bg-card-bg rounded-bento shadow-bento overflow-y-auto relative z-10 transition-all duration-500 ease-in-out scrollbar-hide"
-    >
+    <div id="leftCard"
+      class="w-3/5 h-full bg-card-bg rounded-bento shadow-bento overflow-y-auto relative z-10 transition-all duration-500 ease-in-out scrollbar-hide">
       <div
         id="contentArea"
         class="w-full h-full p-12 pt-24 transition-all duration-400 ease-in-out content-area"
@@ -105,7 +113,7 @@ if (!travel) {
 
   <!-- 导航箭头 -->
   <div
-    class="fixed top-[7%] w-full left-0 z-50 flex justify-between px-10 pointer-events-none transform -translate-y-1/2 transition-all duration-300 ease-in-out"
+    class="fixed top-[7%] w-full left-0 z-50 justify-between px-10 pointer-events-none transform -translate-y-1/2 transition-all duration-300 ease-in-out"
   >
     <div
       id="prevBtn"
@@ -132,6 +140,43 @@ if (!travel) {
   </div>
 
   <script is:inline define:vars={{ travelData: travel.data }}>
+    // 检测是否为移动设备
+    function isMobileDevice() {
+      // 检查屏幕宽度
+      const isSmallScreen = window.innerWidth < 768;
+      
+      // 检查是否为移动设备的用户代理
+      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+      
+      // 如果是小屏幕或移动设备的用户代理，则认为是移动设备
+      return isSmallScreen || isMobileUserAgent;
+    }
+
+    // 处理移动设备访问
+    function handleMobileAccess() {
+      if (isMobileDevice()) {
+        // 显示移动设备提示
+        document.getElementById('mobileNotice').classList.remove('hidden');
+        document.getElementById('mobileNotice').classList.add('flex');
+        document.getElementById('mainContent').classList.add('hidden');
+        
+        // 隐藏导航箭头
+        const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
+        if (navArrows) {
+          navArrows.classList.add('hidden');
+        }
+        
+        // 阻止进一步初始化
+        return true;
+      }
+      document.getElementById('mainContent').classList.add('flex');
+      const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
+      if (navArrows) {
+        navArrows.classList.add('flex');
+      }
+      return false;
+    }
+
     // 全局变量
     let currentSection = 0;
     const totalSections = travelData.days.length + 1; // 封面 + 天数
@@ -142,6 +187,11 @@ if (!travel) {
 
     // 初始化函数
     function init() {
+      // 检查是否为移动设备
+      if (handleMobileAccess()) {
+        return; // 如果是移动设备，不继续初始化
+      }
+      
       // 初始化地图
       initMap();
 
@@ -149,12 +199,8 @@ if (!travel) {
       loadSection(0);
 
       // 设置导航箭头点击事件
-      document
-        .getElementById("prevBtn")
-        .addEventListener("click", navigatePrev);
-      document
-        .getElementById("nextBtn")
-        .addEventListener("click", navigateNext);
+      document.getElementById('prevBtn').addEventListener('click', navigatePrev);
+      document.getElementById('nextBtn').addEventListener('click', navigateNext);
 
       // 设置键盘导航
       document.addEventListener("keydown", function (e) {
@@ -652,7 +698,12 @@ if (!travel) {
     }
 
     // 当页面加载完成后初始化
-    window.addEventListener("load", init);
+    window.addEventListener('load', init);
+    
+    // 监听窗口大小变化，处理响应式
+    window.addEventListener('resize', function() {
+      handleMobileAccess();
+    });
   </script>
 
   <style is:global>
