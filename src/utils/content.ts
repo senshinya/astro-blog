@@ -143,6 +143,8 @@ export const getPinnedPosts = memoize(_getPinnedPosts)
  */
 async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
   const posts = await getRegularPosts(lang)
+  const travels = await getCollection('travels')
+
   const yearMap = new Map<number, Post[]>()
 
   posts.forEach((post: Post) => {
@@ -151,6 +153,21 @@ async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
       yearMap.set(year, [])
     }
     yearMap.get(year)!.push(post)
+  })
+  travels.forEach((travel: CollectionEntry<'travels'>) => {
+    const year = travel.data.published.getFullYear()
+    if (!yearMap.has(year)) {
+      yearMap.set(year, [])
+    }
+    travel.id = `travels/${travel.id}`
+    travel.data.title = `游记：${travel.data.title} (${travel.data.subtitle})`
+    travel.data.description = travel.data.description.replaceAll(/<br \/>/g, '')
+    yearMap.get(year)!.push({
+      ...travel,
+      remarkPluginFrontmatter: {
+        minutes: 10,
+      }
+    } as unknown as Post)
   })
 
   yearMap.forEach((yearPosts) => {

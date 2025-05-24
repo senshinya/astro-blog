@@ -35,10 +35,11 @@ const travels = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/travels' }),
   schema: z.object({
     title: z.string(),
+    published: z.date(),
     subtitle: z.string(),
     slug: z.string(),
     coverImage: z.string(),
-    introduction: z.string(),
+    description: z.string(),
     days: z.array(
       z.object({
         title: z.string(),

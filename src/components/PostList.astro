@@ -44,6 +44,7 @@ function getPostPath(post: Post) {
           href={getPostPath(post)}
           transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
           data-disable-theme-transition
+          target={post.id.startsWith('travels/') ? '_blank' : undefined}
         >
           {post.data.title}
         </a>
