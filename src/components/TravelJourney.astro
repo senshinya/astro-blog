@@ -262,6 +262,8 @@ if (!travel) {
       // 创建地图实例，但不设置初始视图
       map = L.map("map", {
         zoomControl: false,
+        preferCanvas: true,
+        renderer: L.canvas(),
         // 不要设置初始中心点和缩放级别
       });
 
@@ -594,7 +596,14 @@ if (!travel) {
       // 调整地图视图以显示所有标记
       if (markers.length > 0) {
         const group = L.featureGroup(markers);
-        map.fitBounds(group.getBounds().pad(0.1));
+        const bounds = group.getBounds().pad(0.1);
+
+        // 使用更平滑的过渡效果
+        map.flyToBounds(bounds, {
+          duration: 1.5, // 增加动画时间
+          easeLinearity: 0.1,
+          animate: true,
+        });
       }
     }
 
@@ -719,14 +728,16 @@ if (!travel) {
       font-weight: normal;
     }
 
+    #leftCard, #rightCard {
+      will-change: opacity;
+    }
+
     /* 卡片切换动画 */
     .card-enter-left {
-      transform: translateX(-50px);
       opacity: 0;
     }
 
     .card-enter-right {
-      transform: translateX(50px);
       opacity: 0;
     }
 
@@ -738,12 +749,10 @@ if (!travel) {
     /* 内容区域的过渡效果 */
     .content-area.fade-out {
       opacity: 0;
-      transform: translateY(20px);
     }
 
     .content-area.fade-in {
       opacity: 1;
-      transform: translateY(0);
     }
 
     /* 隐藏滚动条样式 */
