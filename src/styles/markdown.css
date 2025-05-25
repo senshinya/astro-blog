@@ -246,11 +246,11 @@ html.dark .heti :where(u) {
 
 /* Horizontal Rules */
 .heti :where(hr) {
-  --at-apply: 'mb-8 mt-12 h-auto border-none text-center c-secondary/25 lg:(mb-10 mt-14)';
+  --at-apply: 'mb-8 mt-12 h-auto border-none text-center lg:(mb-10 mt-14)';
 }
 .heti :where(hr)::before {
-  content: "***";
-  --at-apply: 'text-6 tracking-0.8em';
+  content: "*   *   *";
+  --at-apply: 'whitespace-pre text-6 c-secondary/25 font-serif';
 }
 
 /* Bold */
