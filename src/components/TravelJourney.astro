@@ -491,7 +491,7 @@ if (!travel) {
             photoElement.dataset.index = i.toString();
             
             photoElement.innerHTML = `
-              <img src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
+              <img loading="lazy" src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
               <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
             `;
             
