@@ -366,7 +366,7 @@ if (!travel) {
           rightPanel.style.transform = "";
 
           // 加载行程日
-          loadDay(index - 1);
+          loadDay(index - 1, index !== 1 || isTravelToTravel);
 
           // 如果不是行程页面之间切换，则需要重新设置地图容器
           if (!isTravelToTravel) {
@@ -450,7 +450,7 @@ if (!travel) {
     }
 
     // 加载行程日
-    function loadDay(dayIndex) {
+    function loadDay(dayIndex,later=false) {
       const day = travelData.days[dayIndex];
       const contentArea = document.getElementById("contentArea");
 
@@ -458,36 +458,58 @@ if (!travel) {
       day.descriptions.forEach((desc) => {
         descriptionsHTML += `<p class="mb-5 text-light-text text-lg leading-relaxed">${desc}</p>`;
       });
-
-      let photosHTML = "";
-      day.photos.forEach((photo, index) => {
-        photosHTML += `
-                    <div class="relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group" data-index="${index}">
-                        <img loading="lazy" src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
-                        <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
-                    </div>
-                `;
-      });
-
+    
+      // 先创建不包含照片的内容
       const dayHTML = `
-                <div class="h-full overflow-y-auto scrollbar-hide">
-                    <h3 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 mt-8 pt-4 text-primary relative inline-block -tracking-wide after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:w-[100px] after:h-[3px] after:bg-accent after:rounded-md">${day.title}</h3>
-                    ${descriptionsHTML}
-                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 mb-8">
-                        ${photosHTML}
-                    </div>
-                </div>
-            `;
-
+        <div class="h-full overflow-y-auto scrollbar-hide">
+          <h3 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 mt-8 pt-4 text-primary relative inline-block -tracking-wide after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:w-[100px] after:h-[3px] after:bg-accent after:rounded-md">${day.title}</h3>
+          ${descriptionsHTML}
+          <div id="photos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 mb-8">
+            <!-- 照片将延迟加载 -->
+          </div>
+        </div>
+      `;
+    
       contentArea.innerHTML = dayHTML;
-
-      // 为照片添加点击事件
-      document.querySelectorAll(".group[data-index]").forEach((item) => {
-        item.addEventListener("click", function () {
-          const index = parseInt(this.dataset.index);
-          openPhotoView(dayIndex, index);
-        });
-      });
+      
+      // 延迟加载照片，等待地图动画完成
+      setTimeout(() => {
+        const photosContainer = document.getElementById("photos-container");
+        let photosHTML = "";
+        
+        // 分批加载照片
+        const loadPhotoBatch = (startIdx, batchSize) => {
+          const endIdx = Math.min(startIdx + batchSize, day.photos.length);
+          
+          for (let i = startIdx; i < endIdx; i++) {
+            const photo = day.photos[i];
+            photosHTML += `
+              <div class="relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group" data-index="${i}">
+                <img loading="lazy" src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
+                <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
+              </div>
+            `;
+          }
+          
+          photosContainer.innerHTML = photosHTML;
+          
+          // 为已加载的照片添加点击事件
+          document.querySelectorAll(".group[data-index]").forEach((item) => {
+            item.addEventListener("click", function () {
+              const index = parseInt(this.dataset.index);
+              openPhotoView(dayIndex, index);
+            });
+          });
+          
+          // 如果还有更多照片，继续加载下一批
+          if (endIdx < day.photos.length) {
+            setTimeout(() => loadPhotoBatch(endIdx, batchSize), 100);
+          }
+        };
+        
+        // 开始加载第一批照片（每批5张）
+        loadPhotoBatch(0, 5);
+      }, later?1500:0); // 等待地图动画完成后再加载照片
     }
 
     // 清除地图上的所有标记
@@ -534,81 +556,69 @@ if (!travel) {
       currentPhotoItems = travelData.days[dayIndex].photos;
       currentPhotoIndex = photoIndex;
 
-      // 隐藏导航箭头
+      // 先隐藏导航箭头和内容区域
       const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
-      navArrows.style.opacity = "0";
-      navArrows.style.visibility = "hidden";
-      navArrows.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-
-      // 隐藏行程描述内容
       const contentArea = document.getElementById("contentArea");
-      contentArea.style.opacity = "0";
-      contentArea.style.visibility = "hidden";
-      contentArea.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-
-      // 更新照片查看视图
-      updatePhotoView();
-
-      // 显示照片查看模式
-      document.getElementById("photoViewMode").classList.add("active");
-      document.getElementById("photoViewMode").classList.remove("invisible");
-      document.getElementById("photoViewMode").classList.add("visible");
-      document.getElementById("photoViewMode").style.opacity = "1";
+      
+      // 使用一个函数来处理DOM隐藏，避免布局抖动
+      const hideElements = () => {
+        // 隐藏导航箭头
+        navArrows.style.opacity = "0";
+        navArrows.style.visibility = "hidden";
+        navArrows.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
+      
+        // 隐藏行程描述内容
+        contentArea.style.opacity = "0";
+        contentArea.style.visibility = "hidden";
+        contentArea.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
+      };
+      
+      // 执行DOM隐藏
+      hideElements();
+      
+      // 等待DOM更新完成后再执行后续操作
+      setTimeout(() => {
+        // 准备照片查看模式，但还不显示
+        const photoViewMode = document.getElementById("photoViewMode");
+        photoViewMode.classList.add("active");
+        photoViewMode.classList.remove("invisible");
+        photoViewMode.classList.add("visible");
+        photoViewMode.style.opacity = "0";
+        
+        // 预加载当前照片
+        const currentPhoto = currentPhotoItems[currentPhotoIndex];
+        const img = new Image();
+        img.onload = () => {
+          // 照片加载完成后，先更新照片查看视图的内容
+          updatePhotoViewContent();
+          
+          // 然后再显示照片查看模式
+          setTimeout(() => {
+            photoViewMode.style.opacity = "1";
+            
+            // 最后处理地图动画
+            setTimeout(() => {
+              updateMapView();
+            }, 100);
+          }, 50);
+        };
+        img.src = currentPhoto.src;
+        
+        // 如果图片已经缓存，onload可能不会触发，添加备用方案
+        setTimeout(() => {
+          if (photoViewMode.style.opacity === "0") {
+            updatePhotoViewContent();
+            photoViewMode.style.opacity = "1";
+            setTimeout(() => {
+              updateMapView();
+            }, 100);
+          }
+        }, 200);
+      }, 50);
     }
 
-    // 关闭照片查看模式
-    function closePhotoView() {
-      // 隐藏照片查看模式
-      const photoViewMode = document.getElementById("photoViewMode");
-      photoViewMode.style.opacity = "0";
-
-      setTimeout(() => {
-        photoViewMode.classList.remove("active");
-        photoViewMode.classList.add("invisible");
-        photoViewMode.classList.remove("visible");
-
-        // 完全重置contentArea的样式
-        const contentArea = document.getElementById("contentArea");
-        contentArea.style.transition = "";
-        contentArea.style.visibility = "";
-        contentArea.style.opacity = "1";
-      }, 300);
-
-      // 显示导航箭头
-      const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
-      setTimeout(() => {
-        navArrows.style.opacity = "1";
-        navArrows.style.visibility = "visible";
-      }, 300); // 延迟显示，等待照片查看模式关闭动画完成
-
-      // 显示行程描述内容
-      const contentArea = document.getElementById("contentArea");
-      setTimeout(() => {
-        contentArea.style.opacity = "1";
-        contentArea.style.visibility = "visible";
-      }, 300);
-
-      // 关闭所有marker的弹出窗口
-      markers.forEach((marker) => {
-        marker.closePopup();
-      });
-
-      // 调整地图视图以显示所有标记
-      if (markers.length > 0) {
-        const group = L.featureGroup(markers);
-        const bounds = group.getBounds().pad(0.1);
-
-        // 使用更平滑的过渡效果
-        map.flyToBounds(bounds, {
-          duration: 1.5, // 增加动画时间
-          easeLinearity: 0.1,
-          animate: true,
-        });
-      }
-    }
-
-    // 更新照片查看视图
-    function updatePhotoView() {
+    // 新增：更新照片查看视图内容（不包含地图操作）
+    function updatePhotoViewContent() {
       const photoViewImg = document.getElementById("photoViewImg");
       const photoViewCaption = document.getElementById("photoViewCaption");
       const prevPhotoBtn = document.getElementById("prevPhotoBtn");
@@ -632,15 +642,21 @@ if (!travel) {
       } else {
         nextPhotoBtn.classList.remove("opacity-0", "pointer-events-none");
       }
+    }
 
+    // 新增：更新地图视图（从updatePhotoView中分离出来的地图操作部分）
+    function updateMapView() {
+      const currentPhoto = currentPhotoItems[currentPhotoIndex];
+      
       // 更新地图视图
       if (currentPhoto.lat && currentPhoto.lng) {
         // 使用flyTo代替setView实现平滑移动
         map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, {
-          duration: 1.0, // 动画持续时间（秒）
+          duration: 1.5, // 动画持续时间（秒）
           easeLinearity: 0.1, // 动画曲线的线性程度
+          animate: true, // 是否启用动画
         });
-
+    
         markers.forEach((marker) => {
           if (
             marker.getLatLng().lat === currentPhoto.lat &&
@@ -648,6 +664,103 @@ if (!travel) {
           ) {
             marker.openPopup();
           }
+        });
+      }
+    }
+
+    // 修改原有的updatePhotoView函数，使用新的分离函数
+    function updatePhotoView() {
+      // 先更新内容
+      updatePhotoViewContent();
+      
+      // 延迟更新地图，避免同时进行大量操作
+      setTimeout(() => {
+        updateMapView();
+      }, 100);
+    }
+
+    // 关闭照片查看模式
+    function closePhotoView() {
+      // 先隐藏照片查看模式
+      const photoViewMode = document.getElementById("photoViewMode");
+      photoViewMode.style.opacity = "0";
+      photoViewMode.style.transition = "opacity 0.3s ease";
+      
+      // 先完成照片查看模式的隐藏动画，再进行其他操作
+      setTimeout(() => {
+        // 重置照片查看模式的类
+        resetPhotoViewClasses();
+        
+        // 延迟执行DOM更新，避免同时进行大量操作
+        setTimeout(() => {
+          // 显示内容区域和导航箭头
+          showContentAndNavigation();
+          
+          // 关闭所有marker的弹出窗口
+          closeAllMarkerPopups();
+          
+          // 延迟执行地图动画，等待DOM更新完成
+          setTimeout(() => {
+            // 调整地图视图
+            updateMapBounds();
+          }, 150);
+        }, 50);
+      }, 300);
+      
+      // 添加备用方案，确保过渡效果完成
+      setTimeout(() => {
+        const contentArea = document.getElementById("contentArea");
+        if (contentArea.style.opacity !== "1") {
+          resetPhotoViewClasses();
+          showContentAndNavigation();
+          closeAllMarkerPopups();
+          updateMapBounds();
+        }
+      }, 800);
+    }
+    
+    // 新增：重置照片查看模式的类
+    function resetPhotoViewClasses() {
+      const photoViewMode = document.getElementById("photoViewMode");
+      photoViewMode.classList.remove("active");
+      photoViewMode.classList.add("invisible");
+      photoViewMode.classList.remove("visible");
+    }
+    
+    // 新增：显示内容区域和导航箭头
+    function showContentAndNavigation() {
+      // 完全重置contentArea的样式
+      const contentArea = document.getElementById("contentArea");
+      contentArea.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
+      contentArea.style.visibility = "visible";
+      contentArea.style.opacity = "1";
+    
+      // 显示导航箭头
+      const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
+      navArrows.style.opacity = "1";
+      navArrows.style.visibility = "visible";
+      navArrows.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
+    }
+    
+    // 新增：关闭所有marker的弹出窗口
+    function closeAllMarkerPopups() {
+      markers.forEach((marker) => {
+        marker.closePopup();
+      });
+    }
+    
+    // 新增：更新地图边界
+    function updateMapBounds() {
+      // 调整地图视图以显示所有标记
+      if (markers.length > 0) {
+        const group = L.featureGroup(markers);
+        const bounds = group.getBounds().pad(0.1);
+    
+        // 使用更平滑的过渡效果
+        map.flyToBounds(bounds, {
+          duration: 1.5, // 动画时间
+          easeLinearity: 0.1,
+          animate: true,
         });
       }
     }
