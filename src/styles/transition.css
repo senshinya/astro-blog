@@ -35,3 +35,35 @@ html[data-theme-changing] [data-disable-theme-transition] {
 html.reduce-motion {
   --at-apply: 'transition-colors duration-300 ease-out';
 }
+
+/* GSAP Animation Elements Initial States */
+html:not(.reduce-motion) #gsap-post-page-content > *,
+html:not(.reduce-motion) #gsap-post-page-tags,
+html:not(.reduce-motion) #waline {
+  opacity: 0;
+  transform: translateY(3rem);
+}
+@media (min-width: 1024px) {
+  html:not(.reduce-motion) #gsap-post-page-date {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  html:not(.reduce-motion) #back-button {
+    opacity: 0;
+    transform: translateX(0.5rem);
+  }
+  html:not(.reduce-motion) #toc-icon {
+    opacity: 0;
+    transform: translateY(0.5rem);
+  }
+  html:not(.reduce-motion) #toc-list > * {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+}
+@media (max-width: 1535px) {
+  html:not(.reduce-motion) #toc-container {
+    opacity: 0;
+    transform: translateY(3rem);
+  }
+}

@@ -24,9 +24,9 @@ function setupPostPageAnimation() {
   if (isLargeScreen) {
     // Post Content + Tags + Comments
     // First 15 elements
-    gsap.from(allElements.slice(0, 15), {
-      opacity: 0,
-      y: '3rem',
+    gsap.to(allElements.slice(0, 15), {
+      opacity: 1,
+      y: 0,
       duration: 0.5,
       delay: 0.2,
       ease: 'power2.out',
@@ -34,9 +34,9 @@ function setupPostPageAnimation() {
     })
     // Rest elements as the 16th element
     if (allElements.length > 15) {
-      gsap.from(allElements.slice(15), {
-        opacity: 0,
-        y: '3rem',
+      gsap.to(allElements.slice(15), {
+        opacity: 1,
+        y: 0,
         duration: 0.5,
         delay: 0.2 + 0.05 * 15,
         ease: 'power2.out',
@@ -45,9 +45,9 @@ function setupPostPageAnimation() {
 
     // Post Date
     if (dateElement) {
-      gsap.from(dateElement, {
-        opacity: 0,
-        y: '1.5rem',
+      gsap.to(dateElement, {
+        opacity: 1,
+        y: 0,
         duration: 0.5,
         delay: 0.2,
         ease: 'power2.out',
@@ -56,9 +56,9 @@ function setupPostPageAnimation() {
 
     // TOC Icon
     if (tocIcon) {
-      gsap.from(tocIcon, {
-        opacity: 0,
-        y: '0.5rem',
+      gsap.to(tocIcon, {
+        opacity: 1,
+        y: 0,
         duration: 0.5,
         delay: 0.2,
         ease: 'power2.out',
@@ -67,9 +67,9 @@ function setupPostPageAnimation() {
 
     // Toc List
     if (tocListChildren.length > 0) {
-      gsap.from(tocListChildren, {
-        opacity: 0,
-        y: '1.5rem',
+      gsap.to(tocListChildren, {
+        opacity: 1,
+        y: 0,
         duration: 0.5,
         delay: 0.2,
         ease: 'power2.out',
@@ -79,9 +79,9 @@ function setupPostPageAnimation() {
 
     // Back Button
     if (backButton) {
-      gsap.from(backButton, {
-        opacity: 0,
-        x: '0.5rem',
+      gsap.to(backButton, {
+        opacity: 1,
+        x: 0,
         duration: 0.5,
         delay: 0.2,
         ease: 'power2.out',
@@ -90,32 +90,32 @@ function setupPostPageAnimation() {
   }
   else {
     // Post Content + Tags + Comments
-    // First 7 elements
-    gsap.from(allElements.slice(0, 7), {
-      opacity: 0,
-      y: '3rem',
+    // First 6 elements
+    gsap.to(allElements.slice(0, 6), {
+      opacity: 1,
+      y: 0,
       duration: 0.5,
       delay: 0.2,
       ease: 'power2.out',
       stagger: 0.05,
     })
-    // Rest elements as the 8 element
-    // if (allElements.length > 7) {
-    //   gsap.from(allElements.slice(7), {
-    //     opacity: 0,
-    //     y: '3rem',
-    //     duration: 0.5,
-    //     delay: 0.2 + 0.05 * 5,
-    //     ease: 'power2.out',
-    //   })
-    // }
+    // Rest elements as the 7th element
+    if (allElements.length > 6) {
+      gsap.to(allElements.slice(6), {
+        opacity: 1,
+        y: 0,
+        duration: 0.5,
+        delay: 0.2 + 0.05 * 6,
+        ease: 'power2.out',
+      })
+    }
   }
 
   // Mobile Animation (for screens smaller than 1536px)
   if (isSmallScreen && tocContainer) {
-    gsap.from(tocContainer, {
-      opacity: 0,
-      y: '3rem',
+    gsap.to(tocContainer, {
+      opacity: 1,
+      y: 0,
       duration: 0.5,
       delay: 0.15,
       ease: 'power2.out',

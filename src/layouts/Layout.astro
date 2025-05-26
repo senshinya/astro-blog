@@ -33,7 +33,11 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
 
 <html
   lang={Astro.currentLocale}
-  class:list={[fontStyle, { 'scroll-smooth': isPost }]}
+  class:list={[
+    fontStyle,
+    { 'scroll-smooth': isPost },
+    { 'reduce-motion': themeConfig.global.reduceMotion },
+  ]}
 >
   <Head {postTitle} {postDescription} {postSlug} />
   <body>

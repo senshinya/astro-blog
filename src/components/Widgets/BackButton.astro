@@ -5,7 +5,7 @@ import GoBackIcon from '@/assets/icons/go-back.svg';
 <button
   id="back-button"
   class="hidden"
-  lg="block absolute c-secondary/40 left--10 top-1/2 aspect-square w-4.5 translate-y--1/2 transition-colors ease-out c-secondary active:scale-90! hover:c-secondary/80"
+  lg="absolute left--10 top-3.8 block aspect-square w-4.5 c-secondary/40 transition-colors ease-out hover:c-secondary/80 active:scale-90!"
   aria-label="Go back"
 >
   <GoBackIcon
@@ -20,6 +20,12 @@ function setupBackButton() {
   document.getElementById('back-button')?.addEventListener('click', () => {
     if (window.history.length > 1) {
       window.history.back()
+    }
+    else {
+      const siteTitleLink = document.getElementById('site-title-link')
+      if (siteTitleLink) {
+        siteTitleLink.click()
+      }
     }
   })
 }
