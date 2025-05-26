@@ -12,7 +12,7 @@
 
 /* Customized Post Title */
 .heti .post-title {
-  --at-apply: 'mb-2 text-8.6 font-bold lg:text-9';
+  --at-apply: 'mb-2 mt-0 text-8.6 font-bold lg:text-9';
 }
 
 /* Headings */

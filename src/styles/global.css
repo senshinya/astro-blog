@@ -1,8 +1,3 @@
-:root {
-  --uno-colors-primary: theme('colors.primary');
-  --uno-colors-secondary: theme('colors.secondary');
-  --uno-colors-background: theme('colors.background');
-}
 html {
   --at-apply: 'bg-background c-secondary antialiased';
   scrollbar-width: thin;
@@ -55,14 +50,4 @@ h4:hover .heading-anchor-link svg:hover {
 }
 .highlight-hover::after {
   --at-apply: 'origin-bottom-right scale-x-0 transition-transform ease-out lg:duration-300';
-}
-
-/* Fix Highlight Position Issue on iOS */
-@supports (-webkit-touch-callout: none) {
-  .navbar-highlight-position-fix {
-    --at-apply: 'after:bottom-0.68em';
-  }
-  .footer-highlight-position-fix {
-    --at-apply: 'after:bottom-0.39em';
-  }
 }

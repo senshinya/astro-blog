@@ -2,18 +2,6 @@
 import { defaultLocale, themeConfig } from '@/config'
 import { walineLocaleMap } from '@/i18n/config'
 
-// Get the language code of Waline
-function getWalineLang(currentPath: string, defaultLocale: string): string {
-  // Extract language code from path
-  const pathLang = Object.keys(walineLocaleMap).find(code =>
-    currentPath.startsWith(`/${code}/`),
-  )
-  // Return found path language or default language
-  const lang = pathLang || defaultLocale
-  return walineLocaleMap[lang as keyof typeof walineLocaleMap]
-}
-
-const walineLang = getWalineLang(Astro.url.pathname, defaultLocale)
 const { waline: { serverURL = '', emoji = [], search = false, imageUploader = false } = {} } = themeConfig.comment ?? {}
 ---
 
@@ -27,23 +15,31 @@ const { waline: { serverURL = '', emoji = [], search = false, imageUploader = fa
 <script
   is:inline
   define:vars={{
-    walineLang,
     serverURL,
     emoji,
     search,
     imageUploader,
+    walineLocaleMap,
+    defaultLocale,
   }}
   type="module"
 >
 import { init } from '/assets/waline/waline.js'
 
 function initWaline() {
+  const currentPath = window.location.pathname
+  const pathLang = Object.keys(walineLocaleMap).find(code =>
+    currentPath.startsWith(`/${code}/`),
+  )
+  const lang = pathLang || defaultLocale
+  const currentWalineLang = walineLocaleMap[lang]
+
   init({
     el: '#waline',
     serverURL,
     // Share comments on posts in different languages
     path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'),
-    lang: walineLang,
+    lang: currentWalineLang,
     emoji,
     dark: 'html.dark',
     requiredMeta: ['nick', 'mail'],
@@ -157,28 +153,28 @@ document.addEventListener('astro:page-load', initWaline)
 <style>
 #waline {
   /* Regular Colors */
-  --waline-white: var(--uno-colors-background);
+  --waline-white: oklch(var(--un-preset-theme-colors-background));
   --waline-light-grey: oklch(var(--un-preset-theme-colors-primary) / 0.25);
-  --waline-dark-grey: var(--uno-colors-secondary);
+  --waline-dark-grey: oklch(var(--un-preset-theme-colors-secondary));
 
   /* Theme Colors */
-  --waline-theme-color: var(--uno-colors-primary);
-  --waline-active-color: var(--uno-colors-primary);
+  --waline-theme-color: oklch(var(--un-preset-theme-colors-primary));
+  --waline-active-color: oklch(var(--un-preset-theme-colors-primary));
 
   /* Layout Colors */
-  --waline-color: var(--uno-colors-secondary);
-  --waline-bg-color: var(--uno-colors-background);
-  --waline-bg-color-light: var(--uno-colors-background);
-  --waline-bg-color-hover: var(--uno-colors-background);
+  --waline-color: oklch(var(--un-preset-theme-colors-secondary));
+  --waline-bg-color: oklch(var(--un-preset-theme-colors-background));
+  --waline-bg-color-light: oklch(var(--un-preset-theme-colors-background));
+  --waline-bg-color-hover: oklch(var(--un-preset-theme-colors-background));
   --waline-border-color: oklch(var(--un-preset-theme-colors-primary) / 0.25);
   --waline-disable-bg-color: oklch(var(--un-preset-theme-colors-secondary) / 0.05);
-  --waline-disable-color: var(--uno-colors-primary);
+  --waline-disable-color: oklch(var(--un-preset-theme-colors-primary));
 
   /* Special Colors */
   --waline-bq-color: oklch(var(--un-preset-theme-colors-primary) / 0.25);
 
   /* Information */
-  --waline-info-bg-color: var(--uno-colors-background);
+  --waline-info-bg-color: oklch(var(--un-preset-theme-colors-background));
   --waline-info-color: oklch(var(--un-preset-theme-colors-primary) / 0.25);
 
   /* Rendering Options */

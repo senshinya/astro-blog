@@ -13,8 +13,8 @@ const isAboutActive = isAbout
 
 function getNavItemClass(isActive: boolean) {
   return isActive
-    ? 'highlight-static c-primary font-bold after:bottom-0.5em'
-    : 'highlight-hover transition-colors transition-font-weight after:bottom-0.5em hover:(c-primary font-bold)'
+    ? 'highlight-static c-primary font-bold after:bottom-0.7em'
+    : 'highlight-hover transition-colors transition-font-weight after:bottom-0.7em hover:(c-primary font-bold)'
 }
 
 const navItems = [
@@ -59,7 +59,7 @@ const navItems = [
       <li>
         <a
           href={getLocalizedPath(item.href)}
-          class={`${item.className} navbar-highlight-position-fix`}
+          class={item.className}
         >
           {item.label}
         </a>

@@ -129,13 +129,13 @@
 }
 
 /* Video */
-iframe {
+.heti iframe {
   --at-apply: 'my-6 aspect-video w-full';
 }
-:is(h1, h2, h3, h4, h5, h6, iframe) + iframe {
+.heti :is(h1, h2, h3, h4, h5, h6, iframe) + iframe {
   --at-apply: 'mt-4';
 }
-iframe:has(+ iframe) {
+.heti iframe:has(+ iframe) {
   --at-apply: 'mb-4';
 }
 
