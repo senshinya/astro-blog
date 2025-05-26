@@ -5,6 +5,8 @@ const { favicon } = themeConfig.site
 const { title } = Astro.props
 const fontStyle =
   themeConfig.global.fontStyle === "serif" ? "font-serif" : "font-sans";
+const { googleAnalyticsID = '', umamiAnalyticsID = '' } = themeConfig.seo ?? {}
+const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
 ---
 
 <html
@@ -161,6 +163,48 @@ const fontStyle =
         }
       }
     </style>
+    <!-- Google Analytics -->
+{googleAnalyticsID && (
+  <>
+    <script
+      is:inline
+      type="text/partytown"
+      src={customGoogleAnalyticsJS || `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsID}`}
+    />
+    <script
+      is:inline
+      type="text/partytown"
+      define:vars={{ googleAnalyticsID, customGoogleAnalyticsJS }}
+    >
+      window.dataLayer = window.dataLayer || []
+      function gtag(...args) {
+        dataLayer.push(args)
+      }
+      gtag('js', new Date())
+
+      if (customGoogleAnalyticsJS) {
+        gtag('config', googleAnalyticsID, {
+          transport_url: new URL(customGoogleAnalyticsJS).origin,
+        })
+      }
+      else {
+        gtag('config', googleAnalyticsID)
+      }
+    </script>
+  </>
+)}
+
+<!-- Umami Analytics -->
+{umamiAnalyticsID && (
+  <script
+    is:inline
+    type="text/partytown"
+    crossorigin="anonymous"
+    data-website-id={umamiAnalyticsID}
+    src={customUmamiAnalyticsJS || 'https://cloud.umami.is/script.js'}
+    data-cache="true"
+  />
+)}
   </head>
   <div class="travel-container">
     <slot />
