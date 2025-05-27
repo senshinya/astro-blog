@@ -77,7 +77,7 @@
 
 /* Code Blocks */
 .heti :where(pre) {
-  --at-apply: 'my-6 overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';
+  --at-apply: 'overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';
   scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0) transparent;
   transition: scrollbar-color 0.3s ease-out;
@@ -91,10 +91,13 @@
 html.dark .heti pre span {
   --at-apply: 'text-[var(--shiki-dark)]!';
 }
-.heti :is(h1, h2, h3, h4, h5, h6, pre) + pre {
+.heti .code-block-wrapper {
+  --at-apply: 'my-6 relative';
+}
+.heti :is(h1, h2, h3, h4, h5, h6, .code-block-wrapper) + .code-block-wrapper {
   --at-apply: 'mt-4';
 }
-.heti pre:has(+ pre) {
+.heti .code-block-wrapper:has(+ .code-block-wrapper) {
   --at-apply: 'mb-4';
 }
 

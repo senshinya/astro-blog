@@ -139,6 +139,25 @@
   --at-apply: 'mb-4';
 }
 
+/* Code Copy Button */
+.code-copy-button {
+  --at-apply: 'z-99 absolute top-2.3 right-2.3 w-8 aspect-square uno-round-border border-secondary/15 c-secondary/80 cursor-pointer';
+  --at-apply: 'transition-opacity duration-300 ease-out op-100 bg-background lg:(op-0 bg-background)';
+}
+.code-block-wrapper:hover .code-copy-button {
+  --at-apply: 'op-100';
+}
+.code-copy-button:hover {
+  --at-apply: 'c-primary/80';
+}
+.code-copy-button svg {
+  --at-apply: 'w-4 h-4 block mx-auto';
+}
+.code-copy-button svg,
+.code-copy-button svg path {
+  pointer-events: none;
+}
+
 /* :where(details) {
   --at-apply: 'my-4 px-4 py-3 border border-solid border-secondary/25 rounded cursor-pointer';
 }

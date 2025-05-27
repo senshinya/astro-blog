@@ -1,0 +1,63 @@
+<script>
+const copyIcons = {
+  copy: `<svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+  </svg>`,
+  success: `<svg viewBox="0 0 24 24" fill="currentColor">
+    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+  </svg>`,
+}
+
+// Store active timeouts to prevent memory leaks
+const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>()
+
+async function handleCopy(button: HTMLButtonElement) {
+  const codeElement = button.parentElement?.querySelector('pre code')
+  const code = codeElement?.textContent || ''
+
+  try {
+    await navigator.clipboard.writeText(code)
+
+    // Clear existing timeout to prevent visual glitches on multiple clicks
+    const existingTimeout = activeTimeouts.get(button)
+    if (existingTimeout) {
+      clearTimeout(existingTimeout)
+    }
+
+    button.innerHTML = copyIcons.success
+
+    // Set timeout to revert to copy icon after 2 seconds
+    const timeoutId = setTimeout(() => {
+      button.innerHTML = copyIcons.copy
+      activeTimeouts.delete(button)
+    }, 1000)
+
+    activeTimeouts.set(button, timeoutId)
+  }
+  catch {
+  }
+}
+
+function setupCodeCopyButtons() {
+  // Only initialize buttons that haven't been initialized yet
+  document.querySelectorAll<HTMLButtonElement>('.code-copy-button:not([data-initialized])').forEach((button) => {
+    button.innerHTML = copyIcons.copy
+    button.setAttribute('data-initialized', 'true')
+  })
+}
+
+// Use event delegation for better performance
+document.addEventListener('click', (e) => {
+  if (!(e.target instanceof HTMLElement))
+    return
+
+  // Find closest button element if clicked on button or child element
+  const button = e.target.closest('.code-copy-button') as HTMLButtonElement | null
+  if (button) {
+    handleCopy(button)
+  }
+}, { passive: true })
+
+setupCodeCopyButtons()
+document.addEventListener('astro:page-load', setupCodeCopyButtons)
+</script>
