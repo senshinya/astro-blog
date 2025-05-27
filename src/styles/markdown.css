@@ -75,6 +75,17 @@
   --at-apply: 'mb-4';
 }
 
+/* Video */
+.heti iframe {
+  --at-apply: 'my-6 aspect-video w-full';
+}
+.heti :is(h1, h2, h3, h4, h5, h6, iframe) + iframe {
+  --at-apply: 'mt-4';
+}
+.heti iframe:has(+ iframe) {
+  --at-apply: 'mb-4';
+}
+
 /* Code Blocks */
 .heti :where(pre) {
   --at-apply: 'overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';

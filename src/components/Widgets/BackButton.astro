@@ -14,14 +14,16 @@ import GoBackIcon from '@/assets/icons/go-back.svg';
   />
 </button>
 
-<!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script>
 function setupBackButton() {
   document.getElementById('back-button')?.addEventListener('click', () => {
+    // Navigate back if history exists
     if (window.history.length > 1) {
       window.history.back()
     }
     else {
+      // Fallback to homepage
       const siteTitleLink = document.getElementById('site-title-link')
       if (siteTitleLink) {
         siteTitleLink.click()

@@ -2,7 +2,7 @@
 import { gsap } from 'gsap'
 
 function setupPostPageAnimation() {
-  // Elements
+  // Animated Elements
   const postContent = document.getElementById('gsap-post-page-content')
   const postContentChildren = postContent ? Array.from(postContent.children) : []
   const tocContainer = document.getElementById('toc-container')
@@ -10,7 +10,7 @@ function setupPostPageAnimation() {
   const tocList = document.getElementById('toc-list')
   const tocListChildren = tocList ? Array.from(tocList.children) : []
   const backButton = document.getElementById('back-button')
-  const dateElement = document.getElementById('gsap-post-page-date')
+  const postDate = document.getElementById('gsap-post-page-date')
 
   // Screen Size Check
   const isLargeScreen = window.matchMedia('(min-width: 1024px)').matches
@@ -38,8 +38,8 @@ function setupPostPageAnimation() {
     }
 
     // Post Date
-    if (dateElement) {
-      gsap.to(dateElement, {
+    if (postDate) {
+      gsap.to(postDate, {
         opacity: 1,
         y: 0,
         duration: 0.5,

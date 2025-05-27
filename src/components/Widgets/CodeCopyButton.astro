@@ -1,14 +1,22 @@
 <script>
 const copyIcons = {
-  copy: `<svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
-  </svg>`,
-  success: `<svg viewBox="0 0 24 24" fill="currentColor">
-    <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-  </svg>`,
+  copy:
+    `<svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M16 1H4c-1.1 0-2 .9-2 2v14h2V3h12V1zm3 4H8c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h11c1.1 0 2-.9 2-2V7c0-1.1-.9-2-2-2zm0 16H8V7h11v14z"/>
+    </svg>`,
+  success:
+  `<svg
+      viewBox="0 0 24 24"
+      fill="currentColor"
+    >
+      <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+    </svg>`,
 }
 
-// Store active timeouts to prevent memory leaks
+// Track timeout references for each button to manage icon state transitions
 const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>()
 
 async function handleCopy(button: HTMLButtonElement) {
@@ -18,32 +26,37 @@ async function handleCopy(button: HTMLButtonElement) {
   try {
     await navigator.clipboard.writeText(code)
 
-    // Clear existing timeout to prevent visual glitches on multiple clicks
+    // Clear existing timeout to prevent icon state conflicts on multiple clicks
     const existingTimeout = activeTimeouts.get(button)
     if (existingTimeout) {
       clearTimeout(existingTimeout)
     }
 
     button.innerHTML = copyIcons.success
+    button.classList.add('copy-success')
 
-    // Set timeout to revert to copy icon after 2 seconds
+    // Set timeout to revert to copy icon after 1.5s
     const timeoutId = setTimeout(() => {
       button.innerHTML = copyIcons.copy
+      button.classList.remove('copy-success')
       activeTimeouts.delete(button)
-    }, 1000)
+    }, 1500)
 
     activeTimeouts.set(button, timeoutId)
   }
   catch {
+
   }
 }
 
+// Initialize copy buttons with icons and mark them to prevent duplicate initialization
 function setupCodeCopyButtons() {
-  // Only initialize buttons that haven't been initialized yet
-  document.querySelectorAll<HTMLButtonElement>('.code-copy-button:not([data-initialized])').forEach((button) => {
-    button.innerHTML = copyIcons.copy
-    button.setAttribute('data-initialized', 'true')
-  })
+  document
+    .querySelectorAll<HTMLButtonElement>('.code-copy-button:not([data-initialized])')
+    .forEach((button) => {
+      button.innerHTML = copyIcons.copy
+      button.setAttribute('data-initialized', 'true')
+    })
 }
 
 // Use event delegation for better performance

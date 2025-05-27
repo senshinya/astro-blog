@@ -36,7 +36,7 @@ html.reduce-motion {
   --at-apply: 'transition-colors duration-300 ease-out';
 }
 
-/* GSAP Animation Elements Initial States */
+/* GSAP Animation Elements Initial States >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 @media (min-width: 1024px) {
   html:not(.reduce-motion) #gsap-post-page-content > * {
     opacity: 0;
@@ -59,12 +59,14 @@ html.reduce-motion {
     transform: translateY(1.5rem);
   }
 }
+
 @media (max-width: 1023px) {
   html:not(.reduce-motion) #gsap-post-page-content > :nth-child(-n+7) {
     opacity: 0;
     transform: translateY(3rem);
   }
 }
+
 @media (max-width: 1535px) {
   html:not(.reduce-motion) #toc-container {
     opacity: 0;

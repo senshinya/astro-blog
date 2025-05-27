@@ -120,44 +120,7 @@
   mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M4.47.22A.749.749 0 0 1 5 0h6c.199 0 .389.079.53.22l4.25 4.25c.141.14.22.331.22.53v6a.749.749 0 0 1-.22.53l-4.25 4.25A.749.749 0 0 1 11 16H5a.749.749 0 0 1-.53-.22L.22 11.53A.749.749 0 0 1 0 11V5c0-.199.079-.389.22-.53Zm.84 1.28L1.5 5.31v5.38l3.81 3.81h5.38l3.81-3.81V5.31L10.69 1.5ZM8 4a.75.75 0 0 1 .75.75v3.5a.75.75 0 0 1-1.5 0v-3.5A.75.75 0 0 1 8 4Zm0 8a1 1 0 1 1 0-2 1 1 0 0 1 0 2Z'%3E%3C/path%3E%3C/svg%3E");
 }
 
-/* Fix KaTeX Overflow with Hidden Scrollbar >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-.katex-display {
-  --at-apply: 'my-6 overflow-x-auto overflow-y-hidden scrollbar-hidden';
-}
-.katex-display::-webkit-scrollbar {
-  display: none;
-}
-
-/* Video */
-.heti iframe {
-  --at-apply: 'my-6 aspect-video w-full';
-}
-.heti :is(h1, h2, h3, h4, h5, h6, iframe) + iframe {
-  --at-apply: 'mt-4';
-}
-.heti iframe:has(+ iframe) {
-  --at-apply: 'mb-4';
-}
-
-/* Code Copy Button */
-.code-copy-button {
-  --at-apply: 'z-99 absolute top-2.3 right-2.3 w-8 aspect-square uno-round-border border-secondary/15 c-secondary/80 cursor-pointer';
-  --at-apply: 'transition-opacity duration-300 ease-out op-100 bg-background lg:(op-0 bg-background)';
-}
-.code-block-wrapper:hover .code-copy-button {
-  --at-apply: 'op-100';
-}
-.code-copy-button:hover {
-  --at-apply: 'c-primary/80';
-}
-.code-copy-button svg {
-  --at-apply: 'w-4 h-4 block mx-auto';
-}
-.code-copy-button svg,
-.code-copy-button svg path {
-  pointer-events: none;
-}
-
+/* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* :where(details) {
   --at-apply: 'my-4 px-4 py-3 border border-solid border-secondary/25 rounded cursor-pointer';
 }

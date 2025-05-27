@@ -10,8 +10,7 @@ const { waline: { serverURL = '', emoji = [], search = false, imageUploader = fa
   class="mt-16"
 ></div>
 
-<!-- >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-
+<!-- Waline Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script
   is:inline
   define:vars={{
@@ -37,8 +36,7 @@ function initWaline() {
   init({
     el: '#waline',
     serverURL,
-    // Share comments on posts in different languages
-    path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'),
+    path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'), // Share comments on posts in different languages
     lang: currentWalineLang,
     emoji,
     dark: 'html.dark',
