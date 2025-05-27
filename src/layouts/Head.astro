@@ -155,9 +155,7 @@ window
       define:vars={{ googleAnalyticsID, customGoogleAnalyticsJS }}
     >
       window.dataLayer = window.dataLayer || []
-      function gtag(...args) {
-        dataLayer.push(args)
-      }
+      function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date())
 
       if (customGoogleAnalyticsJS) {
