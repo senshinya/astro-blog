@@ -154,17 +154,19 @@ window
       type="text/partytown"
       define:vars={{ googleAnalyticsID, customGoogleAnalyticsJS }}
     >
+      {/* https://github.com/QwikDev/partytown/issues/382 */}
       window.dataLayer = window.dataLayer || []
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date())
-
+      window.gtag = function () {
+        dataLayer.push(arguments);
+      };
+      window.gtag('js', new Date());
       if (customGoogleAnalyticsJS) {
-        gtag('config', googleAnalyticsID, {
+        window.gtag('config', googleAnalyticsID, {
           transport_url: new URL(customGoogleAnalyticsJS).origin,
         })
       }
       else {
-        gtag('config', googleAnalyticsID)
+        window.gtag('config', googleAnalyticsID)
       }
     </script>
   </>
