@@ -48,8 +48,9 @@ export function generateExcerpt(
   if (!content)
     return ''
 
-  // Remove Markdown headings
+  // Remove HTML comments and Markdown headings
   const contentWithoutHeadings = content
+    .replace(/<!--[\s\S]*?-->/g, '')
     .replace(/^#{1,6}\s+\S.*$/gm, '')
     .replace(/\n{2,}/g, '\n\n')
 
