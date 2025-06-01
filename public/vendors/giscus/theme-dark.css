@@ -10,10 +10,10 @@
   --background-color: oklch(22% 0.005 298);
 
   --color-fg-default: var(--secondary-color);
-  --color-canvas-default: var(--background-color);
-  --color-canvas-overlay: var(--background-color);
-  --color-canvas-inset: var(--background-color);
-  --color-canvas-subtle: var(--background-color);
+  --color-canvas-default: transparent;
+  --color-canvas-overlay: transparent;
+  --color-canvas-inset: transparent;
+  --color-canvas-subtle: transparent;
   --color-accent-fg: oklch(70.7% 0.165 254.624);
   --color-accent-emphasis: oklch(70.7% 0.165 254.624);
 
@@ -72,7 +72,7 @@
   --color-btn-primary-disabled-border: rgb(240 246 252 / 10%);
   --color-action-list-item-default-hover-bg: rgb(177 186 196 / 12%);
   --color-segmented-control-bg: rgb(110 118 129 / 10%);
-  --color-segmented-control-button-bg: #0d1117;
+  --color-segmented-control-button-bg: transparent;
   --color-segmented-control-button-selected-border: #6e7681;
   /* --color-fg-default: var(--secondary-color); */
   --color-fg-muted: #7d8590;
