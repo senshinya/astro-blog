@@ -12,7 +12,6 @@ const {
   reactionsEnabled = '1',
   emitMetadata = '0',
   inputPosition = 'bottom',
-  loading = 'lazy',
 } = themeConfig.comment?.giscus ?? {}
 
 const siteUrl = themeConfig.site.url
@@ -40,7 +39,6 @@ const shouldRender = Boolean(repo && repoID && categoryID)
       giscusLocaleMap,
       defaultLocale,
       siteUrl,
-      loading,
     }}
   >
   function getThemeUrl() {
