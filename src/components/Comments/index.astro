@@ -13,7 +13,7 @@ const enableComments = themeConfig.comment?.enabled ?? false
 
 // Giscus
 const giscusRepo = themeConfig.comment?.giscus?.repo || ''
-const showGiscus = enableComments && themeConfig.comment?.provider == 'giscus' && giscusRepo.trim() !== ''
+const showGiscus = enableComments && giscusRepo.trim() !== ''
 
 // Twikoo
 // const twikooEnvId = themeConfig.comment?.twikoo?.envId || ''

@@ -1,15 +1,19 @@
+/**
+ * Create a new post with frontmatter
+ * Usage: pnpm new-post <title>
+ *
+ * Example: pnpm new-post
+ * Example: pnpm new-post first-post
+ * Example: pnpm new-post first-post.md
+ * Example: pnpm new-post first-post.mdx
+ * Example: pnpm new-post 2025/03/first-post
+ * Example: pnpm new-post 2025/03/first-post.md
+ * Example: pnpm new-post 2025/03/first-post.mdx
+ */
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { basename, dirname, extname, join } from 'node:path'
 import process from 'node:process'
 import { themeConfig } from '../src/config'
-
-// pnpm new-post
-// pnpm new-post first-post
-// pnpm new-post first-post.md
-// pnpm new-post first-post.mdx
-// pnpm new-post 2025/03/first-post
-// pnpm new-post 2025/03/first-post.md
-// pnpm new-post 2025/03/first-post.mdx
 
 // Process file path
 const rawPath = process.argv[2] || 'new-post'

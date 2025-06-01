@@ -18,5 +18,21 @@ export const walineLocaleMap: Record<string, string> = {
   'zh': 'zh-CN',
 }
 
+// Giscus Language Map
+// https://giscus.app/
+export const giscusLocaleMap: Record<string, string> = {
+  'de': 'de',
+  'en': 'en',
+  'es': 'es',
+  'fr': 'fr',
+  'ja': 'ja',
+  'ko': 'ko',
+  'pl': 'pl',
+  'pt': 'pt',
+  'ru': 'ru',
+  'zh': 'zh-CN',
+  'zh-tw': 'zh-TW',
+}
+
 // Supported Languages
 export const supportedLangs = Object.keys(langMap).flat()

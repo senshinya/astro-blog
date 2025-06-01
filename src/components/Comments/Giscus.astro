@@ -1,83 +1,123 @@
 ---
-import { themeConfig } from "@/config";
+import { defaultLocale, themeConfig } from '@/config'
+import { giscusLocaleMap } from '@/i18n/config'
 
 const {
-  repo = "",
-  repoID = "",
-  category = "",
-  categoryID = "",
-  mapping = "pathname",
-  inputPosition = "top",
-  lang = "zh-CN",
-  loading = "lazy",
-} = themeConfig.comment?.giscus ?? {};
+  repo = '',
+  repoID = '',
+  category = '',
+  categoryID = '',
+  mapping = 'pathname',
+  strict = '0',
+  reactionsEnabled = '1',
+  emitMetadata = '0',
+  inputPosition = 'bottom',
+} = themeConfig.comment?.giscus ?? {}
+
+const siteUrl = themeConfig.site.url
+const shouldRender = Boolean(repo && repoID && categoryID)
 ---
 
-<div class="giscus mt-16" id="giscus-container"></div>
+{shouldRender && (
+  <div
+    id="giscus"
+    class="giscus mt-16"
+  ></div>
 
-<script
-  is:inline
-  define:vars={{
-    repo,
-    repoID,
-    category,
-    categoryID,
-    mapping,
-    inputPosition,
-    lang,
-    loading,
-  }}
->
-  const host = window.location.origin;
+  <script
+    is:inline
+    define:vars={{
+      repo,
+      repoID,
+      category,
+      categoryID,
+      mapping,
+      strict,
+      reactionsEnabled,
+      emitMetadata,
+      inputPosition,
+      giscusLocaleMap,
+      defaultLocale,
+      siteUrl,
+    }}
+  >
+  function getThemeUrl() {
+    const isDark = document.documentElement.classList.contains('dark')
+    return isDark
+      ? `${siteUrl}/vendors/giscus/theme-dark.css`
+      : `${siteUrl}/vendors/giscus/theme-light.css`
+      // For local development
+      // ? `http://localhost:4321/vendors/giscus/theme-dark.css`
+      // : `http://localhost:4321/vendors/giscus/theme-light.css`
+  }
 
-  function loadGiscus() {
-    const existingScript = document.querySelector("script[src*='giscus.app']");
-    if (existingScript) {
-      existingScript.remove();
+  function setupGiscus() {
+    const giscusContainer = document.getElementById('giscus')
+    if (!giscusContainer)
+      return
+
+    giscusContainer.innerHTML = ''
+
+    const currentPath = window.location.pathname
+    const pathLang = Object.keys(giscusLocaleMap).find(code =>
+      currentPath.startsWith(`/${code}/`),
+    )
+    const lang = pathLang || defaultLocale
+    const currentGiscusLang = giscusLocaleMap[lang]
+
+    const script = document.createElement('script')
+    script.src = 'https://giscus.app/client.js'
+    script.crossOrigin = 'anonymous'
+    script.async = true
+
+    // Set up basic attributes
+    const dataAttributes = {
+      repo,
+      repoId: repoID,
+      category: undefined,
+      categoryId: categoryID,
+      mapping,
+      strict,
+      reactionsEnabled,
+      emitMetadata,
+      inputPosition,
+      theme: getThemeUrl(),
+      lang: currentGiscusLang,
     }
-    const giscusContainer = document.getElementById("giscus-container");
-    if (giscusContainer) giscusContainer.innerHTML = "";
-    // 创建新脚本
-    const theme = document.documentElement.classList.contains("dark")
-      ? host + "/css/giscus_dark.css"
-      : host + "/css/giscus_light.css";
-    const script = document.createElement("script");
-    script.src = "https://giscus.app/client.js";
-    script.setAttribute("data-repo", repo);
-    script.setAttribute("data-repo-id", repoID);
-    script.setAttribute("data-category", category);
-    script.setAttribute("data-category-id", categoryID);
-    script.setAttribute("data-mapping", mapping);
-    script.setAttribute("data-strict", "0");
-    script.setAttribute("data-reactions-enabled", "1");
-    script.setAttribute("data-theme", theme);
-    script.setAttribute("data-emit-metadata", "0");
-    script.setAttribute("data-input-position", inputPosition);
-    script.setAttribute("data-lang", lang);
-    script.setAttribute("data-loading", loading);
-    script.crossOrigin = "anonymous";
-    script.async = true;
-    giscusContainer.appendChild(script);
+
+    // Add category conditionally
+    if (category)
+      dataAttributes.category = category
+
+    // Apply all attributes
+    Object.assign(script.dataset, dataAttributes)
+
+    try {
+      giscusContainer.appendChild(script)
+    }
+    catch (error) {
+      console.error('Failed to setup Giscus:', error)
+    }
   }
 
-  function changeGiscusTheme() {
-    const iframe = document.querySelector("iframe.giscus-frame");
-    if (!iframe || iframe.classList.contains("giscus-frame--loading")) {
-      // 脚本未加载场景
-      console.log("Giscus iframe not found, reloading...");
-      loadGiscus();
-      return;
-    };
-    const theme = document.documentElement.classList.contains("dark")
-      ? host + "/css/giscus_dark.css"
-      : host + "/css/giscus_light.css";
-    iframe.contentWindow.postMessage(
-      { giscus: { setConfig: { theme } } },
-      "https://giscus.app",
-    );
+  function updateGiscusTheme() {
+    const iframe = document.querySelector('.giscus-frame')
+    if (!iframe || !iframe.contentWindow)
+      return
+
+    try {
+      iframe.contentWindow.postMessage(
+        { giscus: { setConfig: { theme: getThemeUrl() } } },
+        'https://giscus.app',
+      )
+    }
+    catch (error) {
+      console.error('Failed to update Giscus theme:', error)
+    }
   }
 
-  document.addEventListener("DOMContentLoaded", loadGiscus);
-  document.addEventListener("theme-changed", changeGiscusTheme);
-  document.addEventListener("astro:page-load", loadGiscus);
-</script>
+  setupGiscus()
+  document.addEventListener('astro:page-load', setupGiscus)
+  document.addEventListener('theme-changed', updateGiscusTheme)
+  </script>
+)}

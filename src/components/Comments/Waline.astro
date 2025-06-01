@@ -2,7 +2,14 @@
 import { defaultLocale, themeConfig } from '@/config'
 import { walineLocaleMap } from '@/i18n/config'
 
-const { waline: { serverURL = '', emoji = [], search = false, imageUploader = false } = {} } = themeConfig.comment ?? {}
+const {
+  waline: {
+    serverURL = '',
+    emoji = [],
+    search = false,
+    imageUploader = false,
+  } = {},
+} = themeConfig.comment ?? {}
 ---
 
 <div
@@ -25,7 +32,7 @@ const { waline: { serverURL = '', emoji = [], search = false, imageUploader = fa
 >
 import { init } from '/vendors/waline/waline.js'
 
-function initWaline() {
+function setupWaline() {
   const currentPath = window.location.pathname
   const pathLang = Object.keys(walineLocaleMap).find(code =>
     currentPath.startsWith(`/${code}/`),
@@ -50,8 +57,8 @@ function initWaline() {
   })
 }
 
-initWaline()
-document.addEventListener('astro:page-load', initWaline)
+setupWaline()
+document.addEventListener('astro:page-load', setupWaline)
 </script>
 
 <!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
