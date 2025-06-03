@@ -648,7 +648,12 @@ if (!travel) {
 
       photoViewImg.src = currentPhoto.src;
       photoViewImg.alt = currentPhoto.alt;
-      photoViewCaption.textContent = currentPhoto.caption;
+      if (currentPhoto.caption) {
+        photoViewCaption.classList.remove("hidden");
+        photoViewCaption.textContent = currentPhoto.caption;
+      } else {
+        photoViewCaption.classList.add("hidden");
+      }
 
       // 更新照片导航按钮状态
       if (currentPhotoIndex === 0) {
