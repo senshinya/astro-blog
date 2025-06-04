@@ -7,7 +7,7 @@
   /* Custom Theme Colors */
   --secondary-color: oklch(77% 0.005 298);
   --secondary-color-25: oklch(77% 0.005 298 / 25%);
-  --background-color: transparent;
+  --background-color: oklch(22% 0.005 298);
 
   --color-fg-default: var(--secondary-color);
   --color-canvas-default: transparent;
@@ -139,7 +139,7 @@ h4.gsc-replies-count {
 /* Oldest and Newest Buttons Style */
 .BtnGroup-item,
 .BtnGroup-item.BtnGroup-item--selected {
-  background-color: var(--background-color);
+  background-color: transparent;
 }
 .BtnGroup-item.BtnGroup-item--selected {
   border-color: var(--secondary-color-25)!important;
@@ -148,7 +148,7 @@ h4.gsc-replies-count {
   border-color: var(--secondary-color-25)!important;
 }
 .BtnGroup-item button.btn:hover {
-  background-color: var(--background-color);
+  background-color: transparent;
 }
 
 /* Reply Time No Underline */
