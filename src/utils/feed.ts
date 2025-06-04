@@ -27,9 +27,9 @@ const markdownParser = new MarkdownIt()
 const { title, description, url, author: siteAuthor } = themeConfig.site
 const followConfig = themeConfig.seo?.follow
 
-// Dynamically import all images from /src/content/posts/_images
+// Dynamically import all images from /src/content/_images
 const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
-  '/src/content/posts/_images/**/*.{jpeg,jpg,png,gif,webp}',
+  '/src/content/_images/**/*.{jpeg,jpg,png,gif,webp}',
 )
 
 /**
@@ -41,7 +41,7 @@ const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
  */
 const getOptimizedImageUrl = memoize(async (srcPath: string, baseUrl: string) => {
   const prefixRemoved = srcPath.replace(/^\.\.\/|^\.\//, '')
-  const rawImagePath = `/src/content/posts/${prefixRemoved}`
+  const rawImagePath = `/src/content/${prefixRemoved}`
   const rawImageModule = imagesGlob[rawImagePath]
 
   if (!rawImageModule)
@@ -79,7 +79,7 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
         if (!src.startsWith('./') && !src.startsWith('../') && !src.startsWith('/images'))
           return
 
-        // Process images from src/content/posts/_images directory
+        // Process images from src/content/_images directory
         if (src.startsWith('./') || src.startsWith('../')) {
           const optimizedImageUrl = await getOptimizedImageUrl(src, baseUrl)
 
