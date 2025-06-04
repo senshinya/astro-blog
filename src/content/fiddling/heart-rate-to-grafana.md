@@ -2,7 +2,7 @@
 title: My heart beats for U —— 心率同步 Grafana 展示
 tags: ["折腾","Grafana","心率","Apple Watch"]
 published: 2025-03-31T23:51:00+08:00
-description: "展示苹果健康心率数据，通过Grafana可视化，记录同步过程。"
+description: "通过将苹果健康的心率数据定时同步到服务器，使用 Grafana 进行可视化展示，创造了一种直观的健康监测方式。利用 Health Auto Export 应用的 Restful API，将心率信息发送到指定的 http 接口，存储在 InfluxDB 中，最终在 Grafana 中呈现出清晰的看板，便于追踪和分析个人的心率变化。"
 ---
 整了个小活：把苹果健康的心率定时同步到服务器上，并由 Grafana 绘制展示，效果大概如下：
 

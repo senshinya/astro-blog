@@ -2,7 +2,7 @@
 title: Astro 接入 Google Analytics (Tag Manager)
 published: 2025-05-28T22:09:00.000+08:00
 tags: ["Astro","Google Tag Manager","Google Analytics","GTM","partytown"]
-description: "简要介绍如何在 Astro 框架中接入 Google Analytics，并保持高性能。"
+description: "在将博客迁移至 Astro 框架后，常规的 Google Analytics 接入方法因性能因素而不再适用。尽管可以在 head 标签中直接添加 js 代码进行事件上报，这会影响页面性能。为了保持 Astro 的高效表现，采用了 partytown 技术，将脚本从主线程中剥离，确保加载过程不受影响。在此基础上，结合 demo 代码成功实现了 Google Analytics 的无缝接入，达成了性能与数据分析的平衡。"
 ---
 
 ### 前言

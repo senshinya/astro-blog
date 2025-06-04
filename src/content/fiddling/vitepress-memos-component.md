@@ -2,7 +2,7 @@
 title: 在 VitePress 中实现一个动态说说功能
 tags: ["折腾","VitePress","Memos","CloudFlare"]
 published: 2025-01-29T21:58:00+08:00
-description: "实现动态说说功能，提升 VitePress 博客的实时性与用户体验。"
+description: "在构建动态博客时，添加说说功能能显著提升用户体验。相比静态博客的繁琐流程，这种功能允许用户随时随地分享短小的想法，降低了发文的心理负担。通过利用 CloudFlare Workers 实现后端逻辑，并结合 KV 存储，开发者能够轻松管理说说内容。前端则通过 VitePress 框架和 Vue 组件的嵌入，快捷地展示这些动态信息，为博客增添了生动的交互性。"
 ---
 ### 前言
 

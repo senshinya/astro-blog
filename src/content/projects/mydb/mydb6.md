@@ -2,7 +2,7 @@
 title: MYDB 6. 记录的版本与事务隔离
 published: 2021-12-18T14:58:00+08:00
 tags: ["java", "mydb"]
-description: "本章探讨MYDB的Version Manager，涵盖事务隔离与MVCC实现。"
+description: "VM 通过两段锁协议确保调度序列的可串行化，并引入多版本并发控制（MVCC），以消除读写阻塞问题。此外还定义了数据库操作中的冲突，特别关注更新与读取操作的相互影响，为理解事务间的隔离级别奠定基础。"
 ---
 本章涉及代码都在 [backend/vm](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/vm) 中。
 

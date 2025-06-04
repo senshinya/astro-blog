@@ -119,11 +119,11 @@ async function generateDescription(title, content) {
                 },
                 {
                     role: "user",
-                    content: `请为以下标题和内容生成一个简短的描述（不超过100个字符）：\n\n标题：${title}\n\n内容开头：${context}`
+                    content: `以自然、随性、不做作的方式，根据下方标题和内容开头写一段50到100字的描述。不要使用介绍、总结、打招呼或互动语气，避免套路化和刻意吸引。直接展开内容，风格流畅简洁，只输出正文描述，不加引号或多余说明。\n\n标题：${title}\n\n内容开头：${context}`
                 }
             ],
             temperature: 0.7,
-            max_tokens: 100
+            max_tokens: 1000
         });
 
         return completion.choices[0].message.content.trim();
@@ -137,7 +137,7 @@ async function main() {
     console.log('🔍 扫描Markdown文件...');
 
     // 查找所有Markdown文件
-    const files = await fg(['src/content/**/*.{md,mdx}']);
+    const files = await fg(['src/content/**/*.md']);
     console.log(`📦 找到 ${files.length} 个Markdown文件`);
 
     let updatedCount = 0;
@@ -161,11 +161,11 @@ async function main() {
             const data = parseFrontmatter(frontmatter);
 
             // 检查description是否存在且不为空
-            if (data.description && data.description.trim() !== '' && data.description !== "''") {
-                console.log(`⏩ 跳过 ${file}: 已有description`);
-                skippedCount++;
-                continue;
-            }
+            // if (data.description && data.description.trim() !== '' && data.description !== "''") {
+            //     console.log(`⏩ 跳过 ${file}: 已有description`);
+            //     skippedCount++;
+            //     continue;
+            // }
 
             // 生成description
             console.log(`🤖 为 ${file} 生成description...`);
@@ -176,7 +176,7 @@ async function main() {
                 errorCount++;
                 continue;
             }
-
+            console.log(`📝 生成的description: ${description}`);
             // 更新frontmatter
             data.description = `"${description}"`;
             const newFrontmatter = stringifyFrontmatter(data);

@@ -2,7 +2,7 @@
 title: MYDB 10. 服务端客户端的实现及其通信规则
 published: 2021-12-25T18:26:00+08:00
 tags: ["java", "mydb"]
-description: "探讨 MYDB 的客户端与服务端实现及其通信规则，支持 C/S 结构。"
+description: "MYDB 采用 C/S 结构，类似于 MySQL，允许多个客户端通过 socket 连接到服务器，执行 SQL 查询并返回结果。通信采用了一种特殊的二进制格式，尽管也可以选择明文传输，以简化实现。服务端与客户端之间的基本传输结构确保了数据的有效交流和处理。"
 ---
 本章涉及代码都在 [backend/server](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/server) 、 [client](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/client) 与 [transport](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/transport) 中。
 

@@ -2,7 +2,7 @@
 title: MYDB 4. 日志文件与恢复策略
 published: 2021-12-08T22:55:00+08:00
 tags: ["java", "mydb"]
-description: "本章介绍MYDB的日志文件结构及数据恢复策略，确保崩溃后数据一致性。"
+description: "在 MYDB 的设计中，日志文件扮演着至关重要的角色，确保数据在崩溃后能够顺利恢复。每次操作底层数据时，DM 层都会生成并记录日志，形成一条连续的日志链。这些日志以特定的二进制格式存储，包含校验和和各个操作记录，确保在系统重启时能够精准地重建数据状态，维护数据的一致性与完整性。"
 ---
 本章涉及代码都在 [backend/dm/logger](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm/logger) 和 [backend/dm/Recover.java](https://github.com/CN-GuoZiyang/MYDB/blob/master/src/main/java/top/guoziyang/mydb/backend/dm/Recover.java) 中。
 

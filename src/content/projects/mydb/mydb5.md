@@ -2,7 +2,7 @@
 title: MYDB 5. 页面索引与 DM 的实现
 published: 2021-12-11T15:16:00+08:00
 tags: ["java", "mydb"]
-description: "本章介绍MYDB中页面索引与DM层的实现，涉及相关代码与结构。"
+description: "页面索引是 DM 层的重要组成部分，通过缓存每一页的空闲空间来优化插入操作。这一机制使得上层模块能够迅速定位合适的页面，避免了冗长的搜索过程，提高了数据处理的效率。在实现方面，页面索引与数据项（DataItem）的抽象紧密结合，为数据库的高效运行提供了支撑。"
 ---
 本章涉及代码都在 [backend/dm/pageIndex](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm/pageIndex)、[backend/dm/dataItem](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm/dataItem) 和 [backend/dm](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm) 中。
 

@@ -2,7 +2,7 @@
 title: MYDB 0. 项目结构和一些不得不说的话
 published: 2021-11-27T14:43:00+08:00
 tags: ["java", "mydb"]
-description: "MYDB项目介绍，探索数据库基本原理与个人学习经历。"
+description: "MYDB 项目是一个旨在探索和实现数据库基本原理的个人作品，经历了大半个月的努力，在闲暇时间逐步完成。我在学校学习数据库系统的过程中，积累了一些基础知识，尽管在实习期间更多是借机“摸鱼”。在面试时的坦诚回答虽未造成太大影响，但也促使他重新审视数据库的知识，决定主动学习和实践，从而推动了这个项目的诞生。"
 ---
 项目地址：[https://github.com/CN-GuoZiyang/MYDB](https://github.com/CN-GuoZiyang/MYDB)
 

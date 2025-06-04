@@ -2,7 +2,7 @@
 title: MYDB 1. 从最简单的 TM 开始
 published: 2021-11-28T16:10:00+08:00
 tags: ["java", "mydb"]
-description: "介绍 MYDB 的事务管理，从 XID 文件及其状态开始。"
+description: "MYDB 中，事务的管理是通过 XID 文件实现的，每个事务都有一个唯一的 XID，从 1 开始递增，XID 0 被定义为超级事务，状态始终为已提交。TransactionManager 负责维护这一文件，并记录事务的三种状态：活动、已提交和已中止。这一机制确保了事务的状态能够被准确查询和管理，为系统的稳定性和可靠性提供了基础。"
 ---
 本章涉及代码都在 [backend/tm](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/tm) 中。
 
