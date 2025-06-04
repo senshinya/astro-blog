@@ -4,8 +4,6 @@ tags: ["mapreduce","6.5840","6.824"]
 published: 2022-01-16T17:32:00+08:00
 description: "简要介绍MapReduce架构模型及其在大规模数据集处理中的应用。"
 ---
-import { Image } from 'astro:assets';
-
 ### 前言
 
 MapReduce，是 Google 早年提出了一种软件架构模型，支持大规模数据集的并行运算。现在这个概念被运用在大量分布式系统中。
@@ -51,7 +49,7 @@ reduce(String key, Iterator values):
 
 MapReduce 作为一种编程模型或者说编程思想，实现方式可以有很多。Google 在论文中给出了一种实现方法，用于局域网内互相连接的大量机器。执行流程如下图：
 
-<Image src="https://blog-img.shinya.click/2025/6f7e7839e6f09e0d8193d530920a6f7e.jpg" inferSize alt="mapReduce 执行流程"/>
+![mapReduce 执行流程](https://blog-img.shinya.click/2025/6f7e7839e6f09e0d8193d530920a6f7e.jpg)
 
 1. MapReduce 框架首先将输入文件划分为 M 片，每片通常为 16MB 到 64MB 大小。随后会启动集群中的机器（进程）。
 2. 集群中的一个进程是一个特殊的 master 进程。剩余的 worker 进程都由 master 分配任务。一共有 M 个 map 任务和 R 个 reduce 任务需要分配。master 会挑选空闲的 worker，一次分配一个 map 任务或者一个 reduce 任务。

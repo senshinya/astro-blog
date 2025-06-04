@@ -4,8 +4,6 @@ tags: ["折腾","debian","旁路由","翻墙","透明代理","mihomo"]
 published: 2024-07-13T17:49:00+08:00
 description: "介绍一种基于Debian的旁路由方案，解决OpenWRT和LuCI的稳定性问题。"
 ---
-import { Image } from 'astro:assets';
-
 ### 前言
 
 大部分旁路由方案都是基于 OpenWRT 搭建 —— 这是一个单独的 Linux 发行版，拥有自己的软件包系统。再其中大部分方案又是基于 LuCI —— 专用于 OpenWRT 的 Web GUI，教程中使用的软件也是 luci-app-xxx，专为 LuCI 打造。这些方案很好，但不够好：
@@ -19,7 +17,7 @@ import { Image } from 'astro:assets';
 
 最终形态的网络拓扑如下：
 
-<Image src="https://blog-img.shinya.click/2025/c4347103c787f3d28b50a679e80aa0fe.png" inferSize alt="topo"/>
+![topo](https://blog-img.shinya.click/2025/c4347103c787f3d28b50a679e80aa0fe.png)
 
 可以看到，整个内网被划分成了两个网段：192.168.6.0/24，192.168.7.0/24。其中 6.0/24 为默认网段，用于无需越墙的设备，而 7.0/24 为需要越墙的设备，其流量都会经过旁路由小主机转发。
 
@@ -33,11 +31,11 @@ import { Image } from 'astro:assets';
 
 iKuai 下网络设置 - 内外网设置 - lan1，高级设置中添加一个扩展 IP，IP 为 192.168.7.1，子网掩码 255.255.255.0
 
-<Image src="https://blog-img.shinya.click/2025/9fc87b145274f1fb0cba1ed0d2329ac0.png" inferSize alt="iKuai 配置"/>
+![iKuai 配置](https://blog-img.shinya.click/2025/9fc87b145274f1fb0cba1ed0d2329ac0.png)
 
 DHCP 设置中添加一个 192.168.7.0/24 网段的 DHCP 配置
 
-<Image src="https://blog-img.shinya.click/2025/2de91498b256d08c92a3c8844ca14dbe.png" inferSize alt="DHCP 配置"/>
+![DHCP 配置](https://blog-img.shinya.click/2025/2de91498b256d08c92a3c8844ca14dbe.png)
 
 网关设置为 192.168.7.2，即后面要配置的旁路由的地址，首选 DNS 和备选 DNS 也都设置为 192.168.7.2，因为该网段下的 DNS 都由旁路由处理。
 
@@ -115,7 +113,7 @@ sudo sysctl -p
 
 以下说明下 DNS 思路
 
-<Image src="https://blog-img.shinya.click/2025/bb62d86943fdce26364eea909c4621a9.png" inferSize alt="DNS 链路"/>
+![DNS 链路](https://blog-img.shinya.click/2025/bb62d86943fdce26364eea909c4621a9.png)
 
 当客户端需要解析 DNS 时，监听在 53 端口上的 AdguardHome 会转发给其上游 Clash，然后 Clash 根据设置来进行分流，中国大陆部分使用国内的公共 DNS 服务器进行解析，非中国大陆部分通过代理向国外公共 DNS 服务器进行解析
 

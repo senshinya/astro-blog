@@ -4,8 +4,6 @@ tags: ["折腾","翻墙","透明代理","FakeIP"]
 published: 2024-08-16T23:53:00+08:00
 description: "探讨基于 FakeIP 的透明代理分流，优化旁路由的性能与可靠性。"
 ---
-import { Image } from 'astro:assets';
-
 ### 前言
 
 [上篇文章](/fiddling/debian-as-side-router)中介绍了使用旁路由做局域网内透明代理的方案，对于大部分用户已经基本可用，但是该方案的 cons 也比较明显：
@@ -26,7 +24,7 @@ sing-box 和 clash 都内置了 DNS 模块，实现了 DNS Server 了功能，�
 
 由于 FakeIP 通常位于一个保留网段（大部分配置为 `198.18.0.0/15`），分流特征及其明显，分流也十分简单。我们可以直接让软路由代理的 DNS 模块仅对需要代理的域名响应 FakeIP，在主路由中配置下一跳，仅让目标 IP 为 FakeIP 的流量通过软路由代理，非 FakeIP 的流量正常转发。具体如下
 
-<Image src="https://blog-img.shinya.click/2025/e078ffe1fe41b2cbcb04b40a55cbbc56.png" inferSize alt="fakeIP 分流"/>
+ ![fakeIP 分流](https://blog-img.shinya.click/2025/e078ffe1fe41b2cbcb04b40a55cbbc56.png)
 
 ```
 1. 无须科学的域名
@@ -56,7 +54,7 @@ sing-box 和 clash 都内置了 DNS 模块，实现了 DNS Server 了功能，�
 
 首先在主路由配置下一跳网关，ikuai 的配置位于 流控分流-分流设置-端口分流，添加一条分流规则，分流方式选择下一跳网关，并填写你的软路由 IP，我的就是 192.168.7.2 了。并在目的地址中添加一条 198.18.0.0/15，其他配置保持默认即可
 
-<Image src="https://blog-img.shinya.click/2025/37f3bc2ebbd0f4f79e218c2a949a84c4.png" inferSize alt="下一跳网关"/>
+ ![下一跳网关](https://blog-img.shinya.click/2025/37f3bc2ebbd0f4f79e218c2a949a84c4.png)
 
 这样所有目标地址为 198.18.0.0/15 的流量经过主路由时都会被转发到 192.168.7.2 了
 

@@ -4,13 +4,11 @@ tags: ["mapreduce","6.5840","6.824"]
 published: 2022-01-20T22:29:00+08:00
 description: "实现MapReduce系统的实验，包含master与worker程序的并发控制。"
 ---
-import { Image } from 'astro:assets';
-
 ### 前言
 
 实验一是要实现一个 MapReduce 系统，基本就是两个部分：实现 master 程序和实现 worker 程序。这个实验基本就是劝退怪了，一来是对 golang 的 rpc 和并发的使用要比较熟悉，二来就是要对 MapReduce 的整个流程机制要比较熟悉。其实有一个小秘诀，就是拼命看论文中的这张图，再拼命看下面的流程讲解：
 
-<Image src="https://blog-img.shinya.click/2025/6f7e7839e6f09e0d8193d530920a6f7e.jpg" inferSize alt="mapReduce 执行流程"/>
+![mapReduce 执行流程](https://blog-img.shinya.click/2025/6f7e7839e6f09e0d8193d530920a6f7e.jpg)
 
 这个实验我实现了两个版本，主要是并发控制的方式有些不同。最初是基于 mutex 锁的版本，后来重构成了基于 channel 的无锁版本。无锁版本的实现比较优雅，所以讲解也主要基于无锁版本。
 

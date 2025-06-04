@@ -4,8 +4,6 @@ tags: ["折腾","VitePress","Memos","CloudFlare"]
 published: 2025-01-29T21:58:00+08:00
 description: "实现动态说说功能，提升 VitePress 博客的实时性与用户体验。"
 ---
-import { Image } from 'astro:assets';
-
 ### 前言
 
 很多动态博客中都有一个说说的功能，本质就是一种特殊的博文，借助动态博客的实时性，可以做到随写随发
@@ -15,7 +13,7 @@ import { Image } from 'astro:assets';
 于是实现了一套说说系统的前后端，效果就是本博客的[碎碎念](/memos)。后端使用 CloudFlare Workers 实现，存储当然也就近存储在大善人的 KV 里，简单写了个管理页面。博客框架是 VitePress，前端也就做成了个 Vue 组件，直接嵌入一个页面作为说说页
 
 前端效果不再多说，后端管理页面效果
-<Image src="https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png" inferSize alt="Memo 管理页面"/>
+![Memo 管理页面](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
 
 ### 后端 CloudFlare Workers + KV
 
