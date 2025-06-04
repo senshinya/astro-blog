@@ -3,6 +3,7 @@ title: Astro 接入 Google Analytics (Tag Manager)
 published: 2025-05-28T22:09:00.000+08:00
 tags: ["Astro","Google Tag Manager","Google Analytics","GTM","partytown"]
 ---
+import { Image } from 'astro:assets';
 
 ### 前言
 
@@ -10,11 +11,11 @@ tags: ["Astro","Google Tag Manager","Google Analytics","GTM","partytown"]
 
 此前一直在 Google Analytics 上看博客的访问量，分析各种 referer 等信息。使用 hexo 和 hugo 等静态博客框架，都可以很容易的接入 Google Analytics，直接在 head 标签中添加 js 代码即可。前些日子将博客迁移到了 Astro 框架，诚然可以用老办法，直接在 head 执行 js 代码上报事件，但是就会造成性能下降。众所周知，Astro 追求极致前端性能、尽量 0 JS 执行。一旦使用 js 上报事件，就会造成性能损失
 
-![性能满昏！](https://blog-img.shinya.click/2025/e1e778992ea6b393ed763a8642db3770.png)
+<Image src="https://blog-img.shinya.click/2025/e1e778992ea6b393ed763a8642db3770.png" inferSize alt="性能满昏！"/>
 
 于是网上冲浪了一番，搜到的大部分教程是使用 partytown 来将脚本剥离主线程执行，不阻塞主线程加载，以保证性能，并都给出了 demo 代码。于是在给出的 demo 基础上，我将其嵌入了我的博客。于是就得到了以下结果：
 
-![](https://blog-img.shinya.click/2025/e5005b9f2321f6946761eef52156e777.png)
+<Image src="https://blog-img.shinya.click/2025/e5005b9f2321f6946761eef52156e777.png" inferSize alt=""/>
 
 上报直接掉零了
 

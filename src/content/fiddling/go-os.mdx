@@ -3,6 +3,8 @@ title: 一次失败的项目实践——春节七天乐（不起来）
 tags: ["折腾","golang", "os", "riscv"]
 published: 2023-02-02T23:24:55+08:00
 ---
+import { Image } from 'astro:assets';
+
 ### 缘起
 
 最初是在过年回家的高铁上，在知乎上看到了这篇文章：[将Go程序跑在裸机上](https://zhuanlan.zhihu.com/p/265806072)，大致想法是通过实现一遍系统接口，来接管 golang 程序的各种系统调用和中断之类的。感觉这个想法十分有趣。作者还用 golang 写了一个 x86 os：[eggos](https://zhuanlan.zhihu.com/p/265806072)，完成度相当之高。由于是从底层魔改了 golang 的运行时，用户程序完全无感知，所以各种 golang 的第三方库都可以直接使用。作者甚至实现了一个支持 TCP/IP 的协议栈，使得一些网络库可以直接使用。看的我心潮澎湃。
@@ -19,7 +21,7 @@ published: 2023-02-02T23:24:55+08:00
 
 但我确实首先想到了一个绝妙的名字：goose
 
-![README](https://blog-img.shinya.click/2025/736f6c389e54c1327775f1aa95dad597.png)
+<Image src="https://blog-img.shinya.click/2025/736f6c389e54c1327775f1aa95dad597.png" inferSize alt="README"/>
 
 太妙了兄弟们！
 
@@ -218,7 +220,7 @@ Type           Offset             VirtAddr           PhysAddr
 
 百思不得其解，于是开始试验起来，最后发现，只要加上 `-T` 这个链接参数，就会出现这种情况。但是不加又不行，这些内存段不能被加载到低地址上，因为那是 mmio 的位置。于是我去 go 的 github 仓库里发了个 issue：[cmd/link: wrong program header offset when cross-compile to riscv64 when setting -T text alignment](https://github.com/golang/go/issues/57983)。描述了一下后，得到的回答是：
 
-![ISSUE](https://blog-img.shinya.click/2025/42c633b821d4323697e542b47a8fce31.png)
+<Image src="https://blog-img.shinya.click/2025/42c633b821d4323697e542b47a8fce31.png" inferSize alt="ISSUE"/>
 
 看来是 RV64 对 `-T` 的支持不太完善……
 

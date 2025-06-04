@@ -3,6 +3,8 @@ title: GFW 原理考
 tags: ["折腾","防火墙","国际互联网","梯子"]
 published: 2024-06-23T15:31:32+08:00
 ---
+import { Image } from 'astro:assets';
+
 技术无罪。
 
 > 防火长城（英语：Great Firewall，GFW），中国国家防火墙，或简称为墙、防火墙等，中国网信办称其为数据跨境安全网关，是该国政府过滤国际互联网出口内容的软硬件系统集合。———— Wikipedia
@@ -13,7 +15,7 @@ published: 2024-06-23T15:31:32+08:00
 
 很多人可能想当然：GFW 当然部署在出口网关上，这样就能直接抓到全部出口流量进行审查了。但事实上，据 gfwrev.blogspot.com 考证，GFW “在三个国际出口作旁路监听”，通过分光的方式将所有出入境的 IP 包复制到 GFW 集群上以进行审查。推测的 GFW 网络拓扑如下（图源 gfwrev.blogspot.com）：
 
-![gfw topology](https://blog-img.shinya.click/2025/4beb5462a598c9015c56c75fa73ae301.svg)
+<Image src="https://blog-img.shinya.click/2025/4beb5462a598c9015c56c75fa73ae301.svg" inferSize alt="gfw topology"/>
 
 GFW 希望对不同线路的链路异构性进行耦合，并研究了多种链路的耦合技术（来源：[高速网络环境下入侵检测系统结构研究](https://xueshu.baidu.com/usercenter/paper/show?paperid=f46cb7e5a6dbf7b9cb81b1dd3b9965ce)）。根据《国际通信出入口局管理办法》，几大 ISP 在公用国际光缆处汇合，而安管中心（CNNISC）有独立的交换中心，各 ISP 分别接入其交换中心。为了适应不同 ISP 的链路规格，GFW 的交换中心需要对不同链路进行整合，不同 ISP 分别引出旁路接入 GFW。接入的线路主要是光纤线路，所以称为“旁路分光”。实验发现，GFW 的接入地点不一定紧靠最后一跳，所以图中以虚线表示。
 
