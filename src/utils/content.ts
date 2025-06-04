@@ -1,9 +1,9 @@
-import type { CollectionEntry } from 'astro:content'
-import { getCollection, render } from 'astro:content'
-import { defaultLocale } from '@/config'
-import { memoize } from '@/utils/cache'
-
 /**
+ * Blog post data utilities with memoization and multi-language support
+ *
+ * Provides functions to query, filter, and organize blog posts from Astro's content
+ * collections. Features automatic caching, language filtering, and metadata enhancement.
+ *
  * Core Functions
  * - addMetaToPost
  * - getPosts
@@ -21,6 +21,11 @@ import { memoize } from '@/utils/cache'
  * - getTagSupportedLangs
  */
 
+import type { CollectionEntry } from 'astro:content'
+import { getCollection, render } from 'astro:content'
+import { defaultLocale } from '@/config'
+import { memoize } from '@/utils/cache'
+
 // Type definitions
 export type Post = CollectionEntry<'posts'> & {
   remarkPluginFrontmatter: {
@@ -35,7 +40,7 @@ export type Post = CollectionEntry<'posts'> & {
  */
 const metaCache = new Map<string, { minutes: number }>()
 async function addMetaToPost(post: CollectionEntry<'posts'>): Promise<Post> {
-  const cacheKey = `${post.id}-${post.data.lang || 'universal'}`
+  const cacheKey = `${post.id}-${post.data.lang ?? 'universal'}`
 
   if (!metaCache.has(cacheKey)) {
     const { remarkPluginFrontmatter } = await render(post)
@@ -66,16 +71,16 @@ async function _checkPostSlugDuplication(posts: CollectionEntry<'posts'>[]): Pro
     }
 
     const slugSet = slugMap.get(lang)!
-    if (slugSet.has(slug)) {
-      if (!lang) {
-        duplicates.push(`Duplicate slug "${slug}" found in universal post (applies to all languages)`)
-      }
-      else {
-        duplicates.push(`Duplicate slug "${slug}" found in "${lang}" language post`)
-      }
+    if (!slugSet.has(slug)) {
+      slugSet.add(slug)
+      return
+    }
+
+    if (!lang) {
+      duplicates.push(`Duplicate slug "${slug}" found in universal post (applies to all languages)`)
     }
     else {
-      slugSet.add(slug)
+      duplicates.push(`Duplicate slug "${slug}" found in "${lang}" language post`)
     }
   })
 
@@ -90,7 +95,7 @@ export const checkPostSlugDuplication = memoize(_checkPostSlugDuplication)
  * @returns Posts filtered by language, enhanced with metadata, sorted by date
  */
 async function _getPosts(lang?: string) {
-  const currentLang = lang || defaultLocale
+  const currentLang = lang ?? defaultLocale
 
   const filteredPosts = await getCollection(
     'posts',
@@ -131,7 +136,7 @@ async function _getPinnedPosts(lang?: string) {
   const posts = await getPosts(lang)
   return posts
     .filter(post => post.data.pin && post.data.pin > 0)
-    .sort((a, b) => (b.data.pin || 0) - (a.data.pin || 0))
+    .sort((a, b) => (b.data.pin ?? 0) - (a.data.pin ?? 0))
 }
 // Export memoized version
 export const getPinnedPosts = memoize(_getPinnedPosts)
@@ -229,7 +234,7 @@ export const getAllTags = memoize(_getAllTags)
  */
 async function _getPostsByTag(tag: string, lang?: string) {
   const tagMap = await getPostsGroupByTags(lang)
-  return tagMap.get(tag) || []
+  return tagMap.get(tag) ?? []
 }
 // Export memoized version
 export const getPostsByTag = memoize(_getPostsByTag)
@@ -244,20 +249,14 @@ async function _getTagSupportedLangs(tag: string) {
     'posts',
     ({ data }) => !data.draft,
   )
-  const supportedLangs = []
   const { allLocales } = await import('@/config')
 
-  for (const locale of allLocales) {
-    const hasPostsWithTag = posts.some(post =>
+  return allLocales.filter(locale =>
+    posts.some(post =>
       post.data.tags?.includes(tag)
       && (post.data.lang === locale || post.data.lang === ''),
-    )
-    if (hasPostsWithTag) {
-      supportedLangs.push(locale)
-    }
-  }
-
-  return supportedLangs
+    ),
+  )
 }
 // Export memoized version
 export const getTagSupportedLangs = memoize(_getTagSupportedLangs)

@@ -2,7 +2,7 @@ html {
   --at-apply: 'bg-background c-secondary antialiased';
   scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.25) transparent;
-  scrollbar-gutter: stable both-edges;
+  scrollbar-gutter: stable;
 }
 
 /* Fix Flash Issue On iOS */

@@ -14,6 +14,9 @@ const isPost = isPostPage(Astro.url.pathname)
 const timeSpacingClass = isPost ? 'ml-1.75' : 'ml-1.5'
 
 function formatDate(date: Date, format: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYYY' | 'MONTH DAY YYYY' | 'DAY MONTH YYYY') {
+  if (format === 'YYYY-MM-DD')
+    return date.toISOString().split('T')[0]
+
   const options: Intl.DateTimeFormatOptions = {
     year: 'numeric',
     month: format === 'MONTH DAY YYYY' || format === 'DAY MONTH YYYY' ? 'short' : '2-digit',
@@ -21,10 +24,6 @@ function formatDate(date: Date, format: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYY
   }
 
   switch (format) {
-    // ISO format: 2025-04-13
-    case 'YYYY-MM-DD':
-      return date.toISOString().split('T')[0]
-
     // US date format: 04-13-2025
     case 'MM-DD-YYYY':
       return date.toLocaleDateString('en-US', options).replace(/\//g, '-')

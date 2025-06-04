@@ -9,7 +9,7 @@ interface Props {
 }
 
 const { currentLang } = getPageInfo(Astro.url.pathname)
-const currentUI = ui[currentLang as keyof typeof ui]
+const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 
 const { headings = [] } = Astro.props
 const filteredHeadings = headings.filter(heading =>
@@ -46,7 +46,7 @@ const filteredHeadings = headings.filter(heading =>
         <TocIcon
           id="toc-icon"
           aria-hidden="true"
-          class="ml-1 hidden aspect-square w-4.2 2xl:(mt-4 block origin-center active:scale-90!)"
+          class="ml-4 hidden aspect-square w-4.2 2xl:(mt-4 block origin-center active:scale-90!)"
           fill="currentColor"
         />
       </label>
@@ -107,7 +107,7 @@ const filteredHeadings = headings.filter(heading =>
   --at-apply: 'grid rows-[0fr] transition-all duration-350 ease-in-out';
 }
 .accordion-content {
-  --at-apply: 'max-h-59.3 overflow-hidden pl-4 pr-6 2xl:(max-h-[calc(100vh-26.75rem)] pl-1)';
+  --at-apply: 'max-h-59.3 overflow-hidden pl-4 pr-6 2xl:max-h-[calc(100vh-26.75rem)]';
 }
 
 /* When toggle is checked, expand the wrapper to show content */
@@ -175,17 +175,12 @@ function setupTOCHighlight() {
     if (link === currentActiveLink)
       return
 
-    if (currentActiveLink) {
-      currentActiveLink.classList.remove('toc-link-active')
-    }
-
+    currentActiveLink?.classList.remove('toc-link-active')
     link.classList.add('toc-link-active')
     currentActiveLink = link
 
     // Only scroll the TOC in large screen (2xl) mode
-    if (is2xl) {
-      scrollLinkToCenter(link)
-    }
+    is2xl && scrollLinkToCenter(link)
   }
 
   // Scroll the link to center position
@@ -199,12 +194,12 @@ function setupTOCHighlight() {
   // Intersection observer callback
   const intersectionCallback = (entries: IntersectionObserverEntry[]) => {
     const visibleHeading = entries.find(entry => entry.isIntersecting)?.target
+    if (!visibleHeading?.id)
+      return
 
-    if (visibleHeading && visibleHeading.id) {
-      const link = headingMap.get(visibleHeading.id)
-      if (link)
-        highlightLink(link)
-    }
+    const link = headingMap.get(visibleHeading.id)
+    if (link)
+      highlightLink(link)
   }
 
   // Create the intersection observer
@@ -232,9 +227,7 @@ function setupTOCHighlight() {
       // Update screen size flag
       is2xl = newIs2xl
 
-      if (currentActiveLink && is2xl) {
-        scrollLinkToCenter(currentActiveLink)
-      }
+      is2xl && currentActiveLink && scrollLinkToCenter(currentActiveLink)
     }
   })
 }

@@ -76,9 +76,7 @@ function updateTheme() {
   const isDark = document.documentElement.classList.contains('dark')
   // Update meta theme color
   const metaThemeColor = document.head.querySelector('meta[name="theme-color"]')
-  if (metaThemeColor) {
-    metaThemeColor.setAttribute('content', isDark ? darkMode : lightMode)
-  }
+  metaThemeColor?.setAttribute('content', isDark ? darkMode : lightMode)
 
   // Update theme configuration in local storage
   localStorage.setItem('theme', isDark ? 'dark' : 'light')
@@ -89,28 +87,29 @@ function updateTheme() {
 function setupThemeToggle() {
   // Locate theme toggle button
   const themeToggleButton = document.getElementById('theme-toggle-button')
+  if (!themeToggleButton)
+    return
+
   // Add click listener to the button
-  if (themeToggleButton) {
-    themeToggleButton.addEventListener('click', () => {
-      // If reduceMotion is enabled or browser doesn't support View Transitions API, update theme directly
-      if (document.documentElement.classList.contains('reduce-motion') || !document.startViewTransition) {
-        updateTheme()
-        return
-      }
+  themeToggleButton.addEventListener('click', () => {
+    // If reduceMotion is enabled or browser doesn't support View Transitions API, update theme directly
+    if (document.documentElement.classList.contains('reduce-motion') || !document.startViewTransition) {
+      updateTheme()
+      return
+    }
 
-      // Temporarily add markers during animation to implement view transition and disable CSS transitions
-      document.documentElement.style.setProperty('view-transition-name', 'animation-theme-toggle')
-      document.documentElement.setAttribute('data-theme-changing', '')
+    // Temporarily add markers during animation to implement view transition and disable CSS transitions
+    document.documentElement.style.setProperty('view-transition-name', 'animation-theme-toggle')
+    document.documentElement.setAttribute('data-theme-changing', '')
 
-      // If browser supports View Transitions API, use it to update theme
-      const themeTransition = document.startViewTransition(updateTheme)
-      // Remove markers after animation
-      themeTransition.finished.then(() => {
-        document.documentElement.style.removeProperty('view-transition-name')
-        document.documentElement.removeAttribute('data-theme-changing')
-      })
+    // If browser supports View Transitions API, use it to update theme
+    const themeTransition = document.startViewTransition(updateTheme)
+    // Remove markers after animation
+    themeTransition.finished.then(() => {
+      document.documentElement.style.removeProperty('view-transition-name')
+      document.documentElement.removeAttribute('data-theme-changing')
     })
-  }
+  })
 }
 
 // Initialize click event (on first load or page transition)

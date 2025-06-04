@@ -1,22 +1,20 @@
 /**
- * Create a new post with frontmatter
- * Usage: pnpm new-post <title>
+ * Create new blog post with predefined frontmatter template
  *
- * Example: pnpm new-post
- * Example: pnpm new-post first-post
- * Example: pnpm new-post first-post.md
- * Example: pnpm new-post first-post.mdx
- * Example: pnpm new-post 2025/03/first-post
- * Example: pnpm new-post 2025/03/first-post.md
- * Example: pnpm new-post 2025/03/first-post.mdx
+ * Generates a new Markdown file in src/content/posts/ with complete YAML
+ * frontmatter including title, date, tags, and theme configuration.
+ *
+ * Usage: pnpm new-post first-post
+ * Output: src/content/posts/first-post.md
  */
+
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
 import { basename, dirname, extname, join } from 'node:path'
 import process from 'node:process'
 import { themeConfig } from '../src/config'
 
 // Process file path
-const rawPath = process.argv[2] || 'new-post'
+const rawPath = process.argv[2] ?? 'new-post'
 const baseName = basename(rawPath).replace(/\.(md|mdx)$/, '')
 const targetFile = ['.md', '.mdx'].includes(extname(rawPath))
   ? rawPath
@@ -60,6 +58,6 @@ try {
   console.log(`✅ Post created: ${fullPath}`)
 }
 catch (error) {
-  console.error('❌ Failed to create post:', error)
+  console.error('❌ Failed to create post:', (error as Error)?.message ?? String(error))
   process.exit(1)
 }

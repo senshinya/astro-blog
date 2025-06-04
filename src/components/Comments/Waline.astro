@@ -37,7 +37,7 @@ function setupWaline() {
   const pathLang = Object.keys(walineLocaleMap).find(code =>
     currentPath.startsWith(`/${code}/`),
   )
-  const lang = pathLang || defaultLocale
+  const lang = pathLang ?? defaultLocale
   const currentWalineLang = walineLocaleMap[lang]
 
   init({
@@ -50,8 +50,8 @@ function setupWaline() {
     requiredMeta: ['nick', 'mail'],
     highlighter: false,
     texRenderer: false,
-    imageUploader,
-    search,
+    ...(imageUploader && { imageUploader }),
+    ...(search && { search }),
     noCopyright: true,
     reaction: [],
   })

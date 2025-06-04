@@ -24,8 +24,13 @@ export interface Props {
 function getPostPath(post: Post) {
   // Prioritize abbrlink over slug
   const postPath = post.data.abbrlink || post.id
-  // Add language prefix to URL if current page is in a language subdirectory and not the default language
-  return lang && lang !== defaultLocale ? `/${lang}/${postPath}` : `/${postPath}`
+
+  // If no language specified or is default language, return root path
+  if (!lang || lang === defaultLocale)
+    return `/${postPath}/`
+
+  // Add language prefix for non-default languages
+  return `/${lang}/${postPath}/`
 }
 ---
 
@@ -42,7 +47,7 @@ function getPostPath(post: Post) {
           class="cjk:tracking-0.02em"
           lg={isHome ? 'font-medium text-4.5' : ''}
           href={getPostPath(post)}
-          transition:name={`post-${post.data.abbrlink || post.id}-${lang}`}
+          transition:name={`post-${post.data.abbrlink || post.id}${lang ? `-${lang}` : ''}`}
           data-disable-theme-transition
           target={post.id.startsWith('travels/') ? '_blank' : undefined}
         >
@@ -62,12 +67,12 @@ function getPostPath(post: Post) {
       {/* mobile post time */}
       <div
         class="py-0.8 text-3.5 font-time lg:hidden"
-        transition:name={`time-${post.data.abbrlink || post.id}-${lang}`}
+        transition:name={`time-${post.data.abbrlink || post.id}${lang ? `-${lang}` : ''}`}
         data-disable-theme-transition
       >
         <PostDate
           date={post.data.published}
-          minutes={post.remarkPluginFrontmatter.minutes}
+          minutes={post.remarkPluginFrontmatter?.minutes}
         />
       </div>
 
@@ -75,7 +80,7 @@ function getPostPath(post: Post) {
       <div class="hidden text-3.65 font-time lg:(ml-2.5 inline)">
         <PostDate
           date={post.data.published}
-          minutes={post.remarkPluginFrontmatter.minutes}
+          minutes={post.remarkPluginFrontmatter?.minutes}
         />
       </div>
 

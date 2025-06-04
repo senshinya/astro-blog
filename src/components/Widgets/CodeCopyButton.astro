@@ -22,7 +22,12 @@ const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeo
 
 async function handleCopy(button: HTMLButtonElement) {
   const codeElement = button.parentElement?.querySelector('pre code')
-  const code = codeElement?.textContent || ''
+  if (!codeElement)
+    return
+
+  const code = codeElement.textContent ?? ''
+  if (!code)
+    return
 
   try {
     await navigator.clipboard.writeText(code)
@@ -45,8 +50,8 @@ async function handleCopy(button: HTMLButtonElement) {
 
     activeTimeouts.set(button, timeoutId)
   }
-  catch {
-
+  catch (error) {
+    console.error('Failed to copy code', (error as Error)?.message ?? String(error))
   }
 }
 

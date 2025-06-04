@@ -6,7 +6,7 @@ export function remarkGithubCard() {
       if (node.name !== 'github')
         return
 
-      const repo = node.attributes?.repo || ''
+      const repo = node.attributes?.repo ?? ''
       if (!repo)
         return
 

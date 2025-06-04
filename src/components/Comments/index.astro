@@ -12,16 +12,16 @@ const enableComments = themeConfig.comment?.enabled ?? false
 // const showDisqus = enableComments && themeConfig.comment?.provider == 'disqus' && disqusShortname.trim() !== ''
 
 // Giscus
-const giscusRepo = themeConfig.comment?.giscus?.repo || ''
-const showGiscus = enableComments && giscusRepo.trim() !== ''
+const giscusRepo = themeConfig.comment?.giscus?.repo ?? ''
+const showGiscus = enableComments && Boolean(giscusRepo.trim())
 
 // Twikoo
 // const twikooEnvId = themeConfig.comment?.twikoo?.envId || ''
 // const showTwikoo = enableComments && themeConfig.comment?.provider == 'twikoo' && twikooEnvId.trim() !== ''
 
 // Waline
-const walineURL = themeConfig.comment?.waline?.serverURL || ''
-const showWaline = enableComments && themeConfig.comment?.provider == 'waline' && walineURL.trim() !== ''
+const walineURL = themeConfig.comment?.waline?.serverURL ?? ''
+const showWaline = enableComments && Boolean(walineURL.trim())
 ---
 
 <!-- {showDisqus && <Disqus />} -->

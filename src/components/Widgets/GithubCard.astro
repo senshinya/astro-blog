@@ -30,42 +30,40 @@ async function loadCardData(card: HTMLElement) {
 
   try {
     const response = await fetch(`https://api.github.com/repos/${repo}`)
-    if (response.ok) {
-      const data = await response.json()
 
-      if (avatarEl && data.owner?.avatar_url)
-        avatarEl.style.backgroundImage = `url(${data.owner.avatar_url})`
-
-      if (descEl)
-        if (data.description)
-          descEl.textContent = data.description
-        else
-          descEl.textContent = 'No description.'
-
-      if (starsEl) {
-        starsEl.textContent = new Intl.NumberFormat('en', {
-          notation: 'compact',
-          maximumFractionDigits: 1,
-        }).format(data.stargazers_count)
-      }
-
-      if (forksEl) {
-        forksEl.textContent = new Intl.NumberFormat('en', {
-          notation: 'compact',
-          maximumFractionDigits: 1,
-        }).format(data.forks_count)
-      }
-
-      if (licenseEl)
-        licenseEl.textContent = data.license?.spdx_id || 'No License'
-    }
-    else {
+    if (!response.ok) {
       if (descEl)
         descEl.textContent = 'Loading failed.'
+      return
     }
+
+    const data = await response.json()
+
+    if (avatarEl && data.owner?.avatar_url)
+      avatarEl.style.backgroundImage = `url(${data.owner.avatar_url})`
+
+    if (descEl)
+      descEl.textContent = data.description ?? 'No description'
+
+    if (starsEl) {
+      starsEl.textContent = new Intl.NumberFormat('en', {
+        notation: 'compact',
+        maximumFractionDigits: 1,
+      }).format(data.stargazers_count ?? 0)
+    }
+
+    if (forksEl) {
+      forksEl.textContent = new Intl.NumberFormat('en', {
+        notation: 'compact',
+        maximumFractionDigits: 1,
+      }).format(data.forks_count ?? 0)
+    }
+
+    if (licenseEl)
+      licenseEl.textContent = data.license?.spdx_id ?? 'No License'
   }
-  catch {
-    console.error(`Failed to fetch ${repo}`)
+  catch (error) {
+    console.error(`Failed to fetch ${repo}:`, (error as Error)?.message ?? String(error))
   }
 }
 

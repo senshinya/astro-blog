@@ -62,7 +62,7 @@ const shouldRender = Boolean(repo && repoID && categoryID)
     const pathLang = Object.keys(giscusLocaleMap).find(code =>
       currentPath.startsWith(`/${code}/`),
     )
-    const lang = pathLang || defaultLocale
+    const lang = pathLang ?? defaultLocale
     const currentGiscusLang = giscusLocaleMap[lang]
 
     const script = document.createElement('script')

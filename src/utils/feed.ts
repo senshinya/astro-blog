@@ -1,3 +1,10 @@
+/**
+ * RSS/Atom feed generation utilities for multi-language blog
+ *
+ * Generates RSS 2.0 and Atom 1.0 feeds with multi-language support,
+ * image optimization, content sanitization, and follow verification.
+ */
+
 import type { APIContext, ImageMetadata } from 'astro'
 import type { CollectionEntry } from 'astro:content'
 import type { Author } from 'feed'
@@ -33,16 +40,19 @@ const imagesGlob = import.meta.glob<{ default: ImageMetadata }>(
  * @returns Optimized full image URL or null
  */
 const getOptimizedImageUrl = memoize(async (srcPath: string, baseUrl: string) => {
-  const prefixRemoved = srcPath.replace(/^\.\.\/|^\.\//g, '')
+  const prefixRemoved = srcPath.replace(/^\.\.\/|^\.\//, '')
   const rawImagePath = `/src/content/posts/${prefixRemoved}`
-  const rawImageMetadata = await imagesGlob[rawImagePath]?.()?.then(res => res.default)
+  const rawImageModule = imagesGlob[rawImagePath]
 
-  if (rawImageMetadata) {
-    const processedImageData = await getImage({ src: rawImageMetadata })
-    return new URL(processedImageData.src, baseUrl).toString()
-  }
+  if (!rawImageModule)
+    return null
 
-  return null
+  const rawImageMetadata = await rawImageModule().then(res => res.default).catch(() => null)
+  if (!rawImageMetadata)
+    return null
+
+  const processedImageData = await getImage({ src: rawImageMetadata })
+  return new URL(processedImageData.src, baseUrl).toString()
 })
 
 /**
@@ -65,6 +75,10 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
 
     imagePromises.push((async () => {
       try {
+        // Skip if not a relative or public image path
+        if (!src.startsWith('./') && !src.startsWith('../') && !src.startsWith('/images'))
+          return
+
         // Process images from src/content/posts/_images directory
         if (src.startsWith('./') || src.startsWith('../')) {
           const optimizedImageUrl = await getOptimizedImageUrl(src, baseUrl)
@@ -72,15 +86,15 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
           if (optimizedImageUrl) {
             img.setAttribute('src', optimizedImageUrl)
           }
+          return
         }
+
         // Process images from public/images directory
-        else if (src.startsWith('/images')) {
-          const publicImageUrl = new URL(src, baseUrl).toString()
-          img.setAttribute('src', publicImageUrl)
-        }
+        const publicImageUrl = new URL(src, baseUrl).toString()
+        img.setAttribute('src', publicImageUrl)
       }
       catch (error) {
-        console.warn(`Failed to process image in RSS feed: ${src}`, error)
+        console.warn(`Failed to process image in RSS feed: ${src}`, (error as Error)?.message ?? String(error))
       }
     })())
   }
@@ -97,9 +111,10 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
  * @returns The fully formed URL for the post
  */
 function generatePostUrl(post: CollectionEntry<'posts'>, baseUrl: string): string {
-  const needsLangPrefix = post.data.lang !== defaultLocale && post.data.lang !== ''
-  const langPrefix = needsLangPrefix ? `${post.data.lang}/` : ''
   const postSlug = post.data.abbrlink || post.id
+  const langPrefix = post.data.lang !== defaultLocale && post.data.lang !== ''
+    ? `${post.data.lang}/`
+    : ''
 
   return new URL(`${langPrefix}${postSlug}/`, baseUrl).toString()
 }
@@ -112,7 +127,7 @@ function generatePostUrl(post: CollectionEntry<'posts'>, baseUrl: string): strin
  * @returns A Feed instance ready for RSS or Atom output
  */
 export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
-  const currentUI = ui[lang as keyof typeof ui] || ui[defaultLocale as keyof typeof ui]
+  const currentUI = ui[lang as keyof typeof ui] ?? ui[defaultLocale as keyof typeof ui] ?? {}
   const useI18nTitle = themeConfig.site.i18nTitle
   const siteTitle = useI18nTitle ? currentUI.title : title
   const siteDescription = useI18nTitle ? currentUI.description : description

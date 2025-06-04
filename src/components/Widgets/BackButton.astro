@@ -25,9 +25,7 @@ function setupBackButton() {
     else {
       // Fallback to homepage
       const siteTitleLink = document.getElementById('site-title-link')
-      if (siteTitleLink) {
-        siteTitleLink.click()
-      }
+      siteTitleLink?.click()
     }
   })
 }

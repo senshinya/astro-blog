@@ -4,4 +4,5 @@ export default antfu({
   unocss: true,
   typescript: true,
   astro: true,
+  ignores: ['public/vendors/**'],
 })

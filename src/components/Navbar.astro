@@ -3,7 +3,7 @@ import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
 
 const { currentLang, isHome, isPost, isTag, isMemos, isFriends, isAbout, getLocalizedPath } = getPageInfo(Astro.url.pathname)
-const currentUI = ui[currentLang as keyof typeof ui]
+const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 
 const isPostActive = isHome || isPost
 const isTagActive = isTag

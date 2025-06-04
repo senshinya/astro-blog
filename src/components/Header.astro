@@ -6,7 +6,7 @@ import { getPageInfo } from '@/utils/page'
 const { currentLang, getLocalizedPath, isPost } = getPageInfo(Astro.url.pathname)
 const { title, subtitle, i18nTitle } = themeConfig.site
 
-const currentUI = ui[currentLang as keyof typeof ui]
+const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 const headerTitle = i18nTitle ? currentUI.title : title
 const headerSubtitle = i18nTitle ? currentUI.subtitle : subtitle
 

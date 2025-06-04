@@ -3,28 +3,32 @@ import { visit } from 'unist-util-visit'
 export function rehypeImgToFigure() {
   return (tree) => {
     visit(tree, 'element', (node) => {
-      if (
-        node.tagName === 'p'
-        && node.children
-        && node.children.length === 1
-        && node.children[0].tagName === 'img'
-        && node.children[0].properties.alt
-        && !node.children[0].properties.alt.startsWith('_')
-      ) {
-        const child = node.children[0]
-        const altText = child.properties.alt
+      if (node.tagName !== 'p')
+        return
+      if (node.children?.length !== 1)
+        return
 
-        node.tagName = 'figure'
-        node.children = [
-          child,
-          {
-            type: 'element',
-            tagName: 'figcaption',
-            properties: {},
-            children: [{ type: 'text', value: altText }],
-          },
-        ]
-      }
+      const imgNode = node.children[0]
+      if (imgNode?.tagName !== 'img')
+        return
+
+      const altText = imgNode.properties?.alt
+      if (!altText)
+        return
+      if (altText.startsWith('_'))
+        return
+
+      // 转换为 figure 元素
+      node.tagName = 'figure'
+      node.children = [
+        imgNode,
+        {
+          type: 'element',
+          tagName: 'figcaption',
+          properties: {},
+          children: [{ type: 'text', value: altText }],
+        },
+      ]
     })
   }
 }

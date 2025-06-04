@@ -3,35 +3,37 @@ import { SKIP, visit } from 'unist-util-visit'
 export function rehypeCodeCopyButton() {
   return (tree) => {
     visit(tree, 'element', (node, index, parent) => {
-      if (
-        node.tagName === 'pre'
-        && node.children?.[0]?.tagName === 'code'
-        && parent
-        && !node.properties?.['data-copy-button-added']
-      ) {
-        node.properties = node.properties || {}
-        node.properties['data-copy-button-added'] = 'true'
+      if (node.tagName !== 'pre')
+        return
+      if (node.children?.[0]?.tagName !== 'code')
+        return
+      if (!parent)
+        return
+      if (node.properties?.['data-copy-button-added'])
+        return
 
-        parent.children[index] = {
-          type: 'element',
-          tagName: 'div',
-          properties: { className: ['code-block-wrapper'] },
-          children: [
-            {
-              type: 'element',
-              tagName: 'button',
-              properties: {
-                'className': ['code-copy-button'],
-                'type': 'button',
-                'aria-label': 'Copy code',
-              },
-              children: [],
+      node.properties ??= {}
+      node.properties['data-copy-button-added'] = 'true'
+
+      parent.children[index] = {
+        type: 'element',
+        tagName: 'div',
+        properties: { className: ['code-block-wrapper'] },
+        children: [
+          {
+            type: 'element',
+            tagName: 'button',
+            properties: {
+              'className': ['code-copy-button'],
+              'type': 'button',
+              'aria-label': 'Copy code',
             },
-            node,
-          ],
-        }
-        return SKIP
+            children: [],
+          },
+          node,
+        ],
       }
+      return SKIP
     })
   }
 }

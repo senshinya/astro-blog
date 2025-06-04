@@ -1,7 +1,13 @@
 /**
- * Update theme from upstream repository
+ * Update Astro theme from upstream repository
+ *
+ * Fetches and merges latest changes from the upstream theme repository,
+ * automatically sets up remote if needed, and handles merge conflicts gracefully.
+ *
  * Usage: pnpm update-theme
+ * Upstream: https://github.com/radishzzz/astro-theme-retypeset.git
  */
+
 import { execSync } from 'node:child_process'
 import fs from 'node:fs'
 import path from 'node:path'
@@ -39,7 +45,7 @@ catch (error) {
     console.log('⚠️ Update fetched with merge conflicts. Please resolve manually')
   }
   else {
-    console.error('❌ Update failed:', error)
+    console.error('❌ Update failed:', (error as Error)?.message ?? String(error))
     process.exit(1)
   }
 }

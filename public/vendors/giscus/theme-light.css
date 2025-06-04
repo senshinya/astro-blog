@@ -7,7 +7,7 @@
   /* Custom Theme Colors */
   --secondary-color: oklch(40% 0.005 298);
   --secondary-color-25: oklch(40% 0.005 298 / 25%);
-  --background-color: oklch(96% 0.005 298);
+  --background-color: transparent;
 
   --color-fg-default: var(--secondary-color);
   --color-canvas-default: transparent;
@@ -17,7 +17,7 @@
   --color-accent-fg: oklch(48.8% 0.243 264.376);
   --color-accent-emphasis: oklch(48.8% 0.243 264.376);
 
-  /* Offical Theme Colors */
+  /* Official Theme Colors */
   --color-prettylights-syntax-comment: #6e7781;
   --color-prettylights-syntax-constant: #0550ae;
   --color-prettylights-syntax-entity: #8250df;
