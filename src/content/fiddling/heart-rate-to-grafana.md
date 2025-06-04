@@ -4,11 +4,9 @@ tags: ["折腾","Grafana","心率","Apple Watch"]
 published: 2025-03-31T23:51:00+08:00
 description: "展示苹果健康心率数据，通过Grafana可视化，记录同步过程。"
 ---
-import { Image } from 'astro:assets';
-
 整了个小活：把苹果健康的心率定时同步到服务器上，并由 Grafana 绘制展示，效果大概如下：
 
-<Image src="https://blog-img.shinya.click/2025/e01807e95f9c8ea4384d2c4d8f4fe3cb.png" inferSize alt="heart-beat"/>
+![](https://blog-img.shinya.click/2025/e01807e95f9c8ea4384d2c4d8f4fe3cb.png)
 
 <del>可以点击博客右上角的 ♥️ 标志查看，因为套了 Cloudflare Tunnel，国内访问速度不佳，尽量挂🪜访问。</del>已下线，由于更换了 Oppo 手机，心率无法同步上传了
 
