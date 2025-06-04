@@ -23,7 +23,7 @@ export function getTagPath(tagName: string, lang: string): string {
 // Generates a localized path based on current language
 export function getLocalizedPath(path: string, currentLang?: string) {
   const clean = path.replace(/^\/|\/$/g, '')
-  const lang = currentLang ?? getLangFromPath(path)
+  const lang = currentLang || getLangFromPath(path)
 
   if (clean === '') {
     return lang === defaultLocale ? '/' : `/${lang}/`

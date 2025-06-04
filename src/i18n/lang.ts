@@ -10,7 +10,7 @@ import { allLocales, defaultLocale, moreLocales } from '@/config'
 // Gets the language code from the current path
 export function getLangFromPath(path: string) {
   return moreLocales.find(lang =>
-    path.startsWith(`/${lang}/`)) ?? defaultLocale
+    path.startsWith(`/${lang}/`)) || defaultLocale
 }
 
 // Get the next language code in the global language cycle

@@ -12,34 +12,19 @@ interface Props {
   postSlug?: string
 }
 
-// Basic page information
 const { postTitle, postDescription, postSlug } = Astro.props
 const { currentLang } = getPageInfo(Astro.url.pathname)
 const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 const langCode = currentLang === defaultLocale ? '' : `${currentLang}/`
 
-// Theme configuration
 const { title, subtitle, description, author, url, favicon, i18nTitle } = themeConfig.site
 const { mode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
 const { katex: katexEnabled } = themeConfig.global
-
-// Comment system configuration
-const commentEnabled = themeConfig.comment?.enabled ?? false
-const walineServerURL = themeConfig.comment?.waline?.serverURL ?? ''
-
-// SEO configuration
-const verification = themeConfig.seo?.verification ?? {}
-const twitterID = themeConfig.seo?.twitterID ?? ''
-const googleAnalyticsID = themeConfig.seo?.googleAnalyticsID ?? ''
-const umamiAnalyticsID = themeConfig.seo?.umamiAnalyticsID ?? ''
-const apiflashKey = themeConfig.seo?.apiflashKey ?? ''
+const { enabled: commentEnabled = false, waline: { serverURL: walineServerURL = '' } = {} } = themeConfig.comment ?? {}
+const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalyticsID = '', apiflashKey = '' } = themeConfig.seo ?? {}
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
+const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
 
-// Preload configuration
-const customGoogleAnalyticsJS = themeConfig.preload?.customGoogleAnalyticsJS ?? ''
-const customUmamiAnalyticsJS = themeConfig.preload?.customUmamiAnalyticsJS ?? ''
-
-// Page metadata generation
 const initMetaTheme = mode === 'dark' ? darkMode : lightMode
 const siteTitle = i18nTitle ? currentUI.title : title
 const siteSubtitle = i18nTitle ? currentUI.subtitle : subtitle

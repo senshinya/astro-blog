@@ -8,16 +8,16 @@ import { themeConfig } from '@/config'
 const enableComments = themeConfig.comment?.enabled ?? false
 
 // Disqus
-// const disqusShortname = themeConfig.comment?.disqus?.shortname || ''
-// const showDisqus = enableComments && themeConfig.comment?.provider == 'disqus' && disqusShortname.trim() !== ''
+// const disqusShortname = themeConfig.comment?.disqus?.shortname ?? ''
+// const showDisqus = enableComments && Boolean(disqusShortname.trim())
 
 // Giscus
 const giscusRepo = themeConfig.comment?.giscus?.repo ?? ''
 const showGiscus = enableComments && Boolean(giscusRepo.trim())
 
 // Twikoo
-// const twikooEnvId = themeConfig.comment?.twikoo?.envId || ''
-// const showTwikoo = enableComments && themeConfig.comment?.provider == 'twikoo' && twikooEnvId.trim() !== ''
+// const twikooEnvId = themeConfig.comment?.twikoo?.envId ?? ''
+// const showTwikoo = enableComments && Boolean(twikooEnvId.trim())
 
 // Waline
 const walineURL = themeConfig.comment?.waline?.serverURL ?? ''
