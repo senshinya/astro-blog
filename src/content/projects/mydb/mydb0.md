@@ -30,11 +30,11 @@ RESPECT
 
 MYDB 分为后端和前端，前后端通过 socket 进行交互。前端（客户端）的职责很单一，读取用户输入，并发送到后端执行，输出返回结果，并等待下一次输入。MYDB 后端则需要解析 SQL，如果是合法的 SQL，就尝试执行并返回结果。不包括解析器，MYDB 的后端划分为五个模块，每个模块都又一定的职责，通过接口向其依赖的模块提供方法。五个模块如下：
 
-1.  Transaction Manager（TM）
-2.  Data Manager（DM）
-3.  Version Manager（VM）
-4.  Index Manager（IM）
-5.  Table Manager（TBM）
+1.  Transaction Manager (TM)
+2.  Data Manager (DM)
+3.  Version Manager (VM)
+4.  Index Manager (IM)
+5.  Table Manager (TBM)
 
 五个模块的依赖关系如下：
 

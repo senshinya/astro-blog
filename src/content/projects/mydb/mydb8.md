@@ -69,7 +69,7 @@ static byte[] newNilRootRaw()  {
 
 Node 类有两个方法，用于辅助 B+ 树做插入和搜索操作，分别是 searchNext 方法和 leafSearchRange 方法。
 
-searchNext 寻找对应 key 的 UID, 如果找不到, 则返回兄弟节点的 UID。
+searchNext 寻找对应 key 的 UID, 如果找不到，则返回兄弟节点的 UID。
 
 ```java
 public SearchNextRes searchNext(long key) {

@@ -8,8 +8,8 @@ description: "Debian 旁路由方案为用户提供了一种更为稳定和灵�
 
 大部分旁路由方案都是基于 OpenWRT 搭建 —— 这是一个单独的 Linux 发行版，拥有自己的软件包系统。再其中大部分方案又是基于 LuCI —— 专用于 OpenWRT 的 Web GUI，教程中使用的软件也是 luci-app-xxx，专为 LuCI 打造。这些方案很好，但不够好：
 
-1. 过于依赖 GUI 配置: LuCI 的软件包通常在 web 端只能进行有限的配置
-2. LuCI 不够稳定: 不是 OpenWRT 不稳定，而是 LuCI 不稳定。我的 LuCI 曾因为 OpenClash 崩溃过三次（也可能是我的问题）
+1. 过于依赖 GUI 配置：LuCI 的软件包通常在 web 端只能进行有限的配置
+2. LuCI 不够稳定：不是 OpenWRT 不稳定，而是 LuCI 不稳定。我的 LuCI 曾因为 OpenClash 崩溃过三次（也可能是我的问题）
 3. 尽管我们可以自编译 OpenWRT，但是大部分教程都直接使用了一些预编译好的固件，有些可能会过时
 4. 无法完全掌控系统（被 LuCI 架空啦
 
@@ -191,7 +191,7 @@ systemctl restart adguardhome.service
 
 记得点击应用
 
-随后 DNS 服务配置-速度限制 设置为 0 即可。
+随后 DNS 服务配置 - 速度限制 设置为 0 即可。
 
 如果需要去广告的话，可以在 过滤器 - DNS 黑名单 中添加，这里推荐两个大陆使用效果较好的规则集：
 
@@ -284,7 +284,7 @@ ip route add local 0.0.0.0/0 dev lo table 666
 iptables -t mangle -N clash
 
 # 目标地址为局域网或保留地址的流量跳过处理
-# 保留地址参考: https://zh.wikipedia.org/wiki/%E5%B7%B2%E5%88%86%E9%85%8D%E7%9A%84/8_IPv4%E5%9C%B0%E5%9D%80%E5%9D%97%E5%88%97%E8%A1%A8
+# 保留地址参考：https://zh.wikipedia.org/wiki/%E5%B7%B2%E5%88%86%E9%85%8D%E7%9A%84/8_IPv4%E5%9C%B0%E5%9D%80%E5%9D%97%E5%88%97%E8%A1%A8
 iptables -t mangle -A clash -d 0.0.0.0/8 -j RETURN
 iptables -t mangle -A clash -d 127.0.0.0/8 -j RETURN
 iptables -t mangle -A clash -d 10.0.0.0/8 -j RETURN
@@ -320,7 +320,7 @@ iptables -t mangle -A clash_local -d 240.0.0.0/4 -j RETURN
 iptables -t mangle -A clash_local -p tcp -j MARK --set-mark 666
 iptables -t mangle -A clash_local -p udp -j MARK --set-mark 666
 
-# 跳过 clash 程序本身发出的流量, 防止死循环(clash 程序需要使用 "clash" 用户启动)
+# 跳过 clash 程序本身发出的流量，防止死循环 (clash 程序需要使用 "clash" 用户启动)
 iptables -t mangle -A OUTPUT -p tcp -m owner --uid-owner clash -j RETURN
 iptables -t mangle -A OUTPUT -p udp -m owner --uid-owner clash -j RETURN
 
@@ -329,7 +329,7 @@ iptables -t mangle -A OUTPUT -p udp -m owner --uid-owner clash -j RETURN
 iptables -t mangle -A OUTPUT -j clash_local
 
 # 修复 ICMP(ping)
-# 这并不能保证 ping 结果有效(clash 等不支持转发 ICMP), 只是让它有返回结果而已
+# 这并不能保证 ping 结果有效 (clash 等不支持转发 ICMP), 只是让它有返回结果而已
 # --to-destination 设置为一个可达的地址即可
 sysctl -w net.ipv4.conf.all.route_localnet=1
 iptables -t nat -A PREROUTING -p icmp -d 198.18.0.0/16 -j DNAT --to-destination 127.0.0.1
@@ -364,12 +364,12 @@ find-process-mode: off
 bind-address: "*"
 mode: rule
 log-level: debug
-ipv6: false # 不进行IPv6流量代理
+ipv6: false # 不进行 IPv6 流量代理
 
 external-controller: 0.0.0.0:9090
-secret: # 登陆ui的密码
-external-ui: ui # webui的基础路径
-external-ui-name: xd # webui的下级路径
+secret: # 登陆 ui 的密码
+external-ui: ui # webui 的基础路径
+external-ui-name: xd # webui 的下级路径
 external-ui-url: https://github.com/MetaCubeX/metacubexd/archive/refs/heads/gh-pages.zip
 unified-delay: true
 tcp-concurrent: true
@@ -393,10 +393,10 @@ sniffer:
 dns:
   enable: true
   ipv6: false
-  listen: 0.0.0.0:1053 # DNS监听端口
+  listen: 0.0.0.0:1053 # DNS 监听端口
   use-hosts: true
   enhanced-mode: fake-ip
-  default-nameserver: # 建议修改为国内DNS服务器
+  default-nameserver: # 建议修改为国内 DNS 服务器
     - 223.5.5.5
     - 119.29.29.29
   nameserver:
@@ -518,4 +518,4 @@ webui 的配置大家就很熟悉了。如果配置完成没啥问题，就可�
 
 ### 端口映射
 
-如果你在主路由上配置了端口映射，且被映射端口的机器网关配置的是旁路由，那此时端口映射应当是失效了。可以在[旁路由端口映射失效解决](/fiddling/fix-port-forward-in-side-router)这篇文章中找到解决方案。
+如果你在主路由上配置了端口映射，且被映射端口的机器网关配置的是旁路由，那此时端口映射应当是失效了。可以在 [旁路由端口映射失效解决](/fiddling/fix-port-forward-in-side-router) 这篇文章中找到解决方案。

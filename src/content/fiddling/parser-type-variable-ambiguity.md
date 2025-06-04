@@ -22,7 +22,7 @@ typedef_name := IDENTIFIER
 
 ### 思路
 
-对于这种类型名-变量名的歧义，可以在 GLR 的执行过程中或执行后通过维护代价较小的简易符号表的方式对错误的分支进行剪枝。这个符号表至少要维护变量名和用户自定义类型名，同时由于存在深层作用域变量/类型名对浅层作用域符号的遮蔽，这个符号表还需要跟踪符号的作用域
+对于这种类型名 - 变量名的歧义，可以在 GLR 的执行过程中或执行后通过维护代价较小的简易符号表的方式对错误的分支进行剪枝。这个符号表至少要维护变量名和用户自定义类型名，同时由于存在深层作用域变量/类型名对浅层作用域符号的遮蔽，这个符号表还需要跟踪符号的作用域
 
 那么需要做的事情就很简单了：
 
@@ -34,7 +34,7 @@ typedef_name := IDENTIFIER
 以经典 `a*b;`​ 为例：
 
 ```c
-// 例1
+// 例 1
 typedef int a;
 func test_func()
 {
@@ -43,7 +43,7 @@ func test_func()
 ```
 
 ```c
-// 例2
+// 例 2
 typedef int a;
 func test_func()
 {
@@ -52,9 +52,9 @@ func test_func()
 }
 ```
 
-例1：解析到 `a*b;`​ 时，符号表的1级作用域（最外层）中有一个自定义类型 a，2级作用域（函数）中无符号。对于将 `a*b;`​ 解析为声明一个类型为 `a*`​ 的变量 `b`​ 的 AST，a 会使用 `typedef_name := IDENTIFIER`​ 进行规约，检查符号表发现 a 确实是一个声明在1级作用域的自定义类型名，于是该 AST 会被保留；对于将其解析为变量 `a`​ 乘以变量 `b`​ 的 AST，a 会使用 `primary_expression := IDENTIFIER`​ 进行规约，检查符号表发现表中并没有变量 a，于是该 AST 会被抛弃
+例 1：解析到 `a*b;`​ 时，符号表的 1 级作用域（最外层）中有一个自定义类型 a，2 级作用域（函数）中无符号。对于将 `a*b;`​ 解析为声明一个类型为 `a*`​ 的变量 `b`​ 的 AST，a 会使用 `typedef_name := IDENTIFIER`​ 进行规约，检查符号表发现 a 确实是一个声明在 1 级作用域的自定义类型名，于是该 AST 会被保留；对于将其解析为变量 `a`​ 乘以变量 `b`​ 的 AST，a 会使用 `primary_expression := IDENTIFIER`​ 进行规约，检查符号表发现表中并没有变量 a，于是该 AST 会被抛弃
 
-例2：解析到 `a*b;`​ 时，符号表的1级作用域（最外层）中有一个自定义类型 a，，2级作用域（函数）中有一个变量 a，此时变量 a 会遮蔽自定义类型 a。对于将 `a*b;`​ 解析为声明一个类型为 `a*`​ 的变量 `b`​ 的 AST，a 会使用 `typedef_name := IDENTIFIER`​ 进行规约，检查符号表发现在该作用域下a 是一个变量而非自定义类型（遮蔽），于是该 AST 会被抛弃；对于将其解析为变量 `a`​ 乘以变量 `b`​ 的 AST，a 会使用 `primary_expression := IDENTIFIER`​ 进行规约，检查符号表发现 a 确实是一个变量名，于是该 AST 会被保留
+例 2：解析到 `a*b;`​ 时，符号表的 1 级作用域（最外层）中有一个自定义类型 a，，2 级作用域（函数）中有一个变量 a，此时变量 a 会遮蔽自定义类型 a。对于将 `a*b;`​ 解析为声明一个类型为 `a*`​ 的变量 `b`​ 的 AST，a 会使用 `typedef_name := IDENTIFIER`​ 进行规约，检查符号表发现在该作用域下 a 是一个变量而非自定义类型（遮蔽），于是该 AST 会被抛弃；对于将其解析为变量 `a`​ 乘以变量 `b`​ 的 AST，a 会使用 `primary_expression := IDENTIFIER`​ 进行规约，检查符号表发现 a 确实是一个变量名，于是该 AST 会被保留
 
 相对于完整的符号表，简易符号表不会检查作用域内同类变量的同名问题（可以检查用户自定义类型名的同名），由于存在前向声明，对相同变量的多次声明是合法的，而包含初始化的声明只可以有一次，在语法分析阶段区分声明是否包含初始化成本还是比较高的，建议延后到语义分析阶段；同时由于成本问题类型检查也不会在这个阶段进行
 
@@ -95,7 +95,7 @@ DeclaratorID 就比较复杂了，比较基础的如 `direct_declarator := IDENT
 
 当然，不能允许这两个符号无限向上传播，构建后自顶向下处理某一节点时应当只期望处理该级节点的信息，而非混杂着下层节点的信息（由于 C 语言中作用域的限制，信息只能从上级向下级传递，下级信息无法影响上级）。这时就需要在规约出某些节点时清空标记，阻断标记的向上传播
 
-阻断向上传播的时机，除了规约出 `declaration`​ 和 `function_definition`​ 外，规约出`direct_declarator`​时，对于通过形如 `direct_declarator := direct_declarator LEFT_PARENTHESES parameter_type_list RIGHT_PARENTHESES`​ 规约出的节点，应当只取右侧 `direct_declarator`​中的 DeclaratorID 继续传播，以避免 `parameter_type_list`​ 包含函数参数声明的影响
+阻断向上传播的时机，除了规约出 `declaration`​ 和 `function_definition`​ 外，规约出 `direct_declarator`​时，对于通过形如 `direct_declarator := direct_declarator LEFT_PARENTHESES parameter_type_list RIGHT_PARENTHESES`​ 规约出的节点，应当只取右侧 `direct_declarator`​中的 DeclaratorID 继续传播，以避免 `parameter_type_list`​ 包含函数参数声明的影响
 
 在 AST 构建中，可以进行的、确定无误的检查，有以下两个：
 

@@ -56,7 +56,7 @@ Installation successful!
 
 Windows Terminal，可以说是 Windows 下的终端之王了。
 
-安装 Windows Terminal 可以直接在 Microsoft Store 中搜索 “Windows Terminal”，或者在其 Github Releases 页面：[https://github.com/microsoft/terminal/releases](https://github.com/microsoft/terminal/releases)，下载 msixbundle 文件，双击即可安装。
+安装 Windows Terminal 可以直接在 Microsoft Store 中搜索“Windows Terminal”，或者在其 Github Releases 页面：[https://github.com/microsoft/terminal/releases](https://github.com/microsoft/terminal/releases)，下载 msixbundle 文件，双击即可安装。
 
 如果你已经安装了 WSL 和 Ubuntu，那么在 Windows Terminal 顶栏加号下拉处，就会显示一个 Ubuntu 的选项。点击即可快速打开 Ubuntu 的默认 shell。
 
@@ -85,7 +85,7 @@ $ explorer.exe .
 
 vscode，世界上最好的文本编辑器，支持直接打开 WSL 中的文件夹，完全提供本地项目一般的体验。毕竟，不是所有人，都喜欢直接在 vim 里做实验的。
 
-首先打开 Windows 下的 vscode，在扩展商店中搜索 WSL，并安装 “Remote - WSL”，这个插件一般是这个关键词的第一个搜索结果。
+首先打开 Windows 下的 vscode，在扩展商店中搜索 WSL，并安装“Remote - WSL”，这个插件一般是这个关键词的第一个搜索结果。
 
 随后在 Ubuntu 中，在项目文件夹下，输入命令：
 
@@ -180,7 +180,7 @@ CGDB
 
 按 i 键可以将焦点从代码窗口转移到 gdb 窗口，在 gdb 窗口的操作与普通 gdb 完全一致。
 
-更具体的 cgdb 使用可以查看这本 [CGDB中文手册](https://leeyiw.gitbooks.io/cgdb-manual-in-chinese)。
+更具体的 cgdb 使用可以查看这本 [CGDB 中文手册](https://leeyiw.gitbooks.io/cgdb-manual-in-chinese)。
 
 #### 实验在哪？
 

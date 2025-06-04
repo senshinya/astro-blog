@@ -10,7 +10,7 @@ description: "在构建动态博客时，添加说说功能能显著提升用户
 
 静态博客由于是在本地或服务器上静态编译成 html 后再部署，实时性比较差。写一篇博文长篇大论自然可以在电脑前，走 git 推送部署也不算麻烦，但是发一篇说说还要打开电脑，心智负担就有些重了，手机上操作 git 也比较麻烦，不是很优雅，干脆一想就不发算了
 
-于是实现了一套说说系统的前后端，效果就是本博客的[碎碎念](/memos)。后端使用 CloudFlare Workers 实现，存储当然也就近存储在大善人的 KV 里，简单写了个管理页面。博客框架是 VitePress，前端也就做成了个 Vue 组件，直接嵌入一个页面作为说说页
+于是实现了一套说说系统的前后端，效果就是本博客的 [碎碎念](/memos)。后端使用 CloudFlare Workers 实现，存储当然也就近存储在大善人的 KV 里，简单写了个管理页面。博客框架是 VitePress，前端也就做成了个 Vue 组件，直接嵌入一个页面作为说说页
 
 前端效果不再多说，后端管理页面效果
 ![Memo 管理页面](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
@@ -28,7 +28,7 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
 
 ```js
 {
-    "uid":"唯一id",
+    "uid":"唯一 id",
     "createTime":"发布时间",
     "content":"说说内容",
 }
@@ -38,7 +38,7 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
 
 首先要创建一个 CloudFlare 的 KV Space，专门存储说说相关的 KV 对。位置在`账户首页 - 存储和数据库 - KV`，点击创建，名字不太重要，记住就行了，我这里简单命名为 `memos`
 
-接着就是创建 CloudFlare Workers，用于逻辑处理。位置在`账户首页 - 计算（Workers）- Workers 和 Pages`，点击创建，名字依然不太重要，我简单命名为 `memos-api`。创建完成后，点击 Workers 名称进入 Workers 详情，在`设置 - 绑定`中添加一个绑定关系，选择绑定 `KV命名空间`，变量名称为 `KV`，KV 命名空间选择刚刚创建的 KV Space 名称，我的是 `memos`。这样绑定完成后，就可以在代码中直接使用 `env.KV` 操作 `memos` 这个 KV 空间了。最后点击顶栏右侧的`编辑代码`按钮
+接着就是创建 CloudFlare Workers，用于逻辑处理。位置在`账户首页 - 计算（Workers）- Workers 和 Pages`，点击创建，名字依然不太重要，我简单命名为 `memos-api`。创建完成后，点击 Workers 名称进入 Workers 详情，在`设置 - 绑定`中添加一个绑定关系，选择绑定 `KV 命名空间`，变量名称为 `KV`，KV 命名空间选择刚刚创建的 KV Space 名称，我的是 `memos`。这样绑定完成后，就可以在代码中直接使用 `env.KV` 操作 `memos` 这个 KV 空间了。最后点击顶栏右侧的 `编辑代码` 按钮
 
 下面就是 Code Time！
 
@@ -195,7 +195,7 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
             font-size: 0.9rem;
             line-height: 1.4;
             max-height: 4.2em;
-            /* 显示3行文本 */
+            /* 显示 3 行文本 */
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -429,7 +429,7 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
-    <!-- JavaScript代码与之前相同，但需要添加以下功能增强 -->
+    <!-- JavaScript 代码与之前相同，但需要添加以下功能增强 -->
     <script>
         let password = '';
         let currentMemo = null;
@@ -646,14 +646,14 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
             setTimeout(() => notification.remove(), 3000);
         }
 
-        // 用于防止XSS攻击的辅助函数
+        // 用于防止 XSS 攻击的辅助函数
         function escapeHtml(html) {
             const div = document.createElement('div');
             div.textContent = html;
             return div.innerHTML;
         }
 
-        // 初始化marked配置
+        // 初始化 marked 配置
         marked.setOptions({
             breaks: true,
             gfm: true,
@@ -1267,7 +1267,7 @@ export default {
 
 > 什么？你说你从来没有在 vitepress 中使用过单页？
 > 
-> 这样，你先在根目录下新建一个 pages 文件夹，再在 VitePress 核心配置文件中（注意不是主题配置文件，通常为 docs/.vitepress/config.ts，文件路径和拓展名也许会有区别）中新增一个 rewrites 规则 `'pages/:file.md': ':file.md'`，这样 pages 下的内容都可以直接通过 `/文件名` 访问了。关于 rewrites，见[官方文档](https://vitepress.dev/guide/routing#route-rewrites)
+> 这样，你先在根目录下新建一个 pages 文件夹，再在 VitePress 核心配置文件中（注意不是主题配置文件，通常为 docs/.vitepress/config.ts，文件路径和拓展名也许会有区别）中新增一个 rewrites 规则 `'pages/:file.md': ':file.md'`，这样 pages 下的内容都可以直接通过 `/文件名` 访问了。关于 rewrites，见 [官方文档](https://vitepress.dev/guide/routing#route-rewrites)
 
 pages 文件夹下新建 balabala.md，内容为
 

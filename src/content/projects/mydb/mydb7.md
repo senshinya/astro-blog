@@ -19,11 +19,11 @@ description: "VM 需要处理 MVCC 导致的版本跳跃及死锁问题。通过
 ```
 T1 begin
 T2 begin
-R1(X) // T1读取x0
-R2(X) // T2读取x0
-U1(X) // T1将X更新到x1
+R1(X) // T1 读取 x0
+R2(X) // T2 读取 x0
+U1(X) // T1 将 X 更新到 x1
 T1 commit
-U2(X) // T2将X更新到x2
+U2(X) // T2 将 X 更新到 x2
 T2 commit
 ```
 
@@ -58,11 +58,11 @@ MYDB 使用一个 LockTable 对象，在内存中维护这张图。维护结构�
 ```java
 public class LockTable {
 
-    private Map<Long, List<Long>> x2u;  // 某个XID已经获得的资源的UID列表
-    private Map<Long, Long> u2x;        // UID被某个XID持有
-    private Map<Long, List<Long>> wait; // 正在等待UID的XID列表
-    private Map<Long, Lock> waitLock;   // 正在等待资源的XID的锁
-    private Map<Long, Long> waitU;      // XID正在等待的UID
+    private Map<Long, List<Long>> x2u;  // 某个 XID 已经获得的资源的 UID 列表
+    private Map<Long, Long> u2x;        // UID 被某个 XID 持有
+    private Map<Long, List<Long>> wait; // 正在等待 UID 的 XID 列表
+    private Map<Long, Lock> waitLock;   // 正在等待资源的 XID 的锁
+    private Map<Long, Long> waitU;      // XID 正在等待的 UID
     private Lock lock;
 
     ...
@@ -72,7 +72,7 @@ public class LockTable {
 在每次出现等待的情况时，就尝试向图中增加一条边，并进行死锁检测。如果检测到死锁，就撤销这条边，不允许添加，并撤销该事务。
 
 ```java
-// 不需要等待则返回null，否则返回锁对象
+// 不需要等待则返回 null，否则返回锁对象
 // 会造成死锁则抛出异常
 public Lock add(long xid, long uid) throws Exception {
     lock.lock();
@@ -176,7 +176,7 @@ public void remove(long xid) {
 while 循环释放掉了这个线程所有持有的资源的锁，这些资源可以被等待的线程所获取：
 
 ```java
-// 从等待队列中选择一个xid来占用uid
+// 从等待队列中选择一个 xid 来占用 uid
 private void selectNewXID(long uid) {
     u2x.remove(uid);
     List<Long> l = wait.get(uid);

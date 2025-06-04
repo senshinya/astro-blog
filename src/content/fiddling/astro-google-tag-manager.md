@@ -23,7 +23,7 @@ description: "在将博客迁移至 Astro 框架后，常规的 Google Analytics
 
 只得将其搁置了俩月，期间临时改用了 umami 统计数据
 
-这两天又想了起来，如芒在背如鲠在喉，于是又开始了漫长的搜索。最终在 GitHub 的一个[角落](https://github.com/QwikDev/partytown/issues/382#issuecomment-1667675238)中找到了解决方案
+这两天又想了起来，如芒在背如鲠在喉，于是又开始了漫长的搜索。最终在 GitHub 的一个 [角落](https://github.com/QwikDev/partytown/issues/382#issuecomment-1667675238) 中找到了解决方案
 
 ### 解决方案
 

@@ -4,7 +4,7 @@ tags: ["折腾","软路由","透明代理","分流","BGP"]
 published: 2024-10-07T16:51:00+08:00
 description: "基于 BGP 的国内外 IP 分流方案，提升了透明代理的效率和精准度。通过对国外 IP 进行 FakeIP 标记，主路由能够更智能地进行流量分流，确保网络连接的顺畅性。sing-box 的 DNS 模块配置也进行了相应优化，使得在处理 DNS 请求时，更加灵活且高效，进一步提升整体网络体验。"
 ---
-此前折腾过两节的透明代理方案：[debian 旁路由方案](/fiddling/debian-as-side-router)和[基于 FakeIP 的透明代理分流](/fiddling/fake-ip-based-transparent-proxy)，家里的透明代理基本已经可用了。基于 FakeIP 的方案使用 FakeIP 标记国外 IP，并在主路由识别并进行分流。sing-box 的 dns 模块配置为
+此前折腾过两节的透明代理方案：[debian 旁路由方案](/fiddling/debian-as-side-router) 和 [基于 FakeIP 的透明代理分流](/fiddling/fake-ip-based-transparent-proxy)，家里的透明代理基本已经可用了。基于 FakeIP 的方案使用 FakeIP 标记国外 IP，并在主路由识别并进行分流。sing-box 的 dns 模块配置为
 
 ```json
 {

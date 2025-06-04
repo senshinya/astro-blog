@@ -169,7 +169,7 @@ MYDB 对于普通数据页的管理就比较简单了。一个普通页面以一
 所以对普通页的管理，基本都是围绕着对 FSO（Free Space Offset）进行的。例如向页面插入数据：
 
 ```java
-// 将raw插入pg中，返回插入位置
+// 将 raw 插入 pg 中，返回插入位置
 public static short insert(Page pg, byte[] raw) {
     pg.setDirty(true);
     short offset = getFSO(pg.getData());
@@ -186,7 +186,7 @@ private static void setFSO(byte[] raw, short ofData) {
     System.arraycopy(Parser.short2Byte(ofData), 0, raw, OF_FREE, OF_DATA);
 }
 
-// 获取pg的FSO
+// 获取 pg 的 FSO
 public static short getFSO(Page pg) {
     return getFSO(pg.getData());
 }
@@ -204,7 +204,7 @@ public static int getFreeSpace(Page pg) {
 剩余两个函数 `recoverInsert()` 和 `recoverUpdate()` 用于在数据库崩溃后重新打开时，恢复例程直接插入数据以及修改数据使用。
 
 ```java
-// 将raw插入pg中的offset位置，并将pg的offset设置为较大的offset
+// 将 raw 插入 pg 中的 offset 位置，并将 pg 的 offset 设置为较大的 offset
 public static void recoverInsert(Page pg, byte[] raw, short offset) {
     pg.setDirty(true);
     System.arraycopy(raw, 0, pg.getData(), offset, raw.length);
@@ -215,7 +215,7 @@ public static void recoverInsert(Page pg, byte[] raw, short offset) {
     }
 }
 
-// 将raw插入pg中的offset位置，不更新update
+// 将 raw 插入 pg 中的 offset 位置，不更新 update
 public static void recoverUpdate(Page pg, byte[] raw, short offset) {
     pg.setDirty(true);
     System.arraycopy(raw, 0, pg.getData(), offset, raw.length);

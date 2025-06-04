@@ -20,7 +20,7 @@ PageIndex 的实现也很简单，一个 List 类型的数组。
 
 ```java
 public class PageIndex {
-    // 将一页划成40个区间
+    // 将一页划成 40 个区间
     private static final int INTERVALS_NO = 40;
     private static final int THRESHOLD = PageCache.PAGE_SIZE / INTERVALS_NO;
 
@@ -59,7 +59,7 @@ public void add(int pgno, int freeSpace) {
 在 DataManager 被创建时，需要获取所有页面并填充 PageIndex：
 
 ```java
-// 初始化pageIndex
+// 初始化 pageIndex
 void fillPageIndex() {
     int pageNumber = pc.getPageNumber();
     for(int i = 2; i <= pageNumber; i ++) {
@@ -200,7 +200,7 @@ public static DataManager open(String path, long mem, TransactionManager tm) {
 其中，初始化第一页，和校验第一页，基本都是调用 PageOne 类中的方法实现的：
 
 ```java
-// 在创建文件时初始化PageOne
+// 在创建文件时初始化 PageOne
 void initPageOne() {
     int pgno = pc.newPage(PageOne.InitRaw());
     assert pgno == 1;
@@ -212,7 +212,7 @@ void initPageOne() {
     pc.flushPage(pageOne);
 }
 
-// 在打开已有文件时时读入PageOne，并验证正确性
+// 在打开已有文件时时读入 PageOne，并验证正确性
 boolean loadCheckPageOne() {
     try {
         pageOne = pc.getPage(1);
@@ -278,7 +278,7 @@ public long insert(long xid, byte[] data) throws Exception {
         return Types.addressToUid(pi.pgno, offset);
 
     } finally {
-        // 将取出的pg重新插入pIndex
+        // 将取出的 pg 重新插入 pIndex
         if(pg != null) {
             pIndex.add(pi.pgno, PageX.getFreeSpace(pg));
         } else {

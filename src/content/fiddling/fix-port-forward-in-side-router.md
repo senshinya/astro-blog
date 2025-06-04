@@ -6,7 +6,7 @@ description: "在使用旁路由配置的情况下，主路由上的端口映射
 ---
 ### 前言
 
-使用[上篇文章的方案](/fiddling/debian-as-side-router)配置完成后，如果你在主路由上配置了端口映射，且被映射端口的机器网关配置的是旁路由，那此时端口映射应当是失效了。其实并不是 Clash 分流导致的问题，只要是配置了旁路由网关，主路由配置的端口映射都会失效。
+使用 [上篇文章的方案](/fiddling/debian-as-side-router) 配置完成后，如果你在主路由上配置了端口映射，且被映射端口的机器网关配置的是旁路由，那此时端口映射应当是失效了。其实并不是 Clash 分流导致的问题，只要是配置了旁路由网关，主路由配置的端口映射都会失效。
 
 ### 原理（太长不看系列）
 
@@ -51,8 +51,8 @@ description: "在使用旁路由配置的情况下，主路由上的端口映射
 主路由和旁路由配置端口映射的方式因系统而异，iKuai 和 OpenWRT 都由图形化的方式配置，这里不再赘述了。上篇文章的方案中旁路由使用的是 Debian，实际上以下方法适用于所有使用 iptables 的系统。执行以下命令设置 iptables，以下为目标机器为"内部"，称呼网关机器为"外部"
 
 ```shell
-iptables -t nat -I PREROUTING -p tcp -d <外部IP> --dport <外部端口> -j DNAT --to-destination <内部IP>:<内部端口>
-iptables -t nat -I POSTROUTING -p tcp --dport <内部端口> -d <外部IP> -j SNAT --to-source <内部IP>
+iptables -t nat -I PREROUTING -p tcp -d <外部 IP> --dport <外部端口> -j DNAT --to-destination <内部 IP>:<内部端口>
+iptables -t nat -I POSTROUTING -p tcp --dport <内部端口> -d <外部 IP> -j SNAT --to-source <内部 IP>
 ```
 
 执行完后即可设置 iptables

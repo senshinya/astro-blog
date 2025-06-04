@@ -22,7 +22,7 @@ TransactionManager 维护了一个 XID 格式的文件，用来记录各个事�
 2.  committed，已提交
 3.  aborted，已撤销（回滚）
 
-XID 文件给每个事务分配了一个字节的空间，用来保存其状态。同时，在 XID 文件的头部，还保存了一个 8 字节的数字，记录了这个 XID 文件管理的事务的个数。于是，事务 xid 在文件中的状态就存储在 (xid-1)+8 字节处，xid-1 是因为 xid 0（Super XID） 的状态不需要记录。
+XID 文件给每个事务分配了一个字节的空间，用来保存其状态。同时，在 XID 文件的头部，还保存了一个 8 字节的数字，记录了这个 XID 文件管理的事务的个数。于是，事务 xid 在文件中的状态就存储在 (xid-1)+8 字节处，xid-1 是因为 xid 0（Super XID）的状态不需要记录。
 
 TransactionManager 提供了一些接口供其他模块调用，用来创建事务和查询事务状态。更具体的：
 
@@ -34,7 +34,7 @@ public interface TransactionManager {
     boolean isActive(long xid);         // 查询一个事务的状态是否是正在进行的状态
     boolean isCommitted(long xid);      // 查询一个事务的状态是否是已提交
     boolean isAborted(long xid);        // 查询一个事务的状态是否是已取消
-    void close();                       // 关闭TM
+    void close();                       // 关闭 TM
 }
 ```
 
@@ -43,7 +43,7 @@ public interface TransactionManager {
 规则很简单，剩下的就是编码了。首先定义一些必要的常量：
 
 ```java
-// XID文件头长度
+// XID 文件头长度
 static final int LEN_XID_HEADER_LENGTH = 8;
 // 每个事务的占用长度
 private static final int XID_FIELD_SIZE = 1;
@@ -51,7 +51,7 @@ private static final int XID_FIELD_SIZE = 1;
 private static final byte FIELD_TRAN_ACTIVE   = 0;
 private static final byte FIELD_TRAN_COMMITTED = 1;
 private static final byte FIELD_TRAN_ABORTED  = 2;
-// 超级事务，永远为commited状态
+// 超级事务，永远为 commited 状态
 public static final long SUPER_XID = 0;
 // XID 文件后缀
 static final String XID_SUFFIX = ".xid";
@@ -93,7 +93,7 @@ private void checkXIDCounter() {
 我们可以先写一个小的方法，用来获取 xid 的状态在文件中的偏移：
 
 ```java
-// 根据事务xid取得其在xid文件中对应的位置
+// 根据事务 xid 取得其在 xid 文件中对应的位置
 private long getXidPosition(long xid) {
     return LEN_XID_HEADER_LENGTH + (xid-1)*XID_FIELD_SIZE;
 }
@@ -102,7 +102,7 @@ private long getXidPosition(long xid) {
 `begin()` 方法会开始一个事务，更具体的，首先设置 xidCounter+1 事务的状态为 active，随后 xidCounter 自增，并更新文件头。
 
 ```java
-// 开始一个事务，并返回XID
+// 开始一个事务，并返回 XID
 public long begin() {
     counterLock.lock();
     try {
@@ -115,7 +115,7 @@ public long begin() {
     }
 }
 
-// 更新xid事务的状态为status
+// 更新 xid 事务的状态为 status
 private void updateXID(long xid, byte status) {
     long offset = getXidPosition(xid);
     byte[] tmp = new byte[XID_FIELD_SIZE];
@@ -134,7 +134,7 @@ private void updateXID(long xid, byte status) {
     }
 }
 
-// 将XID加一，并更新XID Header
+// 将 XID 加一，并更新 XID Header
 private void incrXIDCounter() {
     xidCounter ++;
     ByteBuffer buf = ByteBuffer.wrap(Parser.long2Byte(xidCounter));
@@ -159,7 +159,7 @@ private void incrXIDCounter() {
 同样，`isActive()`、`isCommitted()` 和 `isAborted()` 都是检查一个 xid 的状态，可以用一个通用的方法解决：
 
 ```java
-// 检测XID事务是否处于status状态
+// 检测 XID 事务是否处于 status 状态
 private boolean checkXID(long xid, byte status) {
     long offset = getXidPosition(xid);
     ByteBuffer buf = ByteBuffer.wrap(new byte[XID_FIELD_SIZE]);
@@ -180,7 +180,7 @@ private boolean checkXID(long xid, byte status) {
 ```java
 public static TransactionManagerImpl create(String path) {
     ...
-    // 写空XID文件头
+    // 写空 XID 文件头
     ByteBuffer buf = ByteBuffer.wrap(new byte[TransactionManagerImpl.LEN_XID_HEADER_LENGTH]);
     try {
         fc.position(0);

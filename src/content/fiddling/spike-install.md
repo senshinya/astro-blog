@@ -58,7 +58,7 @@ $ make install
 
 安装完成后 `spike` 命令应可用
 
-### 模拟内核（riscv-pk） 的安装
+### 模拟内核（riscv-pk）的安装
 
 仓库地址：https://github.com/riscv-software-src/riscv-pk
 

@@ -48,7 +48,7 @@ private byte[] internNext() {
     if(position + OF_DATA >= fileSize) {
         return null;
     }
-    // 读取size
+    // 读取 size
     ByteBuffer tmp = ByteBuffer.allocate(4);
     fc.position(position);
     fc.read(tmp);
@@ -57,7 +57,7 @@ private byte[] internNext() {
         return null;
     }
 
-    // 读取checksum+data
+    // 读取 checksum+data
     ByteBuffer buf = ByteBuffer.allocate(OF_DATA + size);
     fc.position(position);
     fc.read(buf);
@@ -190,22 +190,22 @@ MYDB break down
 
 在系统崩溃时，T2 仍然是活跃状态。那么当数据库重新启动，执行恢复例程时，会撤销 T2，它对数据库的影响会被消除。但是由于 T1 读取了 T2 更新的值，既然 T2 被撤销，那么 T1 也应当被撤销。这种情况，就是级联回滚。但是，T1 已经 commit 了，所有 commit 的事务的影响，应当被持久化。这里就造成了矛盾。所以这里需要保证：
 
-> 规定1：正在进行的事务，不会读取其他任何未提交的事务产生的数据。
+> 规定 1：正在进行的事务，不会读取其他任何未提交的事务产生的数据。
 
 第二种情况，假设 x 的初值是 0
 
 ```
 T1 begin
 T2 begin
-T1 set x = x+1 // 产生的日志为(T1, U, A, 0, 1)
-T2 set x = x+1 // 产生的日志为(T1, U, A, 1, 2)
+T1 set x = x+1 // 产生的日志为 (T1, U, A, 0, 1)
+T2 set x = x+1 // 产生的日志为 (T1, U, A, 1, 2)
 T2 commit
 MYDB break down
 ```
 
 在系统崩溃时，T1 仍然是活跃状态。那么当数据库重新启动，执行恢复例程时，会对 T1 进行撤销，对 T2 进行重做，但是，无论撤销和重做的先后顺序如何，x 最后的结果，要么是 0，要么是 2，这都是错误的。
 
-> 出现这种问题的原因, 归根结底是因为我们的日志太过简单, 仅仅记录了"前相"和"后相". 并单纯的依靠"前相"undo, 依靠"后相"redo. 这种简单的日志方式和恢复方式, 并不能涵盖住所有数据库操作形成的语义
+> 出现这种问题的原因，归根结底是因为我们的日志太过简单，仅仅记录了"前相"和"后相". 并单纯的依靠"前相"undo, 依靠"后相"redo. 这种简单的日志方式和恢复方式，并不能涵盖住所有数据库操作形成的语义
 
 解决方法有两种：
 
@@ -214,7 +214,7 @@ MYDB break down
 
 MYDB 采用的是限制数据库操作，需要保证：
 
-> 规定2：正在进行的事务，不会修改其他任何未提交的事务修改或产生的数据。
+> 规定 2：正在进行的事务，不会修改其他任何未提交的事务修改或产生的数据。
 
 在 MYDB 中，由于 VM 的存在，传递到 DM 层，真正执行的操作序列，都可以保证规定 1 和规定 2。VM 如何保证这两条规定，会在 VM 层一节中说明（VM 的坑还挺大）。有了这两条规定，并发情况下日志的恢复也就很简单了：
 
@@ -289,7 +289,7 @@ private static void undoTranscations(TransactionManager tm, Logger lg, PageCache
         }
     }
 
-    // 对所有active log进行倒序undo
+    // 对所有 active log 进行倒序 undo
     for(Entry<Long, List<byte[]>> entry : logCache.entrySet()) {
         List<byte[]> logs = entry.getValue();
         for (int i = logs.size()-1; i >= 0; i --) {

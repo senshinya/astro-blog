@@ -7,9 +7,9 @@ description: "OPNsense 作为一款开源的防火墙和路由系统，因其美
 ---
 ### 前言
 
-早先透明代理 + 分流一直使用的是 ikuai 作为主路由，OpenWRT 作为旁路由的方案，这也是网上大部分教程的主流方案。后面冲浪的时候了解到 ikuai 可能会有[偷跑流量与上报信息的情况](https://wusiyu.me/2022-ikuai-non-cloud-background-activities/)出现，另外作为国产闭源系统，安全性也比较成问题
+早先透明代理 + 分流一直使用的是 ikuai 作为主路由，OpenWRT 作为旁路由的方案，这也是网上大部分教程的主流方案。后面冲浪的时候了解到 ikuai 可能会有 [偷跑流量与上报信息的情况](https://wusiyu.me/2022-ikuai-non-cloud-background-activities/) 出现，另外作为国产闭源系统，安全性也比较成问题
 
-后续更换了主路由 OpenWRT，旁路由 Debian 的[方案](/fiddling/debian-as-side-router)，后面又不使用旁路由方案，先后尝试了[基于 FakeIP 的分流转发方案](/fiddling/fake-ip-based-transparent-proxy)和[基于 BGP 的分流转发方案](/fiddling/more-accurate-chnroute)，最终稳定在了基于 BGP 的分流转发方案上
+后续更换了主路由 OpenWRT，旁路由 Debian 的 [方案](/fiddling/debian-as-side-router)，后面又不使用旁路由方案，先后尝试了 [基于 FakeIP 的分流转发方案](/fiddling/fake-ip-based-transparent-proxy) 和 [基于 BGP 的分流转发方案](/fiddling/more-accurate-chnroute)，最终稳定在了基于 BGP 的分流转发方案上
 
 最近又了解到了 OPNsense 这个防火墙/路由系统。简直是梦中情路由系统，开源免费，UI 美观，功能完善，同时还提供了 gui 界面支持自动更新 ip list 以用于分流。所以计划将现有的分流转发方案迁移到该系统上，同时不在单独使用一个软路由用于科学，而是直接将 clash 集成进主路由中
 
@@ -28,7 +28,7 @@ DNS 解析和流量处理都依赖了 clash 的功能，所以第一步先安装
 
 ssh 进 OPNsense（怎么开启 ssh？STFW）后，新建文件夹 `/usr/local/clash` 作为 clash 二进制、配置文件和其他相关文件的存放点。clash 二进制建议 scp 过去（毕竟主路由现在还没科学，直接下载速度很慢）。这里需要先把 clash 二进制和配置文件上传到该目录下。clash 二进制重命名为 clash，配置文件命名为 `config.yaml`
 
-在 mihomo 的 [releases 页面](https://github.com/MetaCubeX/mihomo/releases)下载最新的内核版本。注意下载 freebsd 版本，根据你的机器架构选择 386、amd64 或者 arm64。如果你是 amd64 且后续运行 clash 时阶段出现以下报错，请下载 `amd64-compatible` 版
+在 mihomo 的 [releases 页面](https://github.com/MetaCubeX/mihomo/releases) 下载最新的内核版本。注意下载 freebsd 版本，根据你的机器架构选择 386、amd64 或者 arm64。如果你是 amd64 且后续运行 clash 时阶段出现以下报错，请下载 `amd64-compatible` 版
 
 ```shell
 This PROGRAM can only be run on _AMD64 processors with v3 microarchitecture_ support.
@@ -164,9 +164,9 @@ $ fetch -o /usr/local/etc/pkg/repos/mimugmail.conf https://www.routerperformance
 $ pkg update
 ```
 
-接着在 web-gui 中的系统-固件-插件中搜索 adguard，安装 os-adguardhome-maxit 即可。安装完成后即可在服务-Adguardhome 中开启 Adguard Home。web 管理开放在 3000 端口，初始化设置过程不表，注意 DNS 监听端口设置为 53，即以 Adguard Home 作为 OPNsense 所在机器的默认 DNS server
+接着在 web-gui 中的系统 - 固件 - 插件中搜索 adguard，安装 os-adguardhome-maxit 即可。安装完成后即可在服务-Adguardhome 中开启 Adguard Home。web 管理开放在 3000 端口，初始化设置过程不表，注意 DNS 监听端口设置为 53，即以 Adguard Home 作为 OPNsense 所在机器的默认 DNS server
 
-安装完成后在 Adguard Home 的设置-DNS设置中将上游 DNS 服务器设置为 127.0.0.1:5353，即 Clash 的 DNS 监听地址即可
+安装完成后在 Adguard Home 的设置-DNS 设置中将上游 DNS 服务器设置为 127.0.0.1:5353，即 Clash 的 DNS 监听地址即可
 
 ### 国内外 IP 分流
 
@@ -293,18 +293,18 @@ tun2socks_enable="YES"
 
 #### 新建端口、配置网关
 
-在 OPNsense 的接口-分配中，添加一个新接口，设备即为我们在配置文件中写的 proxytun2socks0，保存即可
+在 OPNsense 的接口 - 分配中，添加一个新接口，设备即为我们在配置文件中写的 proxytun2socks0，保存即可
 
-随后在添加的接口的配置页面启用接口，描述填写 TUN2SOCKS，IPv4 配置类型选择静态IPv4，IPv4 地址为 `10.0.3.1/24`，保存
+随后在添加的接口的配置页面启用接口，描述填写 TUN2SOCKS，IPv4 配置类型选择静态 IPv4，IPv4 地址为 `10.0.3.1/24`，保存
 
-在系统-网关-配置中，新建一个网关，名称为 TUN2SOCKS_MIHOMO，接口选择我们刚添加的接口 TUN2SOCKS，IP 地址填写 `10.0.3.2`，其他默认保存
+在系统 - 网关 - 配置中，新建一个网关，名称为 TUN2SOCKS_MIHOMO，接口选择我们刚添加的接口 TUN2SOCKS，IP 地址填写 `10.0.3.2`，其他默认保存
 
 这样我们就新建了一个网关，只要流量进入这个网关，就会被转发到 127.0.0.1:7890，也就是 clash 进行代理
 #### 设置国内外 IP 分流
 
-OPNsense 对于我来说最有用的功能，就是防火墙-别名。这里可以设置一个 ip list，并在后续的规则配置中直接使用这个 ip list。这个 list 不仅可以手动填写，还可以直接订阅一个地址，动态获取
+OPNsense 对于我来说最有用的功能，就是防火墙 - 别名。这里可以设置一个 ip list，并在后续的规则配置中直接使用这个 ip list。这个 list 不仅可以手动填写，还可以直接订阅一个地址，动态获取
 
-进入防火墙-别名，这里需要新建两个别名
+进入防火墙 - 别名，这里需要新建两个别名
 
 第一个是 InternalAddress，表示局域网地址范围，类型选择 Network(s)，内容为
 
@@ -321,7 +321,7 @@ OPNsense 对于我来说最有用的功能，就是防火墙-别名。这里可�
 
 第二个是 CN_V4，表示国内的 IP 地址范围，类型选择 URL Table (IPs)，内容填写一个包含国内所有网段范围的列表地址即可，如 https://raw.githubusercontent.com/gaoyifan/china-operator-ip/refs/heads/ip-lists/china.txt
 
-随后在防火墙-规则-LAN中新建两个规则，排在规则列表的最前面，注意规则顺序从上到下
+随后在防火墙 - 规则-LAN 中新建两个规则，排在规则列表的最前面，注意规则顺序从上到下
 
 第一个规则目标为 InternalAddress，其余默认，表示目标地址为局域网时，按照默认规则路由
 

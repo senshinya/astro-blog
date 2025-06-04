@@ -6,7 +6,7 @@ description: "基于 FakeIP 的透明代理分流方案旨在解决传统旁路�
 ---
 ### 前言
 
-[上篇文章](/fiddling/debian-as-side-router)中介绍了使用旁路由做局域网内透明代理的方案，对于大部分用户已经基本可用，但是该方案的 cons 也比较明显：
+[上篇文章](/fiddling/debian-as-side-router) 中介绍了使用旁路由做局域网内透明代理的方案，对于大部分用户已经基本可用，但是该方案的 cons 也比较明显：
 
 1. 存在单点故障的可能，由于 DHCP 下发的网关直接指向了旁路由，一旦旁路由的 clash 不可用，即使不需要科学的网站也无法访问
 2. clash 包转发性能孱弱，远比不上硬件转发。而一旦网关设置为旁路由，由于 iptables 的设置，无论是否需要科学的流量都会走 clash 转发
@@ -52,7 +52,7 @@ sing-box 和 clash 都内置了 DNS 模块，实现了 DNS Server 了功能，�
 
 #### 主路由配置
 
-首先在主路由配置下一跳网关，ikuai 的配置位于 流控分流-分流设置-端口分流，添加一条分流规则，分流方式选择下一跳网关，并填写你的软路由 IP，我的就是 192.168.7.2 了。并在目的地址中添加一条 198.18.0.0/15，其他配置保持默认即可
+首先在主路由配置下一跳网关，ikuai 的配置位于 流控分流 - 分流设置 - 端口分流，添加一条分流规则，分流方式选择下一跳网关，并填写你的软路由 IP，我的就是 192.168.7.2 了。并在目的地址中添加一条 198.18.0.0/15，其他配置保持默认即可
 
  ![下一跳网关](https://blog-img.shinya.click/2025/37f3bc2ebbd0f4f79e218c2a949a84c4.png)
 
@@ -60,7 +60,7 @@ sing-box 和 clash 都内置了 DNS 模块，实现了 DNS Server 了功能，�
 
 #### sing-box 安装和配置
 
-使用[上篇文章](/fiddling/debian-as-side-router)的教程搭建好 AdGuard Home，上游 DNS 仍然设置为 127.0.0.1:1053。之后安装 sing-box，Debian 机器只需要一条命令：
+使用 [上篇文章](/fiddling/debian-as-side-router) 的教程搭建好 AdGuard Home，上游 DNS 仍然设置为 127.0.0.1:1053。之后安装 sing-box，Debian 机器只需要一条命令：
 
 ```shell
 bash <(curl -fsSL https://sing-box.app/deb-install.sh)
@@ -76,7 +76,7 @@ ExecStartPost = +/usr/bin/bash /etc/sing-box/iptables.sh
 ExecStopPost  = +/usr/bin/bash /etc/sing-box/clean.sh
 ```
 
-这其实和上个方案类似，也是在启动时设置路由表，并在 sing-box 关闭时清除。sing-box 的所有配置都位于 `/etc/sing-box` 下，默认读取的配置文件也是 `/etc/sing-box/config.json` ，所以我们也保持统一。
+这其实和上个方案类似，也是在启动时设置路由表，并在 sing-box 关闭时清除。sing-box 的所有配置都位于 `/etc/sing-box` 下，默认读取的配置文件也是 `/etc/sing-box/config.json`，所以我们也保持统一。
 
 新建 `/etc/sing-box/iptables.sh` 和 `/etc/sing-box/clean.sh` 如下：
 
@@ -140,7 +140,7 @@ iptables -t mangle -A clash_local -p udp -j MARK --set-mark 666
 iptables -t mangle -A OUTPUT -j clash_local
 
 # 修复 ICMP(ping)
-# 这并不能保证 ping 结果有效(clash 等不支持转发 ICMP), 只是让它有返回结果而已
+# 这并不能保证 ping 结果有效 (clash 等不支持转发 ICMP), 只是让它有返回结果而已
 # --to-destination 设置为一个可达的地址即可
 sysctl -w net.ipv4.conf.all.route_localnet=1
 iptables -t nat -A PREROUTING -p icmp -d 198.18.0.0/16 -j DNAT --to-destination 127.0.0.1
@@ -179,7 +179,7 @@ iptables.sh 其实和上篇文章的 iptables.sh 高度相似，只是最终 cla
       {
         "tag": "cloudflare",
         "address": "tls://1.1.1.1",
-        "detour": "🌍 外网" // 改为你的代理节点tag
+        "detour": "🌍 外网" // 改为你的代理节点 tag
       },
       {
         "tag": "local",
@@ -345,7 +345,7 @@ iptables.sh 其实和上篇文章的 iptables.sh 高度相似，只是最终 cla
         "download_detour": "DIRECT"
       }
     ],
-    "final": "🌍 外网", // 改为你的代理节点tag
+    "final": "🌍 外网", // 改为你的代理节点 tag
     "auto_detect_interface": true
   },
   "experimental": {
@@ -353,7 +353,7 @@ iptables.sh 其实和上篇文章的 iptables.sh 高度相似，只是最终 cla
       "external_controller": "0.0.0.0:9090",
       "external_ui": "yacd",
       "external_ui_download_url": "https://github.com/MetaCubeX/Yacd-meta/archive/gh-pages.zip",
-      "external_ui_download_detour": "🌍 外网", // 改为你的代理节点tag
+      "external_ui_download_detour": "🌍 外网", // 改为你的代理节点 tag
       "default_mode": "Rule"
     }
   }

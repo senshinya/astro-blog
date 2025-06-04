@@ -8,7 +8,7 @@ description: "MapReduce 是一种高效的并行计算模型，旨在简化大�
 
 MapReduce，是 Google 早年提出了一种软件架构模型，支持大规模数据集的并行运算。现在这个概念被运用在大量分布式系统中。
 
-相关的理论由 Google 在 2004 年发表在论文《MapReduce: Simplified Data Processing on Large Clusters》中，可以在[这里](https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf)阅读全文。13 页的小论文，信息密度比某些小论文不知道高到哪里去了。
+相关的理论由 Google 在 2004 年发表在论文《MapReduce: Simplified Data Processing on Large Clusters》中，可以在 [这里](https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf) 阅读全文。13 页的小论文，信息密度比某些小论文不知道高到哪里去了。
 
 由于本文是边阅读论文边记录下来的笔记，所以内容可能比较混乱。
 
@@ -32,7 +32,7 @@ map(String key, String value):
     // key：文章名称
     // value：文章内容
     for 单词 w in value:
-        增加中间计数(w, "1")
+        增加中间计数 (w, "1")
  
 reduce(String key, Iterator values):
     // key：一个单词
@@ -40,7 +40,7 @@ reduce(String key, Iterator values):
     int result = 0;
     for v in values:
         result += ParseInt(v);
-    输出(ToString(result))
+    输出 (ToString(result))
 ```
 
 ### 实现

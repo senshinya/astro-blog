@@ -32,7 +32,7 @@ mrworker 的处理就很简单了，只有一个主协程，直接调用了 `mr/
 
 #### 整体流程
 
-workers 会首先执行完 map 任务，生成很多中间文件 “mr-X-Y”，其中，X 是 map 任务的 id，Y 是对应的 reduce 任务 id。接着 reduce 会收集所有 Y 等于 reduce 任务 id 的文件，读取并进行 reduce 操作，并将结果输出到 “mr-out-Y” 中。
+workers 会首先执行完 map 任务，生成很多中间文件“mr-X-Y”，其中，X 是 map 任务的 id，Y 是对应的 reduce 任务 id。接着 reduce 会收集所有 Y 等于 reduce 任务 id 的文件，读取并进行 reduce 操作，并将结果输出到“mr-out-Y”中。
 
 #### master 实现
 

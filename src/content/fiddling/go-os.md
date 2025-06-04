@@ -6,9 +6,9 @@ description: "在一次春节假期中，灵感悄然降临。高铁上偶然阅
 ---
 ### 缘起
 
-最初是在过年回家的高铁上，在知乎上看到了这篇文章：[将Go程序跑在裸机上](https://zhuanlan.zhihu.com/p/265806072)，大致想法是通过实现一遍系统接口，来接管 golang 程序的各种系统调用和中断之类的。感觉这个想法十分有趣。作者还用 golang 写了一个 x86 os：[eggos](https://zhuanlan.zhihu.com/p/265806072)，完成度相当之高。由于是从底层魔改了 golang 的运行时，用户程序完全无感知，所以各种 golang 的第三方库都可以直接使用。作者甚至实现了一个支持 TCP/IP 的协议栈，使得一些网络库可以直接使用。看的我心潮澎湃。
+最初是在过年回家的高铁上，在知乎上看到了这篇文章：[将 Go 程序跑在裸机上](https://zhuanlan.zhihu.com/p/265806072)，大致想法是通过实现一遍系统接口，来接管 golang 程序的各种系统调用和中断之类的。感觉这个想法十分有趣。作者还用 golang 写了一个 x86 os：[eggos](https://zhuanlan.zhihu.com/p/265806072)，完成度相当之高。由于是从底层魔改了 golang 的运行时，用户程序完全无感知，所以各种 golang 的第三方库都可以直接使用。作者甚至实现了一个支持 TCP/IP 的协议栈，使得一些网络库可以直接使用。看的我心潮澎湃。
 
-搜了搜一些前人的工作，发现这个想法很早就被人提出来过。2018 年 OSDI 会议上就有一篇论文，讲述了使用高级语言实现操作系统的好处和代价，幻灯片在[这儿](https://www.usenix.org/sites/default/files/conference/protected-files/osdi18_slides_cutler.pdf)。另外，相关的实现这几年也是有的，比如 [gopher-os](https://github.com/gopher-os/gopher-os)，一个验证性质的内核，只是为了证明使用 golang 实现操作系统是可行的。另外还有 MIT 的一个博士论文项目 [Buscuit](https://github.com/mit-pdos/biscuit)，思路是 hack 编译器使得能够编译到裸机，这个项目完成度更高，实现了部分 POSIX 接口，甚至可以在上面跑 redis 和 nginx。
+搜了搜一些前人的工作，发现这个想法很早就被人提出来过。2018 年 OSDI 会议上就有一篇论文，讲述了使用高级语言实现操作系统的好处和代价，幻灯片在 [这儿](https://www.usenix.org/sites/default/files/conference/protected-files/osdi18_slides_cutler.pdf)。另外，相关的实现这几年也是有的，比如 [gopher-os](https://github.com/gopher-os/gopher-os)，一个验证性质的内核，只是为了证明使用 golang 实现操作系统是可行的。另外还有 MIT 的一个博士论文项目 [Buscuit](https://github.com/mit-pdos/biscuit)，思路是 hack 编译器使得能够编译到裸机，这个项目完成度更高，实现了部分 POSIX 接口，甚至可以在上面跑 redis 和 nginx。
 
 在研究资料过程中，发现了一个共同点：都是基于 x86 架构实现的。我之前用 c 写过一个小内核，是基于 RISC-V 架构，RISC-V 的汇编和各种机制都十分简单，写起来也很舒服。于是就有了这么个想法：用 go 实现一个 RISC-V 的操作系统。
 
@@ -32,7 +32,7 @@ description: "在一次春节假期中，灵感悄然降临。高铁上偶然阅
 
 然而还有一个严重的问题：我们指定了入口函数，但是没有办法指定这个函数的起始地址，就没法把这个函数放到 0x80000000 处，virt 在启动的时候，0x80000000 就可能是一堆啥也不知道的代码。通常，如果是 c，我们可以通过编写链接脚本来解决这个问题，而且非常简单：直接指定好入口标记的地址，一行就完事。可是这是 go。
 
-在查了一些资料后，在 stackoverflow 上看到了这个[提问](https://stackoverflow.com/questions/69111979/using-custom-linker-script-with-go-build)，使用外部链接器而非 go 自己内置的链接器，这样就可以指定链接脚本了。但是尝试了下之后，不太可行。go 的可执行文件中除了一些已知的 text 段、bss 段、rodata 段和 data 段，还有一些自己的乱七八糟的段，这些都必须在链接脚本里显式指定，几乎不太可能。
+在查了一些资料后，在 stackoverflow 上看到了这个 [提问](https://stackoverflow.com/questions/69111979/using-custom-linker-script-with-go-build)，使用外部链接器而非 go 自己内置的链接器，这样就可以指定链接脚本了。但是尝试了下之后，不太可行。go 的可执行文件中除了一些已知的 text 段、bss 段、rodata 段和 data 段，还有一些自己的乱七八糟的段，这些都必须在链接脚本里显式指定，几乎不太可能。
 
 于是更换思路，入口可以写一段 c 代码，这段 c 代码动态获取 go 代码的入口然后跳转过去。由于 go 代码的入口只存在于 elf 文件中，在加载后的内存映像中是没有这个信息的。所以可以把这个 elf 文件直接以二进制的形式链接到 c 程序的 data 段，可以为这段保存二进制的内存开始和结尾指定一个名字，我是用的是 `_binary_kernel_elf_start` 和 `_binary_kernel_elf_end`。这样在 c 代码中就可以快速找到了。而 c 代码的作用，就是解析这段内存中保存的 elf 文件，把需要载入内存的段复制到内存对应的地址处，再跳转到 elf 指定的 entry 处即可。
 
@@ -223,6 +223,6 @@ Type           Offset             VirtAddr           PhysAddr
 
 看来是 RV64 对 `-T` 的支持不太完善……
 
-于是这个项目就被搁置到了现在，可惜了我想的好名字/(ㄒoㄒ)/ 只能期待后续 go 官方能修复这个问题，但是感觉 go 对 RV64 不是很上心，原生支持交叉编译到 RV64 也是近几年才合进主线的……
+于是这个项目就被搁置到了现在，可惜了我想的好名字/(ㄒo ㄒ)/ 只能期待后续 go 官方能修复这个问题，但是感觉 go 对 RV64 不是很上心，原生支持交叉编译到 RV64 也是近几年才合进主线的……
 
 很气，转投 Rust 去了！

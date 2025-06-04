@@ -47,7 +47,7 @@ ImmortalWRT 的安装得提一嘴，最初以为它的安装和 windows 或者�
 
 接着就是扩容，直接写盘安装的 openwrt，可用空间只有不到 1G，硬盘的其他剩余空间完全浪费掉了。这时候第二个困难就出现了：我找不到何时的扩容教程。简中的教程错综复杂、错误百出、一个抄一个，但实际上，要么就是 squashfs 的扩容，要么就是用剩余空间新建一个分区，将根分区改挂到新分区上这样的教程，几乎找不到真正的“扩容”分区
 
-最后在 OpenWRT 的[官方文档](https://openwrt.org/docs/guide-user/advanced/expand_root)中找到了……以后还是不用中文搜索了，Google 都搜不出啥有用的
+最后在 OpenWRT 的 [官方文档](https://openwrt.org/docs/guide-user/advanced/expand_root) 中找到了……以后还是不用中文搜索了，Google 都搜不出啥有用的
 
 先解决越墙和流量出口的问题，这个直接 clash 就能解决
 
