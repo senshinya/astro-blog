@@ -161,11 +161,11 @@ async function main() {
             const data = parseFrontmatter(frontmatter);
 
             // 检查description是否存在且不为空
-            // if (data.description && data.description.trim() !== '' && data.description !== "''") {
-            //     console.log(`⏩ 跳过 ${file}: 已有description`);
-            //     skippedCount++;
-            //     continue;
-            // }
+            if (data.description && data.description.trim() !== '' && data.description !== "''") {
+                console.log(`⏩ 跳过 ${file}: 已有description`);
+                skippedCount++;
+                continue;
+            }
 
             // 生成description
             console.log(`🤖 为 ${file} 生成description...`);
