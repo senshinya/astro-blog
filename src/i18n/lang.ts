@@ -1,10 +1,3 @@
-/**
- * Multi-language path parsing and language switching utilities
- *
- * Provides functions to extract language codes from URL paths and handle
- * language cycling for multi-language navigation in Astro applications.
- */
-
 import { allLocales, defaultLocale, moreLocales } from '@/config'
 
 // Gets the language code from the current path

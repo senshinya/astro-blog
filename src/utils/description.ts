@@ -1,10 +1,3 @@
-/**
- * Content excerpt generation utilities for multi-language blog posts
- *
- * Generates contextual excerpts from Markdown content with language-aware
- * length limits and proper text processing for different use cases.
- */
-
 import type { CollectionEntry } from 'astro:content'
 import MarkdownIt from 'markdown-it'
 import { defaultLocale } from '@/config'

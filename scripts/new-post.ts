@@ -1,11 +1,6 @@
 /**
- * Create new blog post with predefined frontmatter template
- *
- * Generates a new Markdown file in src/content/posts/ with complete YAML
- * frontmatter including title, date, tags, and theme configuration.
- *
- * Usage: pnpm new-post first-post
- * Output: src/content/posts/first-post.md
+ * Create a new post with frontmatter
+ * Usage: pnpm new-post <title>
  */
 
 import { existsSync, mkdirSync, writeFileSync } from 'node:fs'
@@ -35,21 +30,16 @@ const today = new Date().toISOString().split('T')[0]
 const content = `---
 title: ${baseName}
 published: ${today}
-
-# Optional
 description: ''
 updated: ''
 tags:
   - Note
-
-# Advanced
 draft: false
 pin: 0
 toc: ${themeConfig.global.toc}
 lang: ''
 abbrlink: ''
 ---
-
 `
 
 // Write to file

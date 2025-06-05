@@ -18,7 +18,6 @@ export function rehypeImgToFigure() {
       if (altText.startsWith('_'))
         return
 
-      // 转换为 figure 元素
       node.tagName = 'figure'
       node.children = [
         imgNode,

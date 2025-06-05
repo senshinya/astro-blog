@@ -50,15 +50,33 @@ function setupWaline() {
     requiredMeta: ['nick', 'mail'],
     highlighter: false,
     texRenderer: false,
-    ...(imageUploader && { imageUploader }),
-    ...(search && { search }),
+    imageUploader,
+    search,
     noCopyright: true,
     reaction: [],
   })
 }
 
-setupWaline()
-document.addEventListener('astro:page-load', setupWaline)
+// Create an intersection observer to lazy load Waline comments when the container enters viewport
+function lazySetupWaline() {
+  const walineContainer = document.getElementById('waline')
+  if (!walineContainer)
+    return
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setupWaline()
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { rootMargin: '200px' })
+
+  observer.observe(walineContainer)
+}
+
+lazySetupWaline()
+document.addEventListener('astro:page-load', lazySetupWaline)
 </script>
 
 <!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->

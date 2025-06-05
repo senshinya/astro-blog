@@ -1,10 +1,3 @@
-/**
- * Multi-language path generation and navigation utilities
- *
- * Provides functions to generate localized paths, handle language switching,
- * and build URLs for multi-language navigation in Astro applications.
- */
-
 import { defaultLocale, moreLocales } from '@/config'
 import { getLangFromPath, getNextGlobalLang } from '@/i18n/lang'
 

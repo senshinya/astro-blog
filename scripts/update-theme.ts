@@ -1,11 +1,6 @@
 /**
- * Update Astro theme from upstream repository
- *
- * Fetches and merges latest changes from the upstream theme repository,
- * automatically sets up remote if needed, and handles merge conflicts gracefully.
- *
+ * Update theme from upstream repository
  * Usage: pnpm update-theme
- * Upstream: https://github.com/radishzzz/astro-theme-retypeset.git
  */
 
 import { execSync } from 'node:child_process'

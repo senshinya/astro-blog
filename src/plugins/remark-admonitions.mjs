@@ -41,17 +41,16 @@ export function remarkAdmonitions() {
       const firstChild = node.children?.[0]
 
       // Use [title] syntax for custom title
-      if (
-        firstChild?.data?.directiveLabel
-        && firstChild?.children?.length
-      ) {
+      if (firstChild?.data?.directiveLabel && firstChild.children?.length) {
         title = firstChild.children
           .map(child => child.type === 'text' ? child.value : '')
           .join('')
           .trim() || title
       }
 
-      node.children.shift()
+      if (firstChild?.data?.directiveLabel) {
+        node.children.shift()
+      }
 
       createAdmonition(node, type, title)
     })

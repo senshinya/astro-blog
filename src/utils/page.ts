@@ -1,10 +1,3 @@
-/**
- * URL path analysis and page type detection utilities
- *
- * Provides functions to detect page types (home, post, tag, about) and extract
- * language information from URL paths in a multi-language Astro application.
- */
-
 import { moreLocales } from '@/config'
 import { getLangFromPath } from '@/i18n/lang'
 import { getLocalizedPath } from '@/i18n/path'

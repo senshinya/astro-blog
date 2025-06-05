@@ -1,26 +1,3 @@
-/**
- * Blog post data utilities with memoization and multi-language support
- *
- * Provides functions to query, filter, and organize blog posts from Astro's content
- * collections. Features automatic caching, language filtering, and metadata enhancement.
- *
- * Core Functions
- * - addMetaToPost
- * - getPosts
- * - checkPostSlugDuplication
- *
- * Post Filtering
- * - getRegularPosts
- * - getPinnedPosts
- * - getPostsByYear
- *
- * Tag Related
- * - getPostsGroupByTags
- * - getAllTags
- * - getPostsByTag
- * - getTagSupportedLangs
- */
-
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import { defaultLocale } from '@/config'

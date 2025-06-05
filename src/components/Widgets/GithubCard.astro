@@ -1,22 +1,4 @@
 <script>
-function setupGithubCards() {
-  const githubCards = document.getElementsByClassName('gc-container')
-  if (githubCards.length === 0)
-    return
-
-  // Create an intersection observer to lazy load GitHub repo data when cards enter viewport
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        loadCardData(entry.target as HTMLElement)
-        observer.unobserve(entry.target)
-      }
-    })
-  }, { rootMargin: '500px' })
-
-  Array.from(githubCards).forEach(card => observer.observe(card))
-}
-
 async function loadCardData(card: HTMLElement) {
   const repo = card.dataset.repo
   if (!repo)
@@ -65,6 +47,24 @@ async function loadCardData(card: HTMLElement) {
   catch (error) {
     console.error(`Failed to fetch ${repo}:`, (error as Error)?.message ?? String(error))
   }
+}
+
+function setupGithubCards() {
+  const githubCards = document.getElementsByClassName('gc-container')
+  if (githubCards.length === 0)
+    return
+
+  // Create an intersection observer to lazy load GitHub repo data when cards enter viewport
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        loadCardData(entry.target as HTMLElement)
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { rootMargin: '200px' })
+
+  Array.from(githubCards).forEach(card => observer.observe(card))
 }
 
 setupGithubCards()
