@@ -74,18 +74,11 @@
   --color-segmented-control-bg: transparent;
   --color-segmented-control-button-bg: transparent;
   --color-segmented-control-button-selected-border: #6e7681;
-  /* --color-fg-default: var(--secondary-color); */
   --color-fg-muted: #7d8590;
   --color-fg-subtle: #6e7681;
-  /* --color-canvas-default: var(--background-color);
-  --color-canvas-overlay: var(--background-color);
-  --color-canvas-inset: var(--background-color);
-  --color-canvas-subtle: var(--background-color); */
   --color-border-default: #30363d;
   --color-border-muted: #21262d;
   --color-neutral-muted: rgb(110 118 129 / 40%);
-  /* --color-accent-fg: oklch(70.7% 0.165 254.624);
-  --color-accent-emphasis: oklch(70.7% 0.165 254.624); */
   --color-accent-muted: rgb(56 139 253 / 40%);
   --color-accent-subtle: rgb(56 139 253 / 10%);
   --color-success-fg: #3fb950;
@@ -129,14 +122,14 @@ body {
   display: none;
 }
 
-/* Comments Count Font No Underline and Small Size */
+/* No Underline and Small Size on Comments Count */
 h4.gsc-comments-count-separator,
 h4.gsc-replies-count {
   color: var(--secondary-color);
   font-size: 0.875rem;
 }
 
-/* Oldest and Newest Buttons Style */
+/* "Oldest" and "Newest" Buttons Style */
 .BtnGroup-item,
 .BtnGroup-item.BtnGroup-item--selected {
   background-color: transparent;
@@ -150,15 +143,31 @@ h4.gsc-replies-count {
 .BtnGroup-item button.btn:hover {
   background-color: transparent;
 }
+.BtnGroup-item--selected .btn {
+  font-weight: 500;
+}
+.BtnGroup-item .btn {
+  background-color: transparent;
+}
 
-/* Reply Time No Underline */
+/* Larger Padding Top on Author Comment Header */
+.gsc-comment-header {
+  padding-top: 1rem;
+}
+
+/* Add Padding Bottom on Replies Box */
+.gsc-replies {
+  padding-bottom: 0.5rem;
+}
+
+/* No Underline on Reply Time */
 .gsc-comment-author a:has(time),
 .gsc-reply-author a:has(time) {
   text-decoration: none;
   font-size: 0.75rem;
 }
 
-/* Comments Count No Underline */
+/* No Underline on Comments Count */
 .gsc-comments-count a {
   text-decoration: none!important;
 }
@@ -173,4 +182,14 @@ h4.gsc-replies-count {
 }
 .color-bg-info {
   background-color: var(--background-color);
+}
+
+/* Medium Font Weight on Comment Box Tabs Selected Button  */
+.gsc-comment-box-tabs .color-text-primary {
+  font-weight: 500;
+}
+
+/* Thinner Bottom Line on Comment Box Preview Border */
+.gsc-comment-box-preview {
+  border-bottom-width: 1px;
 }
