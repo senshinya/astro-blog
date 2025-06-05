@@ -160,6 +160,10 @@ export const themeConfig: ThemeConfig = {
         url: 'mailto:kobayashi_shinya@outlook.com',
       },
       {
+        name: 'TG',
+        url: 'https://t.me/senshinya',
+      },
+      {
         name: '开往',
         url: 'https://www.travellings.cn/go.html',
       },
