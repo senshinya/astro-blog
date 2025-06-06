@@ -56,9 +56,7 @@ export default defineConfig({
   ],
   shortcuts: {
     'uno-desktop-column': 'fixed right-[max(5rem,calc(50vw-35rem))] w-14rem',
-    'uno-tags-style': 'inline-block whitespace-nowrap border border-secondary/25 rounded-full px-3.2 py-0.7 c-secondary transition-colors ease-out hover:(border-secondary/80 text-primary)',
     'uno-decorative-line': 'mb-4.5 h-0.25 w-10 bg-secondary/25 lg:(mb-6 w-11)',
-    'uno-tags-wrapper': 'flex flex-wrap gap-x-3 gap-y-3.2',
     'uno-round-border': 'border border-secondary/5 rounded border-solid',
   },
   variants: [

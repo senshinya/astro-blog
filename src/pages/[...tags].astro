@@ -1,6 +1,6 @@
 ---
+import TagsWrapper from '@/components/TagsWrapper.astro'
 import { defaultLocale, moreLocales } from '@/config'
-import { getTagPath } from '@/i18n/path'
 import Layout from '@/layouts/Layout.astro'
 import { getAllTags } from '@/utils/content'
 
@@ -37,14 +37,8 @@ const allTags = await getAllTags(lang)
   <!-- Decorative Line -->
   <div class="uno-decorative-line"></div>
   <!-- Tags List -->
-  <div class="uno-tags-wrapper">
-    {allTags.map(tag => (
-      <a
-        href={getTagPath(tag, lang)}
-        class="uno-tags-style"
-      >
-        {tag}
-      </a>
-    ))}
-  </div>
+  <TagsWrapper
+    tags={allTags}
+    lang={lang}
+  />
 </Layout>

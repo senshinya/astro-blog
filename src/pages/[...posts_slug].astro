@@ -3,10 +3,10 @@ import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
 import Comments from '@/components/Comments/index.astro'
 import PostDate from '@/components/PostDate.astro'
+import TagsWrapper from '@/components/TagsWrapper.astro'
 import BackButton from '@/components/Widgets/BackButton.astro'
 import TOC from '@/components/Widgets/TOC.astro'
 import { allLocales, defaultLocale, moreLocales } from '@/config'
-import { getTagPath } from '@/i18n/path'
 import Layout from '@/layouts/Layout.astro'
 import { checkPostSlugDuplication } from '@/utils/content'
 import { generateDescription } from '@/utils/description'
@@ -30,7 +30,7 @@ export async function getStaticPaths() {
     if (!map.has(slug)) {
       map.set(slug, new Set(lang ? [lang] : allLocales))
     }
- else if (lang) {
+    else if (lang) {
       map.get(slug)?.add(lang)
     }
 
@@ -144,16 +144,10 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
   <!-- Tags -->
   {post.data.tags?.length > 0 && (
     <div class="uno-decorative-line"></div>
-    <div class="uno-tags-wrapper">
-      {post.data.tags.map((tag: string) => (
-        <a
-          href={getTagPath(tag, lang)}
-          class="uno-tags-style"
-        >
-          {tag}
-        </a>
-      ))}
-    </div>
+    <TagsWrapper
+      tags={post.data.tags}
+      lang={lang}
+    />
   )}
   <!-- Comments -->
   <Comments />

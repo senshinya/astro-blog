@@ -13,6 +13,23 @@ export function getTagPath(tagName: string, lang: string): string {
     : `/${lang}/tags/${tagName}/`
 }
 
+/**
+ * Get next language path for [...tags_tag] page
+ * @param currentPath Current page path
+ * @returns Path to tags list page in next language
+ */
+export function getTagsListLangPath(currentPath: string): string {
+  const currentLang = getLangFromPath(currentPath)
+  const nextLang = getNextGlobalLang(currentLang)
+
+  // Build path to tags list page
+  if (nextLang === defaultLocale) {
+    return '/tags/'
+  }
+
+  return `/${nextLang}/tags/`
+}
+
 // Generates a localized path based on current language
 export function getLocalizedPath(path: string, currentLang?: string) {
   const clean = path.replace(/^\/|\/$/g, '')

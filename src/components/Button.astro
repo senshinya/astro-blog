@@ -2,7 +2,7 @@
 import LanguageSwitcherIcon from '@/assets/icons/language-switcher.svg'
 import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
 import { moreLocales, themeConfig } from '@/config'
-import { getNextGlobalLangPath, getNextSupportedLangPath } from '@/i18n/path'
+import { getNextGlobalLangPath, getNextSupportedLangPath, getTagsListLangPath } from '@/i18n/path'
 import { isPostPage, isTagPage } from '@/utils/page'
 
 interface Props {
@@ -21,12 +21,12 @@ const isTag = isTagPage(currentPath)
 
 // Check if there are other languages to switch
 const showLanguageSwitcher = moreLocales.length > 0
-// Check if only the supported language switch list is used
-const useSupportedLangs = isPost || (isTag && supportedLangs.length > 0)
 // Choose a language switch list according to the page type
-const nextUrl = useSupportedLangs
-  ? getNextSupportedLangPath(currentPath, supportedLangs) // Switch between supported languages in post/tag page
-  : getNextGlobalLangPath(currentPath) // Switch between all languages in other pages
+const nextUrl = isTag
+  ? getTagsListLangPath(currentPath) // Switch between all languages in tag pages
+  : isPost
+    ? getNextSupportedLangPath(currentPath, supportedLangs) // Switch between supported languages in post pages
+    : getNextGlobalLangPath(currentPath) // Switch between all languages in other pages
 ---
 
 <div
