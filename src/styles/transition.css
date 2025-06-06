@@ -50,11 +50,11 @@ html.reduce-motion {
     opacity: 0;
     transform: translateX(0.5rem);
   }
-  html:not(.reduce-motion) #toc-icon {
+  html:not(.reduce-motion) #toc-desktop-icon {
     opacity: 0;
     transform: translateY(0.5rem);
   }
-  html:not(.reduce-motion) #toc-list > * {
+  html:not(.reduce-motion) #toc-links-list > * {
     opacity: 0;
     transform: translateY(1.5rem);
   }
