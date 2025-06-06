@@ -16,6 +16,7 @@ import UnoCSS from 'unocss/astro'
 import { themeConfig } from './src/config'
 import { langMap } from './src/i18n/config'
 import { rehypeCodeCopyButton } from './src/plugins/rehype-code-copy-button.mjs'
+import { rehypeCodeCollapse } from './src/plugins/rehype-code-collapse.mjs';
 import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
 import { rehypeUnwrapImg } from './src/plugins/rehype-unwrap-img.mjs'
 import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
@@ -79,6 +80,7 @@ export default defineConfig({
     rehypePlugins: [
       rehypeKatex,
       rehypeSlug,
+      [rehypeCodeCollapse, { maxLines: 50 }],
       rehypeCodeCopyButton,
       rehypeImgToFigure,
       rehypeUnwrapImg, // Must be after rehypeImgToFigure

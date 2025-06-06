@@ -21,37 +21,57 @@ const copyIcons = {
 const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>()
 
 async function handleCopy(button: HTMLButtonElement) {
-  const codeElement = button.parentElement?.querySelector('pre code')
-  if (!codeElement)
-    return
+  let codeElement: HTMLElement | null = null;
+  let code = '';
 
-  const code = codeElement.textContent ?? ''
-  if (!code)
-    return
+  // 检查是否在折叠的代码块中
+  const codeWrapper = button.closest('.code-collapse-wrapper');
+  
+  if (codeWrapper) {
+    // 如果在折叠代码块中，优先获取完整代码
+    const fullCodeElement = codeWrapper.querySelector('.code-collapse-full pre code') as HTMLElement;
+    const previewCodeElement = codeWrapper.querySelector('.code-collapse-preview pre code') as HTMLElement;
+    
+    // 优先使用完整代码，如果没有则使用预览代码
+    codeElement = fullCodeElement || previewCodeElement || null;
+  } else {
+    // 如果不在折叠代码块中，使用原来的逻辑
+    const element = button.parentElement?.querySelector('pre code');
+    codeElement = element as HTMLElement | null;
+  }
+
+  if (!codeElement) {
+    return;
+  }
+
+  code = codeElement.textContent ?? '';
+  if (!code) {
+    return;
+  }
 
   try {
-    await navigator.clipboard.writeText(code)
+    await navigator.clipboard.writeText(code);
 
     // Clear existing timeout to prevent icon state conflicts on multiple clicks
-    const existingTimeout = activeTimeouts.get(button)
+    const existingTimeout = activeTimeouts.get(button);
     if (existingTimeout) {
-      clearTimeout(existingTimeout)
+      clearTimeout(existingTimeout);
     }
 
-    button.innerHTML = copyIcons.success
-    button.classList.add('copy-success')
+    button.innerHTML = copyIcons.success;
+    button.classList.add('copy-success');
 
     // Set timeout to revert to copy icon after 1.5s
     const timeoutId = setTimeout(() => {
-      button.innerHTML = copyIcons.copy
-      button.classList.remove('copy-success')
-      activeTimeouts.delete(button)
-    }, 1500)
+      button.innerHTML = copyIcons.copy;
+      button.classList.remove('copy-success');
+      activeTimeouts.delete(button);
+    }, 1500);
 
-    activeTimeouts.set(button, timeoutId)
+    activeTimeouts.set(button, timeoutId);
   }
   catch (error) {
-    console.error('Failed to copy code', (error as Error)?.message ?? String(error))
+    console.error('Failed to copy code', (error as Error)?.message ?? String(error));
   }
 }
 

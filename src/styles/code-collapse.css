@@ -1,0 +1,93 @@
+/* 纯 CSS 代码折叠 */
+.code-collapse-wrapper {
+    margin: 0;
+    position: relative;
+    --gradient-color-light: 234, 233, 237;
+    --gradient-color-dark: 35, 34, 37;
+    --gradient-color: var(--gradient-color-light);
+  }
+  
+  .code-collapse-toggle {
+    display: none;
+  }
+  
+  .code-collapse-preview {
+    position: relative;
+  }
+  
+  .code-collapse-preview .code-preview {
+    margin: 0;
+    position: relative;
+    z-index: 1;
+  }
+  
+  .code-collapse-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 15em;
+    background: linear-gradient(
+      transparent 0%,
+      rgba(var(--gradient-color), 0.1) 30%,
+      rgba(var(--gradient-color), 0.7) 70%,
+      rgba(var(--gradient-color), 1) 100%
+    );
+    pointer-events: none;
+    z-index: 2;
+  }
+  
+  .code-collapse-expand {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 5em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    z-index: 3;
+    transition: background-color 0.2s ease;
+  }
+  
+  .code-collapse-expand:hover {
+    background: rgba(var(--gradient-color), 0.15);
+  }
+  
+  .code-collapse-icon {
+    opacity: 0.6;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+  }
+  
+  .code-collapse-expand:hover .code-collapse-icon {
+    opacity: 1;
+    transform: translateY(1px);
+  }
+  
+  /* 默认显示预览，隐藏完整代码 */
+  .code-collapse-preview {
+    display: block;
+  }
+  
+  .code-collapse-full {
+    display: none;
+  }
+  
+  /* 选中时显示完整代码，隐藏预览 */
+  .code-collapse-toggle:checked ~ .code-collapse-preview {
+    display: none;
+  }
+  
+  .code-collapse-toggle:checked ~ .code-collapse-full {
+    display: block;
+  }
+  
+  .code-collapse-toggle:checked ~ .code-collapse-full pre {
+    margin: 0;
+  }
+  
+  /* 深色模式 */
+  html.dark .code-collapse-wrapper {
+    --gradient-color: var(--gradient-color-dark);
+  }
