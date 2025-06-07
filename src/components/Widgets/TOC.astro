@@ -98,12 +98,18 @@ const filteredHeadings = headings.filter(heading =>
   transition: color 0.15s ease-out, font-weight 0.15s ease-out;
 }
 .toc-link-active {
-  --at-apply: 'text-secondary/80 font-medium';
+  --at-apply: 'text-secondary/80';
+}
+.toc-links-h2.toc-link-active {
+  --at-apply: 'font-medium';
 }
 
 /* Hover Effect */
 #toc-container:hover :is(.toc-links-h2, .toc-links-h3, .toc-links-h4) {
   --at-apply: '2xl:(text-secondary/60 hover:text-primary) hover:(text-secondary font-medium)';
+}
+#toc-container:hover :is(.toc-links-h3, .toc-links-h4) {
+  --at-apply: '2xl:(hover:font-normal)';
 }
 #toc-container:hover .toc-link-active {
   --at-apply: '2xl:text-primary';
@@ -155,34 +161,51 @@ function setupTOCHighlight() {
   if (tocLinksCollection.length === 0)
     return
 
-  const tocLinks = Array.from(tocLinksCollection)
+  const tocLinks = Array.from(tocLinksCollection, item => item as HTMLAnchorElement)
+
+  // Determine the top level heading class
+  const hasH2Headings = tocLinks.some(linkItem =>
+    linkItem.classList.contains('toc-links-h2'),
+  )
+  const topLevelClass = hasH2Headings ? 'toc-links-h2' : 'toc-links-h3'
+
+  // Build the heading map with the more efficient forEach approach
   const headingMap = new Map<string, HTMLAnchorElement>()
+  tocLinks.forEach((link) => {
+    const id = link.getAttribute('href')?.substring(1)
+    if (id)
+      headingMap.set(id, link)
+  })
+
   let currentActiveLink: HTMLAnchorElement | null = null
+
+  // Find and highlight the nearest parent heading
+  function findAndHighlightParent(childElement: HTMLAnchorElement): void {
+    const currentIndex = tocLinks.indexOf(childElement)
+    for (let i = currentIndex - 1; i >= 0; i--) {
+      const linkItem = tocLinks[i]
+      if (linkItem.classList.contains(topLevelClass)) {
+        linkItem.classList.add('toc-link-active')
+        break
+      }
+    }
+  }
 
   function highlightLink(linkElement: HTMLAnchorElement) {
     if (linkElement === currentActiveLink)
       return
 
     // Clear all highlights
-    tocLinks.forEach(linkItem => linkItem.classList.remove('toc-link-active'))
+    tocLinks.forEach((linkItem) => {
+      linkItem.classList.remove('toc-link-active')
+    })
 
     // Highlight current link
     linkElement.classList.add('toc-link-active')
 
-    // If not H2, find the highest level H2 parent heading
-    if (!linkElement.classList.contains('toc-links-h2')) {
-      const currentIndex = tocLinks.indexOf(linkElement)
-
-      // Find and highlight the first H2 parent heading
-      tocLinks.slice(0, currentIndex).reverse().find((linkItem) => {
-        const prevLink = linkItem as HTMLAnchorElement
-
-        if (!prevLink.classList.contains('toc-links-h2'))
-          return false
-
-        prevLink.classList.add('toc-link-active')
-        return true
-      })
+    // If not a top level heading, find and highlight the parent heading
+    if (!linkElement.classList.contains(topLevelClass)) {
+      findAndHighlightParent(linkElement)
     }
 
     currentActiveLink = linkElement
@@ -196,21 +219,13 @@ function setupTOCHighlight() {
 
   // Intersection observer callback
   const intersectionCallback = (entries: IntersectionObserverEntry[]) => {
-    const visibleHeading = entries.find(entry => entry.isIntersecting)?.target
-    if (!visibleHeading?.id)
-      return
-
-    const link = headingMap.get(visibleHeading.id)
-    if (link)
-      highlightLink(link)
+    const headingId = entries.find(entry => entry.isIntersecting)?.target?.id
+    if (headingId) {
+      const link = headingMap.get(headingId)
+      if (link)
+        highlightLink(link)
+    }
   }
-
-  // Build the heading map
-  tocLinks.forEach((link) => {
-    const id = link.getAttribute('href')?.substring(1)
-    if (id)
-      headingMap.set(id, link as HTMLAnchorElement)
-  })
 
   // Create the intersection observer
   const headingObserver = new IntersectionObserver(intersectionCallback, {
@@ -219,15 +234,13 @@ function setupTOCHighlight() {
   })
 
   // Observe all heading elements
-  document.querySelectorAll('h2, h3, h4').forEach((heading) => {
-    if (heading.id && heading.id !== 'footnotes') {
-      headingObserver.observe(heading)
-    }
-  })
+  Array.from(document.querySelectorAll('h2, h3, h4'))
+    .filter(heading => heading.id && heading.id !== 'footnotes')
+    .forEach(heading => headingObserver.observe(heading))
 
   // Highlight the first TOC item by default
   if (tocLinks.length > 0) {
-    highlightLink(tocLinks[0] as HTMLAnchorElement)
+    highlightLink(tocLinks[0])
   }
 }
 
