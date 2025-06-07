@@ -16,10 +16,6 @@
   position: relative;
 }
 
-.code-block-wrapper {
-  margin-bottom: 0 !important;
-}
-
 .code-collapse-preview .code-preview {
   margin: 0;
   position: relative;
