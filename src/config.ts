@@ -10,7 +10,7 @@ export const themeConfig: ThemeConfig = {
     // site description
     description: '互联网自留地',
     // use i18n title/subtitle/description from src/i18n/ui.ts instead of static ones above
-    i18nTitle: false, // true, false
+    i18nTitle: true, // true, false
     // author name
     author: 'shinya',
     // site url
@@ -53,7 +53,7 @@ export const themeConfig: ThemeConfig = {
     locale: 'zh', // de, en, es, fr, ja, ko, pl, pt, ru, zh, zh-tw
     // more languages
     // not fill in the locale code above again
-    moreLocales: [], // ['zh', 'zh-tw', 'ja', 'en', 'es', 'ru']
+    moreLocales: ['en'], // ['zh', 'zh-tw', 'ja', 'en', 'es', 'ru']
     // font styles for post text
     fontStyle: 'sans', // sans, serif
     // date format for posts
@@ -149,7 +149,7 @@ export const themeConfig: ThemeConfig = {
     links: [
       {
         name: 'RSS',
-        url: 'https://rss.beauty/rss?url=https%3a%2f%2fshinya.click%2frss.xml', // or /rss.xml
+        url: '/rss.xml',
       },
       {
         name: 'GitHub',

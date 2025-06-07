@@ -9,5 +9,16 @@ export const ui = {
     friends: '友人',
     about: '关于',
     toc: '目录',
+  },
+  'en': {
+    title: 'Shinya\'s Blog',
+    subtitle: 'Coder',
+    description: 'A personal haven on the Internet',
+    posts: 'Posts',
+    tags: 'Tags',
+    memos: 'Memos',
+    friends: 'Friends',
+    about: 'About',
+    toc: 'Table of Contents',
   }
 }

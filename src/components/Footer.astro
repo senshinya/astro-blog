@@ -2,7 +2,8 @@
 import { defaultLocale, themeConfig } from '@/config'
 import { getLangFromPath } from '@/i18n/lang'
 
-const { author } = themeConfig.site
+const { author, url } = themeConfig.site
+const siteUrl = url
 const { links: socialLinks, startYear } = themeConfig.footer
 
 const currentYear = new Date().getFullYear()
@@ -12,7 +13,7 @@ const year = Number(startYear) === currentYear ? startYear : `${startYear}-${cur
 const currentLang = getLangFromPath(Astro.url.pathname)
 const links = socialLinks.map(({ name, url, ...rest }) => {
   if (name === 'RSS') {
-    return { name, url: currentLang === defaultLocale ? url : `/${currentLang}${url}`, ...rest }
+    return { name, url: `https://rss.beauty/rss?url=` + (currentLang === defaultLocale ? `${siteUrl}${url}` : `${siteUrl}/${currentLang}${url}`), ...rest }
   }
 
   if (name === 'Email') {

@@ -136,21 +136,23 @@ async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
     }
     yearMap.get(year)!.push(post)
   })
-  travels.forEach((travel: CollectionEntry<'travels'>) => {
-    const year = travel.data.published.getFullYear()
-    if (!yearMap.has(year)) {
-      yearMap.set(year, [])
-    }
-    travel.id = `travels/${travel.id}`
-    travel.data.title = `游记：${travel.data.title} (${travel.data.subtitle})`
-    travel.data.description = travel.data.description.replaceAll(/<br \/>/g, '')
-    yearMap.get(year)!.push({
-      ...travel,
-      remarkPluginFrontmatter: {
-        minutes: 10,
+  if ((lang || defaultLocale) === defaultLocale) {
+    travels.forEach((travel: CollectionEntry<'travels'>) => {
+      const year = travel.data.published.getFullYear()
+      if (!yearMap.has(year)) {
+        yearMap.set(year, [])
       }
-    } as unknown as Post)
-  })
+      travel.id = `travels/${travel.id}`
+      travel.data.title = `游记：${travel.data.title} (${travel.data.subtitle})`
+      travel.data.description = travel.data.description.replaceAll(/<br \/>/g, '')
+      yearMap.get(year)!.push({
+        ...travel,
+        remarkPluginFrontmatter: {
+          minutes: 10,
+        }
+      } as unknown as Post)
+    })
+  }
 
   yearMap.forEach((yearPosts) => {
     yearPosts.sort((a, b) => {
