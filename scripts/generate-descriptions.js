@@ -107,7 +107,7 @@ function stringifyFrontmatter(data) {
 async function generateDescription(title, content) {
     try {
         // 提取内容的前500个字符作为上下文
-        const context = content.substring(0, 500);
+        const context = content.substring(0, 3000);
 
         // 使用Chat Completions API而不是Responses API
         const completion = await openai.chat.completions.create({
