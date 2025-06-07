@@ -3,7 +3,7 @@ title: Integrating Google Analytics (Tag Manager) with Astro
 lang: en
 published: 2025-05-28T22:09:00.000+08:00
 tags: ["fiddling", "Astro", "Google Tag Manager", "Google Analytics", "GTM", "partytown"]
-abbrlink: astro-google-tag-manager
+abbrlink: fiddling/astro-google-tag-manager
 description: "After migrating my blog to the Astro framework, I found that the usual method for integrating Google Analytics no longer fit the bill due to performance concerns. While it's possible to add JavaScript directly to the head tag for event reporting, this dampens page performance. To preserve Astro's signature efficiency, I opted for Partytown to offload scripts from the main thread—keeping the load process smooth. Building on available demo code, I achieved seamless Google Analytics integration, balancing performance with data analytics needs."
 ---
 

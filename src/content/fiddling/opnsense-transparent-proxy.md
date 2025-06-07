@@ -3,13 +3,14 @@ title: 实现 OPNsense 透明代理+分流
 tags: ["折腾","翻墙","透明代理","OPNsense","分流"]
 lang: zh
 published: 2025-01-16T23:09:00+08:00
+abbrlink: fiddling/opnsense-transparent-proxy
 description: "OPNsense 作为一款开源的防火墙和路由系统，因其美观的用户界面和全面的功能而备受关注。在经历了一系列路由方案后，用户们逐渐认识到其在透明代理和流量分流方面的强大潜力。通过结合 BGP 分流转发方式，OPNsense 提供了更高的安全性和稳定性，成为了理想的网络管理解决方案。尤其是其自动更新 IP 列表的功能，使得网络管理变得更加便捷。"
 ---
 ### 前言
 
 早先透明代理 + 分流一直使用的是 ikuai 作为主路由，OpenWRT 作为旁路由的方案，这也是网上大部分教程的主流方案。后面冲浪的时候了解到 ikuai 可能会有 [偷跑流量与上报信息的情况](https://wusiyu.me/2022-ikuai-non-cloud-background-activities/) 出现，另外作为国产闭源系统，安全性也比较成问题
 
-后续更换了主路由 OpenWRT，旁路由 Debian 的 [方案](/fiddling/debian-as-side-router)，后面又不使用旁路由方案，先后尝试了 [基于 FakeIP 的分流转发方案](/fiddling/fake-ip-based-transparent-proxy) 和 [基于 BGP 的分流转发方案](/fiddling/more-accurate-chnroute)，最终稳定在了基于 BGP 的分流转发方案上
+后续更换了主路由 OpenWRT，旁路由 Debian 的 [方案](/fiddling/debian-as-bypass-router)，后面又不使用旁路由方案，先后尝试了 [基于 FakeIP 的分流转发方案](/fiddling/fake-ip-based-transparent-proxy) 和 [基于 BGP 的分流转发方案](/fiddling/more-accurate-chnroute)，最终稳定在了基于 BGP 的分流转发方案上
 
 最近又了解到了 OPNsense 这个防火墙/路由系统。简直是梦中情路由系统，开源免费，UI 美观，功能完善，同时还提供了 gui 界面支持自动更新 ip list 以用于分流。所以计划将现有的分流转发方案迁移到该系统上，同时不在单独使用一个软路由用于科学，而是直接将 clash 集成进主路由中
 

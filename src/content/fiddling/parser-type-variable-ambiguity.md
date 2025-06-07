@@ -3,7 +3,7 @@ title: 语法分析中类型名-变量名歧义消除
 lang: zh
 published: 2025-03-15T20:35:00+08:00
 tags: ["折腾","编译原理","语法分析","歧义消除"]
-abbrlink: parser-type-variable-ambiguity
+abbrlink: fiddling/parser-type-variable-ambiguity
 description: "在语法分析过程中，用户自定义类型名与普通变量名的混淆成为一大难题。特别是在某些情况下，如 `a*b;`，该语句既可能被解读为数学表达式，也可能被视为类型声明。这种模糊性源于语法规则的设计，特别是涉及类型说明符的部分，可能会导致变量名被误认作类型名，影响代码的正确性与可读性。随着无初始化变量定义的普遍存在，这一问题在源码中愈发明显。"
 ---
 ### 引

@@ -78,7 +78,7 @@ export default defineConfig({
       remarkReadingTime,
     ],
     rehypePlugins: [
-      rehypeKatex,
+      [rehypeKatex, {strict: false}],
       rehypeSlug,
       [rehypeCodeCollapse, { maxLines: 25 }],
       rehypeCodeCopyButton,

@@ -3,7 +3,7 @@ title: Resolving Typename-Variable Name Ambiguity in Syntax Parsing
 lang: en
 published: 2025-03-15T20:35:00+08:00
 tags: ["fiddling", "compilers", "syntax analysis", "ambiguity resolution"]
-abbrlink: parser-type-variable-ambiguity
+abbrlink: fiddling/parser-type-variable-ambiguity
 description: "In the process of syntax analysis, confusion between user-defined type names and ordinary variable names is a major challenge. For instance, in statements like `a*b;`, the code could be read as either a mathematical expression or a type declaration. This ambiguity stems from grammar design, especially around type specifiers, where a variable identifier might be misinterpreted as a type name, affecting correctness and readability. As uninitialized variable declarations become more common, this issue is increasingly prevalent in source code."
 ---
 ### Introduction

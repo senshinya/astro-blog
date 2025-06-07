@@ -3,11 +3,12 @@ title: 基于 FakeIP 的透明代理分流
 tags: ["折腾","翻墙","透明代理","FakeIP"]
 lang: zh
 published: 2024-08-16T23:53:00+08:00
+abbrlink: fiddling/fake-ip-based-transparent-proxy
 description: "基于 FakeIP 的透明代理分流方案旨在解决传统旁路由的单点故障、性能不足及复杂的端口映射问题。通过引入新的代理内核 sing-box，不仅提升了转发性能，还简化了配置流程。sing-box 提供了更丰富的协议支持，其优化效果明显优于原先的 clash，成为实现高效透明代理的新选择。虽然这也可以通过 clash 实现，但 sing-box 的引入无疑为用户带来了更灵活的体验。"
 ---
 ### 前言
 
-[上篇文章](/fiddling/debian-as-side-router) 中介绍了使用旁路由做局域网内透明代理的方案，对于大部分用户已经基本可用，但是该方案的 cons 也比较明显：
+[上篇文章](/fiddling/debian-as-bypass-router) 中介绍了使用旁路由做局域网内透明代理的方案，对于大部分用户已经基本可用，但是该方案的 cons 也比较明显：
 
 1. 存在单点故障的可能，由于 DHCP 下发的网关直接指向了旁路由，一旦旁路由的 clash 不可用，即使不需要科学的网站也无法访问
 2. clash 包转发性能孱弱，远比不上硬件转发。而一旦网关设置为旁路由，由于 iptables 的设置，无论是否需要科学的流量都会走 clash 转发
@@ -61,7 +62,7 @@ sing-box 和 clash 都内置了 DNS 模块，实现了 DNS Server 了功能，�
 
 #### sing-box 安装和配置
 
-使用 [上篇文章](/fiddling/debian-as-side-router) 的教程搭建好 AdGuard Home，上游 DNS 仍然设置为 127.0.0.1:1053。之后安装 sing-box，Debian 机器只需要一条命令：
+使用 [上篇文章](/fiddling/debian-as-bypass-router) 的教程搭建好 AdGuard Home，上游 DNS 仍然设置为 127.0.0.1:1053。之后安装 sing-box，Debian 机器只需要一条命令：
 
 ```shell
 bash <(curl -fsSL https://sing-box.app/deb-install.sh)

@@ -3,6 +3,7 @@ title: CSAPP LAB 环境搭建
 tags: ["折腾","CSAPP", "实验", "环境搭建"]
 lang: zh
 published: 2021-12-27T00:09:00+08:00
+abbrlink: fiddling/csapplab0
 description: "在学习 CSAPP 的过程中，实验环节的重要性不可忽视。然而，许多学生在搭建 Linux 环境时遇到各种麻烦，尤其是在使用虚拟机的情况下。诸如安装错误、兼容性问题、网络连接不畅等问题层出不穷，往往让人望而却步。为了解决这些障碍，WSL（Windows Subsystem for Linux）成为了一个理想的选择，尤其适用于 Windows 10 版本 2004 及以上的用户。WSL 提供了一个更为简洁、直接的方式来体验 Linux 环境，同时避免了虚拟机带来的复杂性和性能瓶颈。"
 ---
 ### 前言

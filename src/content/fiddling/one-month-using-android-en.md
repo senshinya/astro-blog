@@ -3,7 +3,7 @@ title: One Month Using Android – A Migration Tale
 lang: en
 published: 2025-06-05T23:26:00.000+08:00
 tags: ["fiddling","Android","Oppo","Apple","Mobile Phone"]
-abbrlink: one-month-using-android
+abbrlink: fiddling/one-month-using-android
 description: "As someone who changes phones frequently, I’ve made the switch from OnePlus to iPhone, gradually shifting from the joy of tinkering to a reliance on ecosystems. Recently, at the suggestion of my partner, I picked up an Oppo Find X8 Ultra, mainly to upgrade my photography game. Although deeply ingrained in the Apple ecosystem, migrating apps made me realize the Android app landscape is still hit-or-miss and searching for alternatives can be a challenge. After a month, the friction and adaptation between platforms has been palpable."
 ---
 ### Introduction

@@ -1,50 +1,48 @@
 ---
-title: 在 VitePress 中实现一个动态说说功能
-tags: ["折腾","VitePress","Memos","CloudFlare"]
-lang: zh
+title: Implementing a Dynamic "Memos" (Shuoshuo) Feature in VitePress
+tags: ["Tech Tinkering", "VitePress", "Memos", "CloudFlare"]
+lang: en
 published: 2025-01-29T21:58:00+08:00
 abbrlink: fiddling/vitepress-memos-component
-description: "在构建动态博客时，添加说说功能能显著提升用户体验。相比静态博客的繁琐流程，这种功能允许用户随时随地分享短小的想法，降低了发文的心理负担。通过利用 CloudFlare Workers 实现后端逻辑，并结合 KV 存储，开发者能够轻松管理说说内容。前端则通过 VitePress 框架和 Vue 组件的嵌入，快捷地展示这些动态信息，为博客增添了生动的交互性。"
+description: "In dynamic blogs, adding a 'Memos' feature can greatly enhance the user experience. Unlike the cumbersome process required by static blogs, this feature allows users to post short thoughts anytime and anywhere, lowering the psychological barrier for sharing. By leveraging CloudFlare Workers for backend logic and KV storage for data, developers can easily manage memos. On the frontend, a Vue component embedded in the VitePress framework provides a lively, interactive display of these dynamic entries, enriching the blog with real-time flair."
 ---
-### 前言
+### Preface
 
-很多动态博客中都有一个说说的功能，本质就是一种特殊的博文，借助动态博客的实时性，可以做到随写随发
+Many dynamic blogs come with a "Memos" feature—a special type of blog post that, thanks to the real-time nature of dynamic platforms, allows you to jot down and publish thoughts on the fly.
 
-静态博客由于是在本地或服务器上静态编译成 html 后再部署，实时性比较差。写一篇博文长篇大论自然可以在电脑前，走 git 推送部署也不算麻烦，但是发一篇说说还要打开电脑，心智负担就有些重了，手机上操作 git 也比较麻烦，不是很优雅，干脆一想就不发算了
+Static blogs, on the other hand, require you to compile HTML either locally or on a server before deployment, which makes instant publishing a challenge. When writing a long blog post, it's no trouble to sit at a computer and push updates via Git—deploying isn't a hassle. But when it comes to drafting a quick memo, having to boot up your PC and wrestle with Git commands (let alone doing this on mobile!) becomes a bit of a mental hurdle. You start to think, "Maybe I'll just skip posting this one."
 
-于是实现了一套说说系统的前后端，效果就是本博客的 [碎碎念](/memos)。后端使用 CloudFlare Workers 实现，存储当然也就近存储在大善人的 KV 里，简单写了个管理页面。博客框架是 VitePress，前端也就做成了个 Vue 组件，直接嵌入一个页面作为说说页
+So, I set out to develop a backend and frontend solution for a memo system. The result? The [Memos](/memos) page on this blog. The backend is powered by CloudFlare Workers and KV storage, and I whipped up a simple admin page for management. The blog framework is VitePress, and the frontend is built as a Vue component, directly embedded as a dedicated memo page.
 
-前端效果不再多说，后端管理页面效果
-![Memo 管理页面](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
+Here’s a glimpse of the backend management interface:
+![Memo Management Page](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
 
-### 后端 CloudFlare Workers + KV
+### Backend: CloudFlare Workers + KV
 
-#### 基本概述
+#### Overview
 
-后端包含以下功能：
-- 支持说说的增删改（基本功能）
-- 页面和所有写接口都有鉴权，足够安全
-- Markdown 格式实时预览（by marked）
+The backend offers these main features:
+- Add, delete, and update memos (basic CRUD)
+- Authentication for both the main page and all write endpoints—secure enough
+- Real-time Markdown preview (via marked.js)
 
-KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说说的索引。其他所有说说都存储在以 `uid` 为 key 的条目中，value 格式如
+There’s an `index` key stored in KV; its value is an array of uid strings, serving as the index for all memos. Each individual memo is stored under its unique `uid` as the key, with a value structure like:
 
 ```js
 {
-    "uid":"唯一 id",
-    "createTime":"发布时间",
-    "content":"说说内容",
+    "uid":"unique id",
+    "createTime":"publish time",
+    "content":"memo content",
 }
 ```
 
-#### 实现
+#### Implementation
 
-首先要创建一个 CloudFlare 的 KV Space，专门存储说说相关的 KV 对。位置在`账户首页 - 存储和数据库 - KV`，点击创建，名字不太重要，记住就行了，我这里简单命名为 `memos`
+First, create a dedicated CloudFlare KV Space to store your memos. Head to `Account Home → Storage & Database → KV`, click ‘Create’, and give it a memorable name—mine’s simply `memos`.
 
-接着就是创建 CloudFlare Workers，用于逻辑处理。位置在`账户首页 - 计算（Workers）- Workers 和 Pages`，点击创建，名字依然不太重要，我简单命名为 `memos-api`。创建完成后，点击 Workers 名称进入 Workers 详情，在`设置 - 绑定`中添加一个绑定关系，选择绑定 `KV 命名空间`，变量名称为 `KV`，KV 命名空间选择刚刚创建的 KV Space 名称，我的是 `memos`。这样绑定完成后，就可以在代码中直接使用 `env.KV` 操作 `memos` 这个 KV 空间了。最后点击顶栏右侧的 `编辑代码` 按钮
+Next, create a CloudFlare Worker for logic handling. Go to `Account Home → Compute (Workers) → Workers and Pages`, hit ‘Create’, and (again) give it a name—say, `memos-api`. Once it’s ready, click into your Worker for details, and under `Settings → Bindings`, add a new binding for `KV Namespace`. Set the variable name as `KV`, and select your freshly created KV Space (mine’s `memos`). Done! Now, code under `env.KV` directly accesses your memo KV data. Hit ‘Edit Code’ in the top right to get started.
 
-下面就是 Code Time！
-
-首先创建一个 `index.html`，用来存放管理页面的 html、css 和 js
+Time for some coding magic! First, create an `index.html` file to house your admin page (HTML, CSS, and JS).
 
 ```html
 <!DOCTYPE html>
@@ -667,24 +665,22 @@ KV 中存储一个 `index` key，value 是一个 uid 的数组，作为全部说
 </html>
 ```
 
-从 JS 代码中即可看出，后端包含如下两个端点
+As you can see from the JS code, the backend includes the following API endpoints:
+- `POST /api/auth`: Page authentication
+- `GET /api/memos`: Fetch memos (with pagination)
+- `POST /api/memos`: Publish a new memo
+- `PUT /api/memos/{uid}`: Update a memo
+- `DELETE /api/memos/{uid}`: Delete a memo
 
-- `POST /api/auth`：页面鉴权
-- `GET /api/memos`：获取说说详情，支持分页
-- `POST /api/memos`: 发布新说说
-- `PUT /api/memos/{uid}`: 更新说说
-- `DELETE /api/memos/{uid}`：删除说说
-
-随后编辑 `worker.js` 实现这些端点即可
+Next, write the logic in `worker.js` to implement these endpoints.
 
 ```js
 import html from './index.html';
 
-const CORRECT_PASSWORD = 'CORRECT_PASSWORD';        // 设置你的密码    // [!code highlight]
-const CALLBACK_URL = 'https://CALLBACK_URL';        // 设置回调 URL   // [!code highlight]
-const ALLOWED_ORIGINS = ['https://example.com'];    // 允许请求的域名  // [!code highlight]
+const CORRECT_PASSWORD = 'CORRECT_PASSWORD';
+const CALLBACK_URL = 'https://CALLBACK_URL';
+const ALLOWED_ORIGINS = ['https://example.com'];
 
-// 生成随机 UID
 function generateUID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -694,7 +690,7 @@ function generateUID() {
   }
   return result;
 }
-// CORS 处理
+
 function handleCORS(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -709,14 +705,14 @@ function handleCORS(request) {
 }
 function getCurrentTimeInISOFormat() {
   const now = new Date();
-  // 获取各个部分
+
   const year = now.getUTCFullYear();
   const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // 月份从零开始
   const day = String(now.getUTCDate()).padStart(2, '0');
   const hours = String(now.getUTCHours()).padStart(2, '0');
   const minutes = String(now.getUTCMinutes()).padStart(2, '0');
   const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-  // 组装成 ISO 8601 格式字符串
+
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
 }
 async function handleRequest(request, env) {
@@ -740,19 +736,18 @@ async function handleRequest(request, env) {
   }
   const corsHeaders = handleCORS(request);
   
-  // 处理 CORS 预检请求
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: handleCORS(request),
     });
   }
-  // 管理页面
+
   if (url.pathname === '/manage') {
     return new Response(html, {
       headers: { 'Content-Type': 'text/html' },
     });
   }
-  // 验证密码
+
   if (url.pathname === '/api/auth' && request.method === 'POST') {
     const { password } = await request.json();
     return new Response(
@@ -765,9 +760,8 @@ async function handleRequest(request, env) {
       }
     );
   }
-  // API 路由处理
+
   if (url.pathname.startsWith('/api/memos')) {
-    // 获取说说列表
     if (request.method === 'GET') {
       const offset = parseInt(url.searchParams.get('offset')) || 0;
       const limit = parseInt(url.searchParams.get('limit')) || 10;
@@ -790,14 +784,12 @@ async function handleRequest(request, env) {
         },
       });
     }
-    // 需要验证的操作
     if (!validateAuth(request)) {
       return new Response('Unauthorized', {
         status: 401,
         headers: corsHeaders
       });
     }
-    // 发布新说说
     if (request.method === 'POST') {
       const { content } = await request.json();
       if (!content || !content.trim()) {
@@ -833,7 +825,6 @@ async function handleRequest(request, env) {
         },
       });
     }
-    // 编辑说说
     if (request.method === 'PUT') {
       const uid = url.pathname.split('/').pop();
       const { content } = await request.json();
@@ -853,7 +844,7 @@ async function handleRequest(request, env) {
       const post = JSON.parse(postStr);
       post.content = content.trim();
       await env.KV.put(uid, JSON.stringify(post));
-      // 检查是否需要回调
+
       if (await shouldNotify(uid)) {
         await executeCallback();
       }
@@ -864,7 +855,6 @@ async function handleRequest(request, env) {
         },
       });
     }
-    // 删除说说
     if (request.method === 'DELETE') {
       const uid = url.pathname.split('/').pop();
       const indexStr = await env.KV.get('index');
@@ -910,29 +900,29 @@ export default {
   },
 };
 ```
-最顶上三个常量需要配置：
 
-- `CORRECT_PASSWORD`，页面密码
-- `CALLBACK_URL`，发布新说说或更新/删除说说后触发的回调地址
-- `ALLOWED_ORIGINS`，跨域处理，允许访问的域名列表，至少两个：你的博客域名和管理页面域名
+Be sure to set these three top constants:
+- `CORRECT_PASSWORD`: page/admin password
+- `CALLBACK_URL`: a callback URL to trigger after publishing, updating, or deleting a memo
+- `ALLOWED_ORIGINS`: list of allowed domains for CORS; at minimum, your blog and admin domains
 
-配置完成后点击发布
+Once configured, hit "Publish".
 
-由于墙的原因，默认的 `workers.dev` 域名很难访问，最好为 worker 配置一个新的域名。在 `memos 详情页面 - 设置 - 域和路由`，添加一个自定义域，填入一个在 Cloudflare 上托管的域名即可。注意这个域名也要添加到 `worker.js` 的 `ALLOWED_ORIGINS` 中
+Due to firewall restrictions, the default `workers.dev` domain is hard to access—it's best to configure a custom domain for your worker. In the memos Worker details page under `Settings → Triggers`, add a custom domain that's managed via Cloudflare. Be sure to add this domain to your `ALLOWED_ORIGINS` array in `worker.js`.
 
-完成后就可以使用这个管理页面了，管理页面的 URL 为 `https://{你的域名}/manage`，进入页面需要输入密码，then enjoy！
+Once that’s sorted, you can use the admin page at `https://{your-domain}/manage`, log in with your password, and enjoy the management experience!
 
-### 前端
+### Frontend
 
-Thanks to VitePress，我们可以很方便地通过 Vue 组件的方式，编写说说前端并嵌入博客
+Thanks to VitePress, embedding the front end is a breeze—just build your memo UI as a Vue component.
 
-首先安装 markedjs 依赖，pnpm 可使用如下命令：
+First, install the markedjs dependency using pnpm:
 
 ```shell
 pnpm add marked
 ```
 
-在你的博客的主题配置文件（通常为 `docs/.vitepress/theme/index.ts`，文件路径和拓展名也许会有区别）的同级目录下，新建一个 `components` 文件夹（已有则无需新建），在其中新建 `memos.vue`
+In your blog's theme directory (usually `docs/.vitepress/theme/index.ts`, but the path and extension may vary), create a `components` folder if it doesn't already exist, then add `memos.vue` inside:
 
 ```js
 <template>
@@ -948,7 +938,7 @@ pnpm add marked
         </div>
         <div v-if="hasMore" class="load-more">
             <button @click="loadMoreMemos" :disabled="isLoading" class="load-more-button">
-                <span v-if="!isLoading">加载更多</span>
+                <span v-if="!isLoading">Load More</span>
                 <span v-else class="loading-spinner"></span>
             </button>
         </div>
@@ -978,10 +968,8 @@ interface memo {
 }
 
 function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shanghai'): string {
-    // 创建 Date 对象
     const date = new Date(dateString);
 
-    // 提取所需的时间组件
     const options: Intl.DateTimeFormatOptions = {
         timeZone: timeZone,
         year: 'numeric',
@@ -990,13 +978,12 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: false // 使用 24 小时制
+        hour12: false
     };
 
     const formatter = new Intl.DateTimeFormat('zh-CN', options);
     const parts = formatter.formatToParts(date);
 
-    // 构建最终输出格式
     const year = parts.find(part => part.type === 'year')?.value;
     const month = parts.find(part => part.type === 'month')?.value;
     const day = parts.find(part => part.type === 'day')?.value;
@@ -1004,14 +991,13 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
     const minute = parts.find(part => part.type === 'minute')?.value;
     const second = parts.find(part => part.type === 'second')?.value;
 
-    // 拼接成目标格式
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 const PAGE_SIZE = 10;
 const data = reactive({
     memoList: [] as memo[],
-    offset: 10, // 从文件加载了 10 条，所以初始 offset 为 10
+    offset: 10,
     hasMore: true,
     isLoading: false
 })
@@ -1039,7 +1025,6 @@ function processMemos(memos: memo[]) {
   }));
 }
 
-// 初始化数据
 onMounted(() => {
   const initialMemos = memosRaw.data as memo[];
   data.memoList = processMemos(initialMemos);
@@ -1050,7 +1035,7 @@ async function loadMoreMemos() {
   
   data.isLoading = true;
   try {
-    const url = `https://{你的域名}/api/memos?limit=${PAGE_SIZE}&offset=${data.offset}`;   // [!code highlight]
+    const url = `https://{your-domain}/api/memos?limit=${PAGE_SIZE}&offset=${data.offset}`;   // [!code highlight]
     const response = await fetch(url);
     const result: memosRes = await response.json();
     
@@ -1134,8 +1119,8 @@ async function loadMoreMemos() {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 120px; // 固定宽度
-    height: 40px; // 固定高度
+    width: 120px;
+    height: 40px;
     background-color: transparent;
     color: var(--vp-c-text-2);
     border: 1px solid var(--vp-c-divider);
@@ -1178,22 +1163,22 @@ async function loadMoreMemos() {
 </style>
 ```
 
-注意将 `{你的域名}` 替换为 CloudFlare Worker 的域名
+Be sure to replace `{your-domain}` with your actual CloudFlare Worker domain!
 
-眼尖的同学可能注意到了，这个组件初始化加载的内容不是通过请求 Worker 接口获取到的，而是从一个 json 文件获取的（`import memosRaw from '../../../../memos.json'`）。只有点击加载更多，才会通过 Worker 接口获取更多内容。这是为什么呢？
+Sharp-eyed readers may notice that initial memo content is loaded from a local JSON file (`import memosRaw from '../../../../memos.json'`), not directly from the API. Only when you click "Load More" does it fetch additional data from the Worker. Why?
 
-- 从体验上来说，进入说说页面时，如果初始数据从接口获取，那么这时页面在获取到数据之前会空白一会儿，体验不佳
-- 从<mark>省钱</mark>的角度上来说，CloudFlare Worker 免费版是限制请求次数的，初始化数据静态获取可以极大地降低请求次数
+- **User Experience**: If the initial data is fetched live via API, the page appears blank during loading, which isn’t great UX.
+- **Saving Money**: CloudFlare Worker’s free tier is request-limited. Fetching the initial batch statically greatly reduces the number of API calls.
 
-这个 `memos.json`，则是在项目编译时，从接口获取到的前十条说说。这也就是为什么，Worker 代码中会添加一个 `CALLBACK_URL`，这个 URL 是在你发布新说说，或者删改前十条说说时重新触发编译使用的，具体 URL 可以根据你的部署平台自行搜索。如果完全动态获取说说内容的话，这里可以不用设置这么一个回调
+The `memos.json` file is generated at build time, grabbing the first ten memos via the API. As such, the Worker code includes a `CALLBACK_URL`—when you publish, delete, or update one of the first ten memos, it triggers a site rebuild, keeping your static data fresh. If you handle everything dynamically, you can skip this callback.
 
-下面的代码用于在编译时生成 `memos.json`，在主题配置文件（通常为 `docs/.vitepress/theme/index.ts`，文件路径和拓展名也许会有区别）的同级目录下，新建一个 `utils` 文件夹（已有则无需新建），在其中新建 `memos.js`
+Use the code below to generate `memos.json` at build time. In your theme directory (usually `docs/.vitepress/theme`), create a `utils` folder and add `memos.js`:
 
 ```js
 import https from 'https';
 import { promises as fs } from 'fs';
 
-const url = 'https://{你的域名}/api/memos?limit=10';// [!code highlight]
+const url = 'https://{your-domain}/api/memos?limit=10';// [!code highlight]
 
 const requestOptions = {
     headers: {
@@ -1201,36 +1186,31 @@ const requestOptions = {
     }
 };
 
-// 发出 GET 请求
 https.get(url, requestOptions, (resp) => {
   let data = [];
 
-  // 逐步接收数据
   resp.on('data', (chunk) => {
     data.push(chunk);
   });
 
-  // 完成接收数据
   resp.on('end', async () => {
     try {
-      // 将 Buffer 数组合并为一个 Buffer
       const buffer = Buffer.concat(data);
-      const decodedData = buffer.toString('utf-8'); // 假设返回的数据是 UTF-8 编码
+      const decodedData = buffer.toString('utf-8');
 
-      // 保存 JSON 数据到文件
       await fs.writeFile('memos.json', decodedData);
-      console.log('JSON 数据已保存到 data.json');
+      console.log('JSON Saved to data.json');
     } catch (e) {
-      console.error('解析 JSON 时出错:', e);
+      console.error('Error parsing JSON:', e);
     }
   });
 
 }).on('error', (err) => {
-  console.error('获取数据时出错:', err);
+  console.error('Error getting data:', err);
 });
 ```
 
-接着编辑博客根目录下的 `package.json`，在 dev 和 build 的命令前都添加 `node docs/.vitepress/theme/utils/memos.js`。这里的添加位置可能因人而异，以我为例：
+Then, update your project's root `package.json` to run `memos.js` before dev/build. Here’s an example for reference:
 
 ```json
 {
@@ -1244,11 +1224,9 @@ https.get(url, requestOptions, (resp) => {
 }
 ```
 
-这样在 dev 阶段和 build 阶段都会首先调用 `memos.js`，在博客根目录下生成 `memos.json`。注意根据目录层级调整 `memos.vue` 中 import 的路径
+This way, every time you run dev or build, the first thing that happens is generation of `memos.json` in your project's root. Be sure to adjust your import path in `memos.vue` if your directory structure differs.
 
-这样组件和数据都准备好了，下面这个组件注册为全局组件
-
-在主题配置文件（通常为 `docs/.vitepress/theme/index.ts`，文件路径和拓展名也许会有区别）中引入这个组件，并注册
+Now that both the component and the data are ready, register `Memos` as a global component. In your theme config file (again, usually `docs/.vitepress/theme/index.ts`):
 
 ```js
 ...
@@ -1263,19 +1241,19 @@ export default {
 } satisfies Theme
 ```
 
-这样在博客的任何地方，都可以通过 `<Memos />` 直接引入这个组件了
+With this setup, you can now use `<Memos />` anywhere in your blog.
 
-最后就是创建一个单页，专门用于放置这个组件
+For a dedicated memo page, simply create a new page.
 
-> 什么？你说你从来没有在 vitepress 中使用过单页？
-> 
-> 这样，你先在根目录下新建一个 pages 文件夹，再在 VitePress 核心配置文件中（注意不是主题配置文件，通常为 docs/.vitepress/config.ts，文件路径和拓展名也许会有区别）中新增一个 rewrites 规则 `'pages/:file.md': ':file.md'`，这样 pages 下的内容都可以直接通过 `/文件名` 访问了。关于 rewrites，见 [官方文档](https://vitepress.dev/guide/routing#route-rewrites)
+> Never used a custom single page in VitePress before?
+>
+> Here’s how: add a `pages` folder in the root, then—in your core VitePress config (not the theme one, usually `docs/.vitepress/config.ts`)—add a rewrites rule: `'pages/:file.md': ':file.md'`. This lets you access everything in `pages/` directly via `/{filename}`. More info in the [official docs](https://vitepress.dev/guide/routing#route-rewrites).
 
-pages 文件夹下新建 balabala.md，内容为
+Add a `balabala.md` file in your `pages` folder with the following content:
 
 ```markdown
 ---
-title: 碎碎念
+title: Memos
 hidden: true
 comment: false
 sidebar: false
@@ -1287,4 +1265,4 @@ showMeta: false
 <Memos />
 ```
 
-完事收工
+And that's all! Done and dusted.

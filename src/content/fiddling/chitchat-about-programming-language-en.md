@@ -3,7 +3,7 @@ title: A Casual Talk on Programming Languages
 lang: en
 published: 2023-04-08T13:16:36.812+08:00
 tags: ["fiddling","Type Systems","Programming Languages"]
-abbrlink: chitchat-about-programming-language
+abbrlink: fiddling/chitchat-about-programming-language
 description: "Designing a new programming language is both a challenging and fascinating endeavor. By simplifying the complexities of compiler theory and feature implementation—and focusing on how code operates within computer systems—we gain deeper insights into the process of building programming languages. Exploring language design from the ground up based on the RISC-VI instruction set, we uncover the system’s layered structure and the concept of virtual machines. This journey is not just a technical exploration, but also a profound reflection on the true nature of programming languages."
 ---
 This article popularizes some basic concepts, implementation ideas, and current trends in programming language theory by discussing the process of designing a language of our own.
