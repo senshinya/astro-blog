@@ -87,7 +87,7 @@
 
 /* Code Blocks */
 .heti :where(pre) {
-  --at-apply: 'overflow-auto uno-round-border px-4 py-3 bg-secondary/5!';
+  --at-apply: 'overflow-x-auto overflow-y-hidden uno-round-border px-4 py-3 bg-secondary/5!';
   scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0) transparent;
   transition: scrollbar-color 0.3s ease-out;

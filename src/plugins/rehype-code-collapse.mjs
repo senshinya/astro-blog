@@ -9,15 +9,101 @@ export function rehypeCodeCollapse(options = {}) {
                 node.children?.[0]?.tagName === 'code') {
 
                 const codeNode = node.children[0];
-                const wrapperId = `toggle-${Math.random().toString(36).substr(2, 9)}`;
-                if (codeNode.children.length > maxLines) {
+                const wrapperId = `toggle-${Math.random().toString(36).substring(2, 9)}`;
+                if (codeNode.children.length > maxLines * 2) {
                     // 克隆原始代码节点结构，只截取前 maxLines 行
                     const previewCodeNode = {
                         type: 'element',
                         tagName: 'code',
                         properties: codeNode.properties,
-                        children: codeNode.children.slice(0, maxLines)
+                        children: codeNode.children.slice(0, maxLines * 2)
                     };
+
+                    // 创建展开按钮
+                    const expandButton = {
+                        type: 'element',
+                        tagName: 'label',
+                        properties: {
+                            className: ['code-collapse-expand'],
+                            htmlFor: wrapperId
+                        },
+                        children: [
+                            {
+                                type: 'element',
+                                tagName: 'svg',
+                                properties: {
+                                    className: ['code-collapse-icon'],
+                                    width: '32',
+                                    height: '24',
+                                    viewBox: '0 0 32 24',
+                                    fill: 'none',
+                                    stroke: 'currentColor',
+                                    strokeWidth: '2',
+                                    strokeLinecap: 'round',
+                                    strokeLinejoin: 'round'
+                                },
+                                children: [
+                                    {
+                                        type: 'element',
+                                        tagName: 'polyline',
+                                        properties: {
+                                            points: '4,9 12,17 20,9'
+                                        },
+                                        children: []
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+
+                    // 创建折叠按钮
+                    const collapseButton = {
+                        type: 'element',
+                        tagName: 'label',
+                        properties: {
+                            className: ['code-collapse-collapse'],
+                            htmlFor: wrapperId
+                        },
+                        children: [
+                            {
+                                type: 'element',
+                                tagName: 'svg',
+                                properties: {
+                                    className: ['code-collapse-icon'],
+                                    width: '32',
+                                    height: '24',
+                                    viewBox: '0 0 32 24',
+                                    fill: 'none',
+                                    stroke: 'currentColor',
+                                    strokeWidth: '2',
+                                    strokeLinecap: 'round',
+                                    strokeLinejoin: 'round'
+                                },
+                                children: [
+                                    {
+                                        type: 'element',
+                                        tagName: 'polyline',
+                                        properties: {
+                                            points: '20,15 12,7 4,15'
+                                        },
+                                        children: []
+                                    }
+                                ]
+                            }
+                        ]
+                    };
+
+                    node.children = [
+                        ...node.children,
+                        {
+                            type: 'element',
+                            tagName: 'div',
+                            properties: {
+                                className: ['code-collapse-collapse-area']
+                            },
+                            children: [collapseButton]
+                        }
+                    ];
 
                     const wrapper = {
                         type: 'element',
@@ -63,42 +149,7 @@ export function rehypeCodeCollapse(options = {}) {
                                         },
                                         children: []
                                     },
-                                    // 展开按钮（label）
-                                    {
-                                        type: 'element',
-                                        tagName: 'label',
-                                        properties: {
-                                            className: ['code-collapse-expand'],
-                                            htmlFor: wrapperId
-                                        },
-                                        children: [
-                                            {
-                                                type: 'element',
-                                                tagName: 'svg',
-                                                properties: {
-                                                    className: ['code-collapse-icon'],
-                                                    width: '24',
-                                                    height: '24',
-                                                    viewBox: '0 0 24 24',
-                                                    fill: 'none',
-                                                    stroke: 'currentColor',
-                                                    strokeWidth: '2',
-                                                    strokeLinecap: 'round',
-                                                    strokeLinejoin: 'round'
-                                                },
-                                                children: [
-                                                    {
-                                                        type: 'element',
-                                                        tagName: 'polyline',
-                                                        properties: {
-                                                            points: '6,9 12,15 18,9'
-                                                        },
-                                                        children: []
-                                                    }
-                                                ]
-                                            }
-                                        ]
-                                    }
+                                    expandButton
                                 ]
                             },
                             // 完整代码

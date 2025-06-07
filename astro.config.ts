@@ -80,7 +80,7 @@ export default defineConfig({
     rehypePlugins: [
       rehypeKatex,
       rehypeSlug,
-      [rehypeCodeCollapse, { maxLines: 50 }],
+      [rehypeCodeCollapse, { maxLines: 25 }],
       rehypeCodeCopyButton,
       rehypeImgToFigure,
       rehypeUnwrapImg, // Must be after rehypeImgToFigure
