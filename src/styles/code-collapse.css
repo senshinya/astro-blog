@@ -61,22 +61,16 @@
 }
 
 /* 折叠区域样式 */
-.code-collapse-collapse-area {
-  height: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(var(--gradient-color), 0.05);
-  border-top: 1px solid rgba(var(--gradient-color), 0.1);
-}
-
 .code-collapse-collapse {
+  height: 2em;
   display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   padding: 1em 2em;
   border-radius: 0.5em;
+  background: rgba(var(--gradient-color), 0.05);
+  border-top: 1px solid rgba(var(--gradient-color), 0.1);
   transition: background-color 0.2s ease;
 }
 

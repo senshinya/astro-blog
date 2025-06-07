@@ -95,14 +95,7 @@ export function rehypeCodeCollapse(options = {}) {
 
                     node.children = [
                         ...node.children,
-                        {
-                            type: 'element',
-                            tagName: 'div',
-                            properties: {
-                                className: ['code-collapse-collapse-area']
-                            },
-                            children: [collapseButton]
-                        }
+                        collapseButton
                     ];
 
                     const wrapper = {
