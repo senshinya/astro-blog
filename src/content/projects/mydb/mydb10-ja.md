@@ -10,13 +10,13 @@ description: "MYDBはC/S構造を採用し、MySQLに似ており、複数のク
 
 ### はじめに
 
-MYDBはC/S構造として設計されており、MySQLに似ています。サーバーを起動し、複数のクライアントがソケットを通じて接続し、SQLを実行して結果を返すことができます。
+MYDB は C/S 構造として設計されており、MySQL に似ています。サーバーを起動し、複数のクライアントがソケットを通じて接続し、SQL を実行して結果を返すことができます。
 
-### C/S通信
+### C/S 通信
 
-MYDBはクライアントとサーバー間の通信に特殊なバイナリ形式を使用しています。もちろん、面倒であればプレーンテキストでの通信も可能です。
+MYDB はクライアントとサーバー間の通信に特殊なバイナリ形式を使用しています。もちろん、面倒であればプレーンテキストでの通信も可能です。
 
-伝送の最も基本的な構造はPackageです：
+伝送の最も基本的な構造は Package です：
 
 ```java
 public class Package {
@@ -25,13 +25,13 @@ public class Package {
 }
 ```
 
-各Packageは送信前にEncoderによってバイト配列にエンコードされ、受信側でも同様にEncoderによってPackageオブジェクトにデコードされます。エンコード・デコードのルールは以下の通りです：
+各 Package は送信前に Encoder によってバイト配列にエンコードされ、受信側でも同様に Encoder によって Package オブジェクトにデコードされます。エンコード・デコードのルールは以下の通りです：
 
 ```
 [Flag][data]
 ```
 
-flagが0の場合はデータを送信していることを示し、そのdataはデータ本体です。flagが1の場合はエラーを送信しており、dataはException.getMessage()によるエラーメッセージとなります。具体的には以下のようになります：
+flag が 0 の場合はデータを送信していることを示し、その data はデータ本体です。flag が 1 の場合はエラーを送信しており、data は Exception.getMessage() によるエラーメッセージとなります。具体的には以下のようになります：
 
 ```java
 public class Encoder {
@@ -63,7 +63,7 @@ public class Encoder {
 }
 ```
 
-エンコードされた情報はTransporterクラスを通じて出力ストリームに書き込まれ送信されます。特殊文字による問題を避けるため、データは16進文字列（Hex String）に変換され、末尾に改行コードが付加されます。これにより送受信時はBufferedReaderとWriterを使い、行単位で簡単に読み書きできます。
+エンコードされた情報は Transporter クラスを通じて出力ストリームに書き込まれ送信されます。特殊文字による問題を避けるため、データは 16 進文字列（Hex String）に変換され、末尾に改行コードが付加されます。これにより送受信時は BufferedReader と Writer を使い、行単位で簡単に読み書きできます。
 
 ```java
 public class Transporter {
@@ -107,7 +107,7 @@ public class Transporter {
 }
 ```
 
-PackagerはEncoderとTransporterの組み合わせで、sendとreceiveメソッドを直接提供します：
+Packager は Encoder と Transporter の組み合わせで、send と receive メソッドを直接提供します：
 
 ```java
 public class Packager {
@@ -137,11 +137,11 @@ public class Packager {
 
 ### サーバーとクライアントの実装
 
-サーバーとクライアントは手抜きでJavaのソケットを直接使用しています。
+サーバーとクライアントは手抜きで Java のソケットを直接使用しています。
 
-サーバーはServerSocketを起動してポートを監視し、リクエストが来ると新しいスレッドに処理を任せます。この部分はほぼ定石通りです。
+サーバーは ServerSocket を起動してポートを監視し、リクエストが来ると新しいスレッドに処理を任せます。この部分はほぼ定石通りです。
 
-HandleSocketクラスはRunnableを実装し、接続確立後にPackagerを初期化し、クライアントからのデータをループで受信して処理します：
+HandleSocket クラスは Runnable を実装し、接続確立後に Packager を初期化し、クライアントからのデータをループで受信して処理します：
 
 ```java
 Packager packager = null;
@@ -185,9 +185,9 @@ while(true) {
 }
 ```
 
-処理の核はExecutorクラスで、ExecutorはParserを呼び出して構造化された文情報オブジェクトを取得し、そのオブジェクトの種類に応じてTBMの各種メソッドを呼び出して処理します。詳細は省略します。
+処理の核は Executor クラスで、Executor は Parser を呼び出して構造化された文情報オブジェクトを取得し、そのオブジェクトの種類に応じて TBM の各種メソッドを呼び出して処理します。詳細は省略します。
 
-top.guoziyang.mydb.backend.Launcherクラスはサーバーの起動エントリーポイントです。このクラスはコマンドライン引数を解析し、重要な引数として -open または -create があります。Launcherはこれらの引数に基づき、データベースファイルの作成か既存データベースの起動かを決定します。
+top.guoziyang.mydb.backend.Launcher クラスはサーバーの起動エントリーポイントです。このクラスはコマンドライン引数を解析し、重要な引数として -open または -create があります。Launcher はこれらの引数に基づき、データベースファイルの作成か既存データベースの起動かを決定します。
 
 ```java
 private static void createDB(String path) {
@@ -208,7 +208,7 @@ private static void openDB(String path, long mem) {
 }
 ```
 
-クライアントがサーバーに接続する過程も定石通りです。クライアントは簡単なShellを持ち、ユーザー入力を読み込みClient.execute()を呼び出します。
+クライアントがサーバーに接続する過程も定石通りです。クライアントは簡単な Shell を持ち、ユーザー入力を読み込み Client.execute() を呼び出します。
 
 ```java
 public byte[] execute(byte[] stat) throws Exception {
@@ -221,7 +221,7 @@ public byte[] execute(byte[] stat) throws Exception {
 }
 ```
 
-RoundTripperクラスは単一の送受信動作を実装しています：
+RoundTripper クラスは単一の送受信動作を実装しています：
 
 ```java
 public Package roundTrip(Package pkg) throws Exception {
@@ -230,7 +230,7 @@ public Package roundTrip(Package pkg) throws Exception {
 }
 ```
 
-最後にクライアントの起動エントリーポイントを示します。非常にシンプルで、Shellを起動するだけです：
+最後にクライアントの起動エントリーポイントを示します。非常にシンプルで、Shell を起動するだけです：
 
 ```java
 public class Launcher {
@@ -247,6 +247,6 @@ public class Launcher {
 }
 ```
 
-今日は2021年12月26日、クリスマスです。
+今日は 2021 年 12 月 26 日、クリスマスです。
 
 無敵の毛沢東思想万歳！

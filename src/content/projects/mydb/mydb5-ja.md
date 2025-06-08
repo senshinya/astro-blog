@@ -10,19 +10,19 @@ description: "ページインデックスはDM層の重要な構成要素であ�
 
 ### はじめに
 
-本節ではDM層の締めくくりとして、シンプルなページインデックスの実装を紹介します。また、DM層が上位に提供する抽象であるDataItemの実装も行います。
+本節では DM 層の締めくくりとして、シンプルなページインデックスの実装を紹介します。また、DM 層が上位に提供する抽象である DataItem の実装も行います。
 
 ### ページインデックス
 
 ページインデックスは各ページの空きスペースをキャッシュしています。これにより、上位モジュールが挿入操作を行う際に、ディスクやキャッシュからすべてのページ情報を調べることなく、適切な空きスペースを持つページを素早く見つけることが可能です。
 
-MYDBでは比較的粗いアルゴリズムでページインデックスを実装しており、1ページの空間を40の区間に分割しています。起動時にすべてのページ情報を走査し、ページの空きスペースを取得してこれら40区間に振り分けます。挿入時は要求された空きスペースを切り上げて該当区間にマッピングし、その区間の任意のページを取り出せば要件を満たします。
+MYDB では比較的粗いアルゴリズムでページインデックスを実装しており、1 ページの空間を 40 の区間に分割しています。起動時にすべてのページ情報を走査し、ページの空きスペースを取得してこれら 40 区間に振り分けます。挿入時は要求された空きスペースを切り上げて該当区間にマッピングし、その区間の任意のページを取り出せば要件を満たします。
 
-PageIndexの実装も非常にシンプルで、List型の配列として表現されています。
+PageIndex の実装も非常にシンプルで、List 型の配列として表現されています。
 
 ```java
 public class PageIndex {
-    // 1ページを40区間に分割
+    // 1 ページを 40 区間に分割
     private static final int INTERVALS_NO = 40;
     private static final int THRESHOLD = PageCache.PAGE_SIZE / INTERVALS_NO;
 
@@ -30,7 +30,7 @@ public class PageIndex {
 }
 ```
 
-PageIndexからページを取得するのも簡単で、区間番号を計算して直接取得します：
+PageIndex からページを取得するのも簡単で、区間番号を計算して直接取得します：
 
 ```java
 public PageInfo select(int spaceSize) {
@@ -47,9 +47,9 @@ public PageInfo select(int spaceSize) {
 }
 ```
 
-返されるPageInfoにはページ番号と空きスペースの大きさが含まれます。
+返される PageInfo にはページ番号と空きスペースの大きさが含まれます。
 
-選択されたページはPageIndexから直接削除されるため、同一ページへの同時書き込みは許されません。上位モジュールがこのページを使い終わった後は、再びPageIndexに戻す必要があります：
+選択されたページは PageIndex から直接削除されるため、同一ページへの同時書き込みは許されません。上位モジュールがこのページを使い終わった後は、再び PageIndex に戻す必要があります：
 
 ```java
 public void add(int pgno, int freeSpace) {
@@ -58,10 +58,10 @@ public void add(int pgno, int freeSpace) {
 }
 ```
 
-DataManagerが生成される際には、すべてのページを取得してPageIndexを埋める必要があります：
+DataManager が生成される際には、すべてのページを取得して PageIndex を埋める必要があります：
 
 ```java
-// pageIndexの初期化
+// pageIndex の初期化
 void fillPageIndex() {
     int pageNumber = pc.getPageNumber();
     for(int i = 2; i <= pageNumber; i ++) {
@@ -77,13 +77,13 @@ void fillPageIndex() {
 }
 ```
 
-Pageを使い終わったら速やかにreleaseすることが重要です。そうしないとキャッシュが溢れてしまう恐れがあります。
+Page を使い終わったら速やかに release することが重要です。そうしないとキャッシュが溢れてしまう恐れがあります。
 
 ### DataItem
 
-DataItemはDM層が上位に提供するデータの抽象です。上位モジュールはアドレスを通じてDMに対応するDataItemを要求し、その中のデータを取得します。
+DataItem は DM 層が上位に提供するデータの抽象です。上位モジュールはアドレスを通じて DM に対応する DataItem を要求し、その中のデータを取得します。
 
-DataItemの実装は非常にシンプルです：
+DataItem の実装は非常にシンプルです：
 
 ```java
 public class DataItemImpl implements DataItem {
@@ -95,17 +95,17 @@ public class DataItemImpl implements DataItem {
 }
 ```
 
-dmの参照を保持するのは、DataItemの解放がdmの解放に依存していること（dmはDataItemのキャッシュも実装しているため）や、データ変更時のログ記録のためです。
+dm の参照を保持するのは、DataItem の解放が dm の解放に依存していること（dm は DataItem のキャッシュも実装しているため）や、データ変更時のログ記録のためです。
 
-DataItem内に保存されるデータ構造は以下の通りです：
+DataItem 内に保存されるデータ構造は以下の通りです：
 
 ```
 [ValidFlag] [DataSize] [Data]
 ```
 
-ValidFlagは1バイトで、そのDataItemが有効かどうかを示します。DataItemを削除する際は、この有効フラグを0に設定するだけで済みます。DataSizeは2バイトで、その後に続くDataの長さを示します。
+ValidFlag は 1 バイトで、その DataItem が有効かどうかを示します。DataItem を削除する際は、この有効フラグを 0 に設定するだけで済みます。DataSize は 2 バイトで、その後に続く Data の長さを示します。
 
-上位モジュールはDataItemを取得後、`data()`メソッドを通じてデータを得ます。このメソッドが返す配列はコピーではなく共有された配列であるため、SubArrayを用いています。
+上位モジュールは DataItem を取得後、`data()` メソッドを通じてデータを得ます。このメソッドが返す配列はコピーではなく共有された配列であるため、SubArray を用いています。
 
 ```java
 @Override
@@ -114,7 +114,7 @@ public SubArray data() {
 }
 ```
 
-上位モジュールがDataItemを変更しようとする場合、一定の手順に従う必要があります。変更前に`before()`を呼び、変更を取り消したい場合は`unBefore()`を呼び、変更完了後は`after()`を呼びます。この一連の流れは変更前のデータを保存し、適切にログを残すためのものです。DMはDataItemへの変更が原子性を持つことを保証します。
+上位モジュールが DataItem を変更しようとする場合、一定の手順に従う必要があります。変更前に `before()`を呼び、変更を取り消したい場合は`unBefore()`を呼び、変更完了後は`after()` を呼びます。この一連の流れは変更前のデータを保存し、適切にログを残すためのものです。DM は DataItem への変更が原子性を持つことを保証します。
 
 ```java
 @Override
@@ -137,9 +137,9 @@ public void after(long xid) {
 }
 ```
 
-`after()`メソッドは主にdmのメソッドを呼び出して変更操作のログを記録します。詳細は省略します。
+`after()` メソッドは主に dm のメソッドを呼び出して変更操作のログを記録します。詳細は省略します。
 
-DataItemを使い終わったら、速やかに`release()`を呼び出してキャッシュを解放する必要があります（DMがDataItemをキャッシュしているため）。
+DataItem を使い終わったら、速やかに `release()` を呼び出してキャッシュを解放する必要があります（DM が DataItem をキャッシュしているため）。
 
 ```java
 @Override
@@ -148,11 +148,11 @@ public void release() {
 }
 ```
 
-### DMの実装
+### DM の実装
 
-DataManagerはDM層が直接外部に提供するクラスであり、同時にDataItemオブジェクトのキャッシュも実装しています。DataItemのキーはページ番号とページ内オフセットからなる8バイトの符号なし整数で、ページ番号とオフセットはそれぞれ4バイトずつです。
+DataManager は DM 層が直接外部に提供するクラスであり、同時に DataItem オブジェクトのキャッシュも実装しています。DataItem のキーはページ番号とページ内オフセットからなる 8 バイトの符号なし整数で、ページ番号とオフセットはそれぞれ 4 バイトずつです。
 
-DataItemキャッシュの`getForCache()`はキーからページ番号を解析し、pageCacheからページを取得し、オフセットに基づいてDataItemを解析して返します：
+DataItem キャッシュの `getForCache()` はキーからページ番号を解析し、pageCache からページを取得し、オフセットに基づいて DataItem を解析して返します：
 
 ```java
 @Override
@@ -165,7 +165,7 @@ protected DataItem getForCache(long uid) throws Exception {
 }
 ```
 
-DataItemキャッシュの解放はDataItemをデータソースに書き戻す必要があり、ファイルの読み書きはページ単位で行われるため、DataItemが属するページをreleaseすれば十分です：
+DataItem キャッシュの解放は DataItem をデータソースに書き戻す必要があり、ファイルの読み書きはページ単位で行われるため、DataItem が属するページを release すれば十分です：
 
 ```java
 @Override
@@ -174,7 +174,7 @@ protected void releaseForCache(DataItem di) {
 }
 ```
 
-既存ファイルからDataManagerを作成する場合と空ファイルから作成する場合では若干の違いがあります。PageCacheやLoggerの生成方法が異なるほか、空ファイルから作成する際は最初のページの初期化が必要で、既存ファイルから開く場合は最初のページの検証を行い、リカバリが必要かどうかを判断します。また最初のページのランダムバイトを再生成します。
+既存ファイルから DataManager を作成する場合と空ファイルから作成する場合では若干の違いがあります。PageCache や Logger の生成方法が異なるほか、空ファイルから作成する際は最初のページの初期化が必要で、既存ファイルから開く場合は最初のページの検証を行い、リカバリが必要かどうかを判断します。また最初のページのランダムバイトを再生成します。
 
 ```java
 public static DataManager create(String path, long mem, TransactionManager tm) {
@@ -199,10 +199,10 @@ public static DataManager open(String path, long mem, TransactionManager tm) {
 }
 ```
 
-最初のページの初期化や検証は基本的にPageOneクラスのメソッドで実装されています：
+最初のページの初期化や検証は基本的に PageOne クラスのメソッドで実装されています：
 
 ```java
-// ファイル作成時にPageOneを初期化
+// ファイル作成時に PageOne を初期化
 void initPageOne() {
     int pgno = pc.newPage(PageOne.InitRaw());
     assert pgno == 1;
@@ -214,7 +214,7 @@ void initPageOne() {
     pc.flushPage(pageOne);
 }
 
-// 既存ファイルを開く際にPageOneを読み込み、正当性を検証
+// 既存ファイルを開く際に PageOne を読み込み、正当性を検証
 boolean loadCheckPageOne() {
     try {
         pageOne = pc.getPage(1);
@@ -225,9 +225,9 @@ boolean loadCheckPageOne() {
 }
 ```
 
-DM層は上位に対して読み込み、挿入、変更の3つの機能を提供します。変更は読み出したDataItemを通じて行うため、DataManagerは`read()`と`insert()`メソッドを提供すれば十分です。
+DM 層は上位に対して読み込み、挿入、変更の 3 つの機能を提供します。変更は読み出した DataItem を通じて行うため、DataManager は `read()`と`insert()` メソッドを提供すれば十分です。
 
-`read()`はUIDからキャッシュ経由でDataItemを取得し、有効フラグを検証します：
+`read()` は UID からキャッシュ経由で DataItem を取得し、有効フラグを検証します：
 
 ```java
 @Override
@@ -241,7 +241,7 @@ public DataItem read(long uid) throws Exception {
 }
 ```
 
-`insert()`メソッドはpageIndexから挿入データを格納可能なページを取得し、ページを得た後はまず挿入ログを書き込み、その後pageXを使ってデータを挿入し、挿入位置のオフセットを返します。最後にページ情報をpageIndexに再登録します。
+`insert()` メソッドは pageIndex から挿入データを格納可能なページを取得し、ページを得た後はまず挿入ログを書き込み、その後 pageX を使ってデータを挿入し、挿入位置のオフセットを返します。最後にページ情報を pageIndex に再登録します。
 
 ```java
 @Override
@@ -280,7 +280,7 @@ public long insert(long xid, byte[] data) throws Exception {
         return Types.addressToUid(pi.pgno, offset);
 
     } finally {
-        // 取得したページをpageIndexに再登録
+        // 取得したページを pageIndex に再登録
         if(pg != null) {
             pIndex.add(pi.pgno, PageX.getFreeSpace(pg));
         } else {
@@ -290,7 +290,7 @@ public long insert(long xid, byte[] data) throws Exception {
 }
 ```
 
-DataManagerを正常に閉じる際は、キャッシュとログのクローズ処理を行い、最初のページのバイト検証を設定することを忘れてはいけません：
+DataManager を正常に閉じる際は、キャッシュとログのクローズ処理を行い、最初のページのバイト検証を設定することを忘れてはいけません：
 
 ```java
 @Override
@@ -304,9 +304,9 @@ public void close() {
 }
 ```
 
-以上でDM層の説明は終わりです。
+以上で DM 層の説明は終わりです。
 
-今日は2021年12月11日、A-SOULの1周年記念ライブです。A-SOULの1周年おめでとうございます！これからも2周年、3周年、10周年と続きますように！鳥の巣（北京国家体育場）で会いましょう！！！
+今日は 2021 年 12 月 11 日、A-SOUL の 1 周年記念ライブです。A-SOUL の 1 周年おめでとうございます！これからも 2 周年、3 周年、10 周年と続きますように！鳥の巣（北京国家体育場）で会いましょう！！！
 
 ![](https://blog-img.shinya.click/2025/bee2e73291a2ecde2667bb41f2e2c5b6.jpg)
 

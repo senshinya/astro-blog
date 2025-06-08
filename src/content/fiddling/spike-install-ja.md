@@ -12,7 +12,7 @@ description: "RISC-V ツールチェーンをインストールする際、ま�
 
 RISC-V ツールチェーンには gcc、gdb、objdump/copy、関連する標準ライブラリの実装などが含まれており、まずはこちらをインストールすることをおすすめします。
 
-リポジトリURL：https://github.com/riscv-collab/riscv-gnu-toolchain
+リポジトリ URL：https://github.com/riscv-collab/riscv-gnu-toolchain
 
 clone する際は `--depth=1` オプションを付けてクローンサイズを小さくすることを推奨します。以降のリポジトリも同様にこのオプションを付けることをおすすめします。
 
@@ -45,7 +45,7 @@ sudo chown 1000:1000 /opt/riscv
 
 ### エミュレーター（spike）のインストール
 
-リポジトリURL：https://github.com/riscv-software-src/riscv-isa-sim
+リポジトリ URL：https://github.com/riscv-software-src/riscv-isa-sim
 
 clone した後、README の Build Steps セクションに従って直接インストールすれば問題ありません。現在のコマンドは以下の通りです：
 
@@ -62,7 +62,7 @@ $ make install
 
 ### シミュレーションカーネル（riscv-pk）のインストール
 
-リポジトリURL：https://github.com/riscv-software-src/riscv-pk
+リポジトリ URL：https://github.com/riscv-software-src/riscv-pk
 
 pk（Proxy Kernel）は静的リンクされたユーザーモードの RISC-V プログラムを直接実行するためのもので、検証目的であればフルの OS を動かすより軽量です。
 

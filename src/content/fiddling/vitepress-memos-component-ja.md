@@ -10,9 +10,9 @@ description: "動的なブログを構築する際、つぶやき機能を追加
 
 多くの動的ブログには「つぶやき」機能があります。これは本質的に特殊なブログ記事であり、動的ブログのリアルタイム性を活かして、書いたらすぐに発信できる仕組みです。
 
-静的ブログはローカルやサーバー上でHTMLに静的コンパイルしてからデプロイするため、リアルタイム性に欠けます。長文の記事を書くのはパソコンの前で行い、gitでプッシュしてデプロイするのはそれほど面倒ではありませんが、つぶやきを投稿するためにわざわざパソコンを開くのは心理的負担が大きいです。スマホでgit操作するのも煩雑で優雅とは言えず、結局「まあいいや」となりがちです。
+静的ブログはローカルやサーバー上で HTML に静的コンパイルしてからデプロイするため、リアルタイム性に欠けます。長文の記事を書くのはパソコンの前で行い、git でプッシュしてデプロイするのはそれほど面倒ではありませんが、つぶやきを投稿するためにわざわざパソコンを開くのは心理的負担が大きいです。スマホで git 操作するのも煩雑で優雅とは言えず、結局「まあいいや」となりがちです。
 
-そこで、つぶやきシステムのフロントエンドとバックエンドを一式実装しました。結果として本ブログの[碎碎念](/ja/memos)がそれです。バックエンドはCloudFlare Workersで実装し、ストレージは親切なKVに近接保存。管理ページも簡単に作りました。ブログフレームワークはVitePressで、フロントエンドはVueコンポーネントとして作成し、ページに直接埋め込んでつぶやきページとしています。
+そこで、つぶやきシステムのフロントエンドとバックエンドを一式実装しました。結果として本ブログの [碎碎念](/ja/memos) がそれです。バックエンドは CloudFlare Workers で実装し、ストレージは親切な KV に近接保存。管理ページも簡単に作りました。ブログフレームワークは VitePress で、フロントエンドは Vue コンポーネントとして作成し、ページに直接埋め込んでつぶやきページとしています。
 
 フロントエンドの見た目は割愛し、バックエンド管理ページの様子はこちらです。
 ![Memo 管理ページ](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
@@ -23,14 +23,14 @@ description: "動的なブログを構築する際、つぶやき機能を追加
 
 バックエンドは以下の機能を含みます：
 - つぶやきの追加・削除・編集（基本機能）
-- ページおよび全ての書き込みAPIに認証を設け、安全性を確保
-- Markdown形式のリアルタイムプレビュー（marked使用）
+- ページおよび全ての書き込み API に認証を設け、安全性を確保
+- Markdown 形式のリアルタイムプレビュー（marked 使用）
 
-KVには`index`キーを保存し、値はUIDの配列で全つぶやきのインデックスとなります。その他のつぶやきはUIDをキーにしたエントリに保存し、値の形式は以下の通りです。
+KV には `index` キーを保存し、値は UID の配列で全つぶやきのインデックスとなります。その他のつぶやきは UID をキーにしたエントリに保存し、値の形式は以下の通りです。
 
 ```js
 {
-    "uid":"ユニークID",
+    "uid":"ユニーク ID",
     "createTime":"投稿日時",
     "content":"つぶやき内容",
 }
@@ -38,13 +38,13 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
 
 #### 実装
 
-まずCloudFlareのKVスペースを作成し、つぶやき関連のKVペアを保存します。場所は「アカウントホーム - ストレージとデータベース - KV」で作成。名前は重要ではなく、覚えやすければ良いです。ここでは簡単に`memos`と命名しました。
+まず CloudFlare の KV スペースを作成し、つぶやき関連の KV ペアを保存します。場所は「アカウントホーム - ストレージとデータベース - KV」で作成。名前は重要ではなく、覚えやすければ良いです。ここでは簡単に `memos` と命名しました。
 
-次にCloudFlare Workersを作成し、ロジック処理を担当させます。場所は「アカウントホーム - 計算（Workers）- WorkersとPages」で作成。名前も重要ではなく、ここでは`memos-api`としました。作成後、Workers名をクリックして詳細画面へ。設定の「バインド」からバインドを追加し、「KV名前空間」を選択。変数名は`KV`、KV名前空間は先ほど作成した`memos`を選びます。これでコード内で`env.KV`を使って`memos`KV空間を操作可能になります。最後に画面右上の「コード編集」ボタンを押します。
+次に CloudFlare Workers を作成し、ロジック処理を担当させます。場所は「アカウントホーム - 計算（Workers）- Workers と Pages」で作成。名前も重要ではなく、ここでは `memos-api`としました。作成後、Workers 名をクリックして詳細画面へ。設定の「バインド」からバインドを追加し、「KV 名前空間」を選択。変数名は`KV`、KV 名前空間は先ほど作成した`memos`を選びます。これでコード内で`env.KV` を使って`memos`KV 空間を操作可能になります。最後に画面右上の「コード編集」ボタンを押します。
 
 以下、コードの説明です。
 
-まず`index.html`を作成し、管理ページのHTML・CSS・JSを格納します。
+まず `index.html` を作成し、管理ページの HTML・CSS・JS を格納します。
 
 ```html
 <!DOCTYPE html>
@@ -197,7 +197,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
             font-size: 0.9rem;
             line-height: 1.4;
             max-height: 4.2em;
-            /* 3行分のテキストを表示 */
+            /* 3 行分のテキストを表示 */
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -334,7 +334,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
             }
         }
 
-        /* Markdownプレビュー用スタイル */
+        /* Markdown プレビュー用スタイル */
         .memo-preview h1,
         .memo-preview h2,
         .memo-preview h3 {
@@ -431,7 +431,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
-    <!-- JavaScriptコードは以前と同様ですが、以下の機能強化を追加 -->
+    <!-- JavaScript コードは以前と同様ですが、以下の機能強化を追加 -->
     <script>
         let password = '';
         let currentMemo = null;
@@ -508,7 +508,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
                 });
                 document.querySelector(`.memo-item[data-id="${uid}"]`)?.classList.add('active');
             } catch (error) {
-                showNotification('Memoの読み込みに失敗しました', 'error');
+                showNotification('Memo の読み込みに失敗しました', 'error');
             }
         }
 
@@ -528,7 +528,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
         async function saveMemo() {
             const content = document.getElementById('memo-content').value;
             if (!content.trim()) {
-                showNotification('Memoの内容は空にできません', 'error');
+                showNotification('Memo の内容は空にできません', 'error');
                 return;
             }
 
@@ -557,10 +557,10 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
                     });
                 }
 
-                showNotification('Memoを保存しました');
+                showNotification('Memo を保存しました');
                 loadMemos();
             } catch (error) {
-                showNotification('Memoの保存に失敗しました', 'error');
+                showNotification('Memo の保存に失敗しました', 'error');
             } finally {
                 showLoading(false);
             }
@@ -569,7 +569,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
         async function deleteMemo() {
             if (!currentMemo) return;
 
-            if (confirm('このMemoを削除してもよろしいですか？')) {
+            if (confirm('この Memo を削除してもよろしいですか？')) {
                 try {
                     showLoading(true);
                     await fetch(`/api/memos/${currentMemo.uid}`, {
@@ -578,11 +578,11 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
                             'Authorization': password
                         }
                     });
-                    showNotification('Memoを削除しました');
+                    showNotification('Memo を削除しました');
                     loadMemos();
                     clearMemoDetail();
                 } catch (error) {
-                    showNotification('Memoの削除に失敗しました', 'error');
+                    showNotification('Memo の削除に失敗しました', 'error');
                 } finally {
                     showLoading(false);
                 }
@@ -648,14 +648,14 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
             setTimeout(() => notification.remove(), 3000);
         }
 
-        // XSS攻撃防止のための補助関数
+        // XSS 攻撃防止のための補助関数
         function escapeHtml(html) {
             const div = document.createElement('div');
             div.textContent = html;
             return div.innerHTML;
         }
 
-        // markedの初期設定
+        // marked の初期設定
         marked.setOptions({
             breaks: true,
             gfm: true,
@@ -667,7 +667,7 @@ KVには`index`キーを保存し、値はUIDの配列で全つぶやきのイ�
 </html>
 ```
 
-JSコードからわかるように、バックエンドは以下のエンドポイントを持ちます。
+JS コードからわかるように、バックエンドは以下のエンドポイントを持ちます。
 
 - `POST /api/auth`：ページ認証
 - `GET /api/memos`：つぶやき詳細取得（ページネーション対応）
@@ -675,16 +675,16 @@ JSコードからわかるように、バックエンドは以下のエンドポ
 - `PUT /api/memos/{uid}`：つぶやき更新
 - `DELETE /api/memos/{uid}`：つぶやき削除
 
-続いて`worker.js`を編集し、これらのエンドポイントを実装します。
+続いて `worker.js` を編集し、これらのエンドポイントを実装します。
 
 ```js
 import html from './index.html';
 
 const CORRECT_PASSWORD = 'CORRECT_PASSWORD';        // パスワードを設定    // [!code highlight]
-const CALLBACK_URL = 'https://CALLBACK_URL';        // コールバックURLを設定   // [!code highlight]
+const CALLBACK_URL = 'https://CALLBACK_URL';        // コールバック URL を設定   // [!code highlight]
 const ALLOWED_ORIGINS = ['https://example.com'];    // 許可するドメインリスト  // [!code highlight]
 
-// ランダムUID生成
+// ランダム UID 生成
 function generateUID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -694,7 +694,7 @@ function generateUID() {
   }
   return result;
 }
-// CORS処理
+// CORS 処理
 function handleCORS(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -711,12 +711,12 @@ function getCurrentTimeInISOFormat() {
   const now = new Date();
   // 各パーツ取得
   const year = now.getUTCFullYear();
-  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // 月は0始まり
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // 月は 0 始まり
   const day = String(now.getUTCDate()).padStart(2, '0');
   const hours = String(now.getUTCHours()).padStart(2, '0');
   const minutes = String(now.getUTCMinutes()).padStart(2, '0');
   const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-  // ISO 8601形式の文字列に組み立て
+  // ISO 8601 形式の文字列に組み立て
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
 }
 async function handleRequest(request, env) {
@@ -740,7 +740,7 @@ async function handleRequest(request, env) {
   }
   const corsHeaders = handleCORS(request);
   
-  // CORSプリフライトリクエスト処理
+  // CORS プリフライトリクエスト処理
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: handleCORS(request),
@@ -765,7 +765,7 @@ async function handleRequest(request, env) {
       }
     );
   }
-  // APIルーティング処理
+  // API ルーティング処理
   if (url.pathname.startsWith('/api/memos')) {
     // つぶやき一覧取得
     if (request.method === 'GET') {
@@ -910,29 +910,29 @@ export default {
   },
 };
 ```
-最上部の3つの定数は設定が必要です：
+最上部の 3 つの定数は設定が必要です：
 
 - `CORRECT_PASSWORD`：ページのパスワード
-- `CALLBACK_URL`：新規投稿や更新・削除後に呼び出すコールバックURL
-- `ALLOWED_ORIGINS`：クロスオリジン対応のため許可するドメインリスト。最低でもブログのドメインと管理ページのドメインの2つを含めること。
+- `CALLBACK_URL`：新規投稿や更新・削除後に呼び出すコールバック URL
+- `ALLOWED_ORIGINS`：クロスオリジン対応のため許可するドメインリスト。最低でもブログのドメインと管理ページのドメインの 2 つを含めること。
 
 設定が完了したら公開ボタンを押します。
 
-中国のネット環境の影響で、デフォルトの`workers.dev`ドメインはアクセスが困難な場合が多いので、Workerに新しいドメインを設定するのが望ましいです。`memos`詳細ページの「設定 - ドメインとルーティング」でカスタムドメインを追加し、Cloudflareで管理しているドメインを入力します。このドメインも`worker.js`の`ALLOWED_ORIGINS`に追加してください。
+中国のネット環境の影響で、デフォルトの `workers.dev`ドメインはアクセスが困難な場合が多いので、Worker に新しいドメインを設定するのが望ましいです。`memos` 詳細ページの「設定 - ドメインとルーティング」でカスタムドメインを追加し、Cloudflare で管理しているドメインを入力します。このドメインも `worker.js`の`ALLOWED_ORIGINS` に追加してください。
 
-これで管理ページが使えるようになります。管理ページのURLは`https://{あなたのドメイン}/manage`です。アクセス時にパスワード入力が求められます。入力後は快適に管理できます！
+これで管理ページが使えるようになります。管理ページの URL は `https://{あなたのドメイン}/manage` です。アクセス時にパスワード入力が求められます。入力後は快適に管理できます！
 
 ### フロントエンド
 
-VitePressのおかげで、Vueコンポーネントとしてつぶやきのフロントエンドを簡単に作成し、ブログに埋め込めます。
+VitePress のおかげで、Vue コンポーネントとしてつぶやきのフロントエンドを簡単に作成し、ブログに埋め込めます。
 
-まずmarkedjs依存をインストールします。pnpmなら以下のコマンドを実行。
+まず markedjs 依存をインストールします。pnpm なら以下のコマンドを実行。
 
 ```shell
 pnpm add marked
 ```
 
-ブログのテーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`、ファイルパスや拡張子は環境により異なる場合あり）と同じ階層に`components`フォルダを作成（既存なら不要）、その中に`memos.vue`を新規作成します。
+ブログのテーマ設定ファイル（通常は `docs/.vitepress/theme/index.ts`、ファイルパスや拡張子は環境により異なる場合あり）と同じ階層に`components`フォルダを作成（既存なら不要）、その中に`memos.vue` を新規作成します。
 
 ```vue
 <template>
@@ -978,7 +978,7 @@ interface memo {
 }
 
 function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shanghai'): string {
-    // Dateオブジェクトを作成
+    // Date オブジェクトを作成
     const date = new Date(dateString);
 
     // 必要な時間要素を抽出
@@ -990,7 +990,7 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: false // 24時間制を使用
+        hour12: false // 24 時間制を使用
     };
 
     const formatter = new Intl.DateTimeFormat('zh-CN', options);
@@ -1011,7 +1011,7 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
 const PAGE_SIZE = 10;
 const data = reactive({
     memoList: [] as memo[],
-    offset: 10, // ファイルから10件読み込んだので初期offsetは10
+    offset: 10, // ファイルから 10 件読み込んだので初期 offset は 10
     hasMore: true,
     isLoading: false
 })
@@ -1178,16 +1178,16 @@ async function loadMoreMemos() {
 </style>
 ```
 
-`{あなたのドメイン}`はCloudFlare Workerのドメインに置き換えてください。
+`{あなたのドメイン}` は CloudFlare Worker のドメインに置き換えてください。
 
-鋭い方はお気づきかもしれませんが、このコンポーネントの初期読み込みはWorkerのAPIから取得しているのではなく、JSONファイル（`import memosRaw from '../../../../memos.json'`）から取得しています。読み込み時に「もっと読み込む」を押すとWorkerのAPIから追加取得します。なぜでしょうか？
+鋭い方はお気づきかもしれませんが、このコンポーネントの初期読み込みは Worker の API から取得しているのではなく、JSON ファイル（`import memosRaw from '../../../../memos.json'`）から取得しています。読み込み時に「もっと読み込む」を押すと Worker の API から追加取得します。なぜでしょうか？
 
-- UXの観点から、つぶやきページに入った際、初期データをAPIから取得するとデータ取得まで画面が空白になり、体験が悪くなるため
-- <mark>コスト節約</mark>の観点から、CloudFlare Worker無料枠はリクエスト回数制限があるため、初期データを静的に取得することでリクエスト数を大幅に減らせるため
+- UX の観点から、つぶやきページに入った際、初期データを API から取得するとデータ取得まで画面が空白になり、体験が悪くなるため
+- <mark>コスト節約</mark>の観点から、CloudFlare Worker 無料枠はリクエスト回数制限があるため、初期データを静的に取得することでリクエスト数を大幅に減らせるため
 
-この`memos.json`はビルド時にAPIから取得した最新10件のつぶやきです。だからWorkerコードに`CALLBACK_URL`があり、新規投稿や上位10件の更新・削除時に再ビルドをトリガーするためのコールバックURLを設定しています。完全に動的取得にしたい場合はこのコールバックは不要です。
+この `memos.json`はビルド時に API から取得した最新 10 件のつぶやきです。だから Worker コードに`CALLBACK_URL` があり、新規投稿や上位 10 件の更新・削除時に再ビルドをトリガーするためのコールバック URL を設定しています。完全に動的取得にしたい場合はこのコールバックは不要です。
 
-以下のコードはビルド時に`memos.json`を生成するためのものです。テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）と同じ階層に`utils`フォルダを作成（既存なら不要）、その中に`memos.js`を作成します。
+以下のコードはビルド時に `memos.json`を生成するためのものです。テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）と同じ階層に`utils`フォルダを作成（既存なら不要）、その中に`memos.js` を作成します。
 
 ```js
 import https from 'https';
@@ -1201,7 +1201,7 @@ const requestOptions = {
     }
 };
 
-// GETリクエストを送信
+// GET リクエストを送信
 https.get(url, requestOptions, (resp) => {
   let data = [];
 
@@ -1213,15 +1213,15 @@ https.get(url, requestOptions, (resp) => {
   // 受信完了
   resp.on('end', async () => {
     try {
-      // Buffer配列を結合
+      // Buffer 配列を結合
       const buffer = Buffer.concat(data);
-      const decodedData = buffer.toString('utf-8'); // UTF-8エンコードと仮定
+      const decodedData = buffer.toString('utf-8'); // UTF-8 エンコードと仮定
 
-      // JSONデータをファイルに保存
+      // JSON データをファイルに保存
       await fs.writeFile('memos.json', decodedData);
-      console.log('JSONデータをdata.jsonに保存しました');
+      console.log('JSON データを data.json に保存しました');
     } catch (e) {
-      console.error('JSON解析エラー:', e);
+      console.error('JSON 解析エラー:', e);
     }
   });
 
@@ -1230,7 +1230,7 @@ https.get(url, requestOptions, (resp) => {
 });
 ```
 
-続いてブログルートの`package.json`を編集し、devとbuildコマンドの前に`node docs/.vitepress/theme/utils/memos.js`を追加します。追加位置は環境により異なりますが、例として：
+続いてブログルートの `package.json` を編集し、dev と build コマンドの前に`node docs/.vitepress/theme/utils/memos.js`を追加します。追加位置は環境により異なりますが、例として：
 
 ```json
 {
@@ -1244,11 +1244,11 @@ https.get(url, requestOptions, (resp) => {
 }
 ```
 
-こうすることでdev・build時にまず`memos.js`が呼ばれ、ブログルートに`memos.json`が生成されます。パスはディレクトリ構成に応じて`memos.vue`のimportパスも調整してください。
+こうすることで dev・build 時にまず `memos.js`が呼ばれ、ブログルートに`memos.json`が生成されます。パスはディレクトリ構成に応じて`memos.vue` の import パスも調整してください。
 
 これでコンポーネントとデータの準備が整いました。次にこのコンポーネントをグローバル登録します。
 
-テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）でコンポーネントをインポートし、登録します。
+テーマ設定ファイル（通常は `docs/.vitepress/theme/index.ts`）でコンポーネントをインポートし、登録します。
 
 ```ts
 ...
@@ -1267,9 +1267,9 @@ export default {
 
 最後に、このコンポーネントを置く単一ページを作成します。
 
-> え？VitePressで単一ページを使ったことがない？
+> え？VitePress で単一ページを使ったことがない？
 > 
-> では、ルートに`pages`フォルダを作成し、VitePressのコア設定ファイル（テーマ設定ファイルではなく、通常は`docs/.vitepress/config.ts`）に以下のrewritesルールを追加してください。
+> では、ルートに `pages` フォルダを作成し、VitePress のコア設定ファイル（テーマ設定ファイルではなく、通常は`docs/.vitepress/config.ts`）に以下の rewrites ルールを追加してください。
 > 
 > ```ts
 > rewrites: {
@@ -1277,9 +1277,9 @@ export default {
 > }
 > ```
 > 
-> これで`pages`配下のファイルが`/ファイル名`でアクセス可能になります。rewritesの詳細は[公式ドキュメント](https://vitepress.dev/guide/routing#route-rewrites)を参照。
+> これで `pages`配下のファイルが`/ファイル名` でアクセス可能になります。rewrites の詳細は [公式ドキュメント](https://vitepress.dev/guide/routing#route-rewrites) を参照。
 
-`pages`フォルダに`balabala.md`を作成し、内容は以下。
+`pages`フォルダに `balabala.md` を作成し、内容は以下。
 
 ```markdown
 ---

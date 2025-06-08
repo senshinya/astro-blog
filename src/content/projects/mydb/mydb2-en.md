@@ -24,7 +24,7 @@ Notice that whether facing upwards (to modules) or downwards (to disk), DM provi
 
 Since both page management and DataItem management involve caching, it's worthwhile to design a more general caching framework here.
 
-You may be wondering: Why use a reference counting strategy instead of the seemingly “advanced” LRU approach?
+You may be wondering: Why use a reference counting strategy instead of the seemingly“advanced”LRU approach?
 
 Let’s begin with cache interface design. If we used LRU, all we’d need is a `get(key)` interface, and resources would be automatically evicted from the cache when it's full. But imagine this situation: The cache becomes full and evicts a resource; at that very moment, an upper-level module tries to flush a resource back to the data source—except that resource has just been evicted! The upper-level module now faces an awkward dilemma: should it still attempt the back-write?
 
@@ -179,7 +179,7 @@ Now, here’s a frustrating aspect of Java.
 
 In Java, arrays are objects—stored on the heap like any other object. In languages like C, C++, or Go, arrays are implemented as pointers. That’s why there’s an old saying:
 
-> Only Java has “real” arrays
+> Only Java has“real”arrays
 
 However, for this project, that's not really good news. For example, in Go you can write:
 

@@ -8,7 +8,7 @@ description: "MYDB では、トランザクションの管理は XID ファイ�
 ---
 本章で扱うコードはすべて [backend/tm](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/tm) にあります。
 
-第0章で述べたように：
+第 0 章で述べたように：
 
 > TM は XID ファイルを維持することでトランザクションの状態を管理し、他のモジュールが特定のトランザクションの状態を照会できるインターフェースを提供します。
 

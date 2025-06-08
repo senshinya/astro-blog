@@ -38,9 +38,9 @@ There’s an `index` key stored in KV; its value is an array of uid strings, ser
 
 #### Implementation
 
-First, create a dedicated CloudFlare KV Space to store your memos. Head to `Account Home → Storage & Database → KV`, click ‘Create’, and give it a memorable name—mine’s simply `memos`.
+First, create a dedicated CloudFlare KV Space to store your memos. Head to `Account Home → Storage & Database → KV`, click‘Create’, and give it a memorable name—mine’s simply `memos`.
 
-Next, create a CloudFlare Worker for logic handling. Go to `Account Home → Compute (Workers) → Workers and Pages`, hit ‘Create’, and (again) give it a name—say, `memos-api`. Once it’s ready, click into your Worker for details, and under `Settings → Bindings`, add a new binding for `KV Namespace`. Set the variable name as `KV`, and select your freshly created KV Space (mine’s `memos`). Done! Now, code under `env.KV` directly accesses your memo KV data. Hit ‘Edit Code’ in the top right to get started.
+Next, create a CloudFlare Worker for logic handling. Go to `Account Home → Compute (Workers) → Workers and Pages`, hit‘Create’, and (again) give it a name—say, `memos-api`. Once it’s ready, click into your Worker for details, and under `Settings → Bindings`, add a new binding for `KV Namespace`. Set the variable name as `KV`, and select your freshly created KV Space (mine’s `memos`). Done! Now, code under `env.KV` directly accesses your memo KV data. Hit‘Edit Code’in the top right to get started.
 
 Time for some coding magic! First, create an `index.html` file to house your admin page (HTML, CSS, and JS).
 

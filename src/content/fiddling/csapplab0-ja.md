@@ -8,34 +8,34 @@ description: "CSAPPを学ぶ過程で、実験の重要性は無視できませ�
 ---
 ### はじめに
 
-> CSAPPを学びながら実験をしないのは、『四大名著』の中で『紅楼夢』を読まないようなものです。これはその人の教養や自己修養が不足していることを示しており、内在する高雅な芸術性を理解できず、表面的な言葉の羅列しか見えず、その深遠な精神的核心を読み解けません。そうした人はそこで成長が止まり、相対的に失敗した人生を送ることになります。
+> CSAPP を学びながら実験をしないのは、『四大名著』の中で『紅楼夢』を読まないようなものです。これはその人の教養や自己修養が不足していることを示しており、内在する高雅な芸術性を理解できず、表面的な言葉の羅列しか見えず、その深遠な精神的核心を読み解けません。そうした人はそこで成長が止まり、相対的に失敗した人生を送ることになります。
 
-CSAPPの実験を挫折させる最大の要因はLinux環境です。私も学部時代に一度Vmware Workstationを使ってUbuntu Desktopをインストールして実験しました。個人的には大きな問題はありませんでしたが、周囲の人は以下のような問題に遭遇していました：
+CSAPP の実験を挫折させる最大の要因は Linux 環境です。私も学部時代に一度 Vmware Workstation を使って Ubuntu Desktop をインストールして実験しました。個人的には大きな問題はありませんでしたが、周囲の人は以下のような問題に遭遇していました：
 
 * 仮想マシンのインストールエラー
-* VmwareとHyper-Vの互換性問題
+* Vmware と Hyper-V の互換性問題
 * 仮想マシンのネットワーク接続不良
 * 仮想マシンとホスト間の共有フォルダが機能しない
-* Ubuntuの中国語入力環境
+* Ubuntu の中国語入力環境
 * その他の謎の問題
 
-また、仮想マシンの性能も褒められたものではありません。ホストマシンからメモリを割り当てる必要があり、どちらが先にOOM（メモリ不足）になるか分からないという不安もあります。
+また、仮想マシンの性能も褒められたものではありません。ホストマシンからメモリを割り当てる必要があり、どちらが先に OOM（メモリ不足）になるか分からないという不安もあります。
 
-以上の理由から、私はWSL（Windows Subsystem for Linux、Windows向けLinuxサブシステム）を選びました。推奨OSはWindows 10 Version 2004以降、またはWindows 11で、WSL 2を利用できます。これより古いWindowsではWSL機能があってもWSL 1であり、LinuxのシステムコールをWindowsのシステムコールに翻訳するレイヤーを使っています。一方、WSL 2は軽量でメンテナンス不要の仮想マシンを使用し、その中で完全なLinuxカーネルを動作させています。CSAPPの実験には完全なLinuxカーネルが不可欠です。
+以上の理由から、私は WSL（Windows Subsystem for Linux、Windows 向け Linux サブシステム）を選びました。推奨 OS は Windows 10 Version 2004 以降、または Windows 11 で、WSL 2 を利用できます。これより古い Windows では WSL 機能があっても WSL 1 であり、Linux のシステムコールを Windows のシステムコールに翻訳するレイヤーを使っています。一方、WSL 2 は軽量でメンテナンス不要の仮想マシンを使用し、その中で完全な Linux カーネルを動作させています。CSAPP の実験には完全な Linux カーネルが不可欠です。
 
-「MacOSはどうするの？」と聞かれたら、Intelチップ搭載のMacBookならVirtualBox、VMware Fusion、Parallel DesktopをインストールしてLinuxディストリビューションを入れるか、Dockerを使うのが良いでしょう。M1チップのMacBookについては、**パソコンを買い替えることを強くおすすめします**（冗談ではなく、M1は実験には本当に向きません）。
+「MacOS はどうするの？」と聞かれたら、Intel チップ搭載の MacBook なら VirtualBox、VMware Fusion、Parallel Desktop をインストールして Linux ディストリビューションを入れるか、Docker を使うのが良いでしょう。M1 チップの MacBook については、**パソコンを買い替えることを強くおすすめします**（冗談ではなく、M1 は実験には本当に向きません）。
 
 ああ、話が長くなってしまいました。
 
-### WSLとUbuntuのインストール
+### WSL と Ubuntu のインストール
 
-WindowsでWSLをインストールするのは非常に簡単で、管理者権限のあるPowerShellで以下のコマンドを入力するだけです：
+Windows で WSL をインストールするのは非常に簡単で、管理者権限のある PowerShell で以下のコマンドを入力するだけです：
 
 ```shell
 wsl --install -d Ubuntu
 ```
 
-システムが必要な機能を自動的に設定し、Ubuntuの最新LTS（この記事執筆時点では20.04）を自動でダウンロードします。インストール完了後、端末が起動し、ユーザー名とパスワードの入力を求められます：
+システムが必要な機能を自動的に設定し、Ubuntu の最新 LTS（この記事執筆時点では 20.04）を自動でダウンロードします。インストール完了後、端末が起動し、ユーザー名とパスワードの入力を求められます：
 
 ```shell
 Installing, this may take a few minutes...
@@ -50,23 +50,23 @@ Installation successful!
 
 パスワード入力時は画面に表示されませんのでご注意ください。
 
-設定が完了すると、`shinya@DESKTOP-4TMFLAE:~$`のようなプロンプトが表示され、コマンド入力を待ちます。これでUbuntuシステムに入ったことになります。
+設定が完了すると、`shinya@DESKTOP-4TMFLAE:~$` のようなプロンプトが表示され、コマンド入力を待ちます。これで Ubuntu システムに入ったことになります。
 
 ### いくつかの便利な使い方
 
 #### Windows Terminal
 
-Windows Terminalは、Windows上で最も優れた端末と言えます。
+Windows Terminal は、Windows 上で最も優れた端末と言えます。
 
-Windows TerminalはMicrosoft Storeで「Windows Terminal」を検索してインストールするか、GitHubのリリースページ（[https://github.com/microsoft/terminal/releases](https://github.com/microsoft/terminal/releases)）からmsixbundleファイルをダウンロードしてダブルクリックでインストールできます。
+Windows Terminal は Microsoft Store で「Windows Terminal」を検索してインストールするか、GitHub のリリースページ（[https://github.com/microsoft/terminal/releases](https://github.com/microsoft/terminal/releases)）から msixbundle ファイルをダウンロードしてダブルクリックでインストールできます。
 
-WSLとUbuntuをインストール済みなら、Windows Terminalのタブの「＋」ボタンのドロップダウンにUbuntuの項目が表示されます。クリックすればUbuntuのデフォルトシェルがすぐに開きます。
+WSL と Ubuntu をインストール済みなら、Windows Terminal のタブの「＋」ボタンのドロップダウンに Ubuntu の項目が表示されます。クリックすれば Ubuntu のデフォルトシェルがすぐに開きます。
 
 #### ファイル共有
 
-WSLのUbuntuとWindowsは別々の隔離されたシステムで、それぞれ独自のファイルシステムを使っています。しかし、完全に隔離されているわけではありません。
+WSL の Ubuntu と Windows は別々の隔離されたシステムで、それぞれ独自のファイルシステムを使っています。しかし、完全に隔離されているわけではありません。
 
-WindowsのCドライブはUbuntu内で`/mnt/c`にマウントされています。例えばLinuxからWindowsのデスクトップにアクセスするには：
+Windows の C ドライブは Ubuntu 内で `/mnt/c` にマウントされています。例えば Linux から Windows のデスクトップにアクセスするには：
 
 ```shell
 $ cd /mnt/c/Users/Shinya/Desktop
@@ -74,22 +74,22 @@ $ ls
  course.py     desktop.ini     szxx.bat     szxx.txt
 ```
 
-逆に、WindowsでWSLのファイルシステム（例：`~`）を見たい場合は、Ubuntu内で以下のコマンドを使います。例えばユーザーフォルダを開くには：
+逆に、Windows で WSL のファイルシステム（例：`~`）を見たい場合は、Ubuntu 内で以下のコマンドを使います。例えばユーザーフォルダを開くには：
 
 ```shell
 $ cd ~
 $ explorer.exe .
 ```
 
-するとWindowsのエクスプローラーが開き、対象フォルダの内容が表示されます。Windowsのフォルダと同じように操作可能です。
+すると Windows のエクスプローラーが開き、対象フォルダの内容が表示されます。Windows のフォルダと同じように操作可能です。
 
 #### Visual Studio Code
 
-VSCodeは世界最高のテキストエディタで、WSL内のフォルダを直接開け、ローカルプロジェクトと同様の体験を提供します。もちろん、vimで実験するのが好きな人もいますが。
+VSCode は世界最高のテキストエディタで、WSL 内のフォルダを直接開け、ローカルプロジェクトと同様の体験を提供します。もちろん、vim で実験するのが好きな人もいますが。
 
-まずWindows版のVSCodeを開き、拡張機能ストアで「WSL」を検索し、「Remote - WSL」をインストールします。通常、このキーワードの最初の結果です。
+まず Windows 版の VSCode を開き、拡張機能ストアで「WSL」を検索し、「Remote - WSL」をインストールします。通常、このキーワードの最初の結果です。
 
-次にUbuntu内のプロジェクトフォルダで以下を実行します：
+次に Ubuntu 内のプロジェクトフォルダで以下を実行します：
 
 ```shell
 $ code .
@@ -104,7 +104,7 @@ Downloading: 100%
 Unpacking: 100%
 ```
 
-その後、自動的にWindows版VSCodeが起動し、Ubuntuのプロジェクトフォルダが作業ディレクトリとして開かれます。あとは自由に開発できます。
+その後、自動的に Windows 版 VSCode が起動し、Ubuntu のプロジェクトフォルダが作業ディレクトリとして開かれます。あとは自由に開発できます。
 
 #### 中国のミラーサーバーに切り替える
 
@@ -115,7 +115,7 @@ Unpacking: 100%
 
 すみません、脱線しました。
 
-簡単に言うと、UbuntuやDebian系のパッケージ管理ツールaptは、ソフトウェアをインストールする際にURLリスト（ミラーサーバー）から検索・ダウンロードします。このURLリストが「源」です。デフォルトは海外のサーバーであり、よく知られている理由で速度が遅かったり接続できなかったりします。そこで国内のミラーサーバーに切り替えます。
+簡単に言うと、Ubuntu や Debian 系のパッケージ管理ツール apt は、ソフトウェアをインストールする際に URL リスト（ミラーサーバー）から検索・ダウンロードします。この URL リストが「源」です。デフォルトは海外のサーバーであり、よく知られている理由で速度が遅かったり接続できなかったりします。そこで国内のミラーサーバーに切り替えます。
 
 手順は以下の通り：
 
@@ -124,7 +124,7 @@ $ sudo mv /etc/apt/sources.list /etc/apt/sources.list.bak
 $ sudo nano /etc/apt/sources.list
 ```
 
-以下の内容を貼り付けます。ここでは阿里云（Alibaba Cloud）のミラーを使っています。ディストリビューションやバージョンによってミラーは異なるので注意してください。これはUbuntu 20.04用です。
+以下の内容を貼り付けます。ここでは阿里云（Alibaba Cloud）のミラーを使っています。ディストリビューションやバージョンによってミラーは異なるので注意してください。これは Ubuntu 20.04 用です。
 
 ```shell
 deb http://mirrors.aliyun.com/ubuntu/ focal main restricted universe multiverse
@@ -156,7 +156,7 @@ $ sudo apt upgrade
 $ sudo apt install build-essential gcc-multilib gdb
 ```
 
-オプションでcgdbもおすすめです。cgdbはGDBの軽量フロントエンドで、gdbコマンド画面とソースコードを分割表示します。aptのリポジトリのcgdbは最新でないため、ソースからビルドします。手順は以下：
+オプションで cgdb もおすすめです。cgdb は GDB の軽量フロントエンドで、gdb コマンド画面とソースコードを分割表示します。apt のリポジトリの cgdb は最新でないため、ソースからビルドします。手順は以下：
 
 ```shell
 $ sudo apt install automake libncurses5-dev flex texinfo libreadline-dev
@@ -168,23 +168,23 @@ $ make
 $ sudo make install
 ```
 
-インストール後はどこでも`cgdb`コマンドで起動可能です。例えば：
+インストール後はどこでも `cgdb` コマンドで起動可能です。例えば：
 
 ![CGDB](https://blog-img.shinya.click/2025/a36f15210399888f0e0cf56efe45a202.jpg)
 
 CGDB
 
-左側がコードウィンドウ、右側がgdbウィンドウです。
+左側がコードウィンドウ、右側が gdb ウィンドウです。
 
-起動時は上下分割ですが、`ctrl+w`で左右分割に切り替えられます。
+起動時は上下分割ですが、`ctrl+w` で左右分割に切り替えられます。
 
-`esc`キーでフォーカスをgdbウィンドウからコードウィンドウに移し、コードウィンドウで上下にソースを閲覧、スペースキーで現在行にブレークポイントを設定できます。
+`esc` キーでフォーカスを gdb ウィンドウからコードウィンドウに移し、コードウィンドウで上下にソースを閲覧、スペースキーで現在行にブレークポイントを設定できます。
 
-`i`キーでフォーカスをコードウィンドウからgdbウィンドウに戻し、gdbの操作は通常通りです。
+`i` キーでフォーカスをコードウィンドウから gdb ウィンドウに戻し、gdb の操作は通常通りです。
 
-詳しい使い方は[CGDB中文マニュアル](https://leeyiw.gitbooks.io/cgdb-manual-in-chinese)をご覧ください。
+詳しい使い方は [CGDB 中文マニュアル](https://leeyiw.gitbooks.io/cgdb-manual-in-chinese) をご覧ください。
 
 #### 実験はどこで？
 
-CSAPPを独学しているなら、このサイトがおすすめです：[http://csapp.cs.cmu.edu/3e/labs.html](http://csapp.cs.cmu.edu/3e/labs.html)  
-各実験の後にあるSelf-Study Handoutのリンクが実験資料のダウンロード先です。WSLに入れて、楽しく実験しましょう！
+CSAPP を独学しているなら、このサイトがおすすめです：[http://csapp.cs.cmu.edu/3e/labs.html](http://csapp.cs.cmu.edu/3e/labs.html)  
+各実験の後にある Self-Study Handout のリンクが実験資料のダウンロード先です。WSL に入れて、楽しく実験しましょう！

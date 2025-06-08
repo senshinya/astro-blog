@@ -10,7 +10,7 @@ description: "MapReduce は大規模データセットの処理を簡素化す�
 
 MapReduce は Google が初期に提唱したソフトウェアアーキテクチャモデルで、大規模データセットの並列処理をサポートします。現在、この概念は多くの分散システムで活用されています。
 
-関連理論は Google が 2004 年に発表した論文『MapReduce: Simplified Data Processing on Large Clusters』に詳述されており、[こちら](https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf)から全文を読むことができます。13ページの短い論文ですが、情報密度は非常に高いです。
+関連理論は Google が 2004 年に発表した論文『MapReduce: Simplified Data Processing on Large Clusters』に詳述されており、[こちら](https://static.googleusercontent.com/media/research.google.com/zh-CN//archive/mapreduce-osdi04.pdf) から全文を読むことができます。13 ページの短い論文ですが、情報密度は非常に高いです。
 
 本記事は論文を読みながらメモを取ったものであるため、内容がやや散漫になる可能性があります。
 
@@ -53,7 +53,7 @@ MapReduce はプログラミングモデル、あるいはプログラミング�
 
 ![mapReduce 実行フロー](https://blog-img.shinya.click/2025/6f7e7839e6f09e0d8193d530920a6f7e.jpg)
 
-1. MapReduce フレームワークはまず入力ファイルを M 個のチャンクに分割します。各チャンクのサイズは通常16MBから64MBです。その後、クラスタ内のマシン（プロセス）を起動します。
+1. MapReduce フレームワークはまず入力ファイルを M 個のチャンクに分割します。各チャンクのサイズは通常 16MB から 64MB です。その後、クラスタ内のマシン（プロセス）を起動します。
 2. クラスタ内の一つのプロセスは特別な master プロセスで、残りの worker プロセスにタスクを割り当てます。M 個の map タスクと R 個の reduce タスクがあり、master は空いている worker を選んで一つずつ map または reduce タスクを割り当てます。
 3. map タスクを割り当てられた worker は対応するチャンクの入力を読み込み、キー・バリュー対を解析し、ユーザー定義の map 関数に渡します。map 関数が返す中間キー・バリュー対は一時的にメモリにキャッシュされます。
 4. worker のメモリにキャッシュされたキー・バリュー対は分割関数により R 個のチャンクに分割され、定期的にローカルディスクに書き込まれます。これらのディスク上の位置情報は master に送られ、master は reduce タスクに割り当てられた worker に位置情報を通知します。
