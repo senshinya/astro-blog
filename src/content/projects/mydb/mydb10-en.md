@@ -1,22 +1,22 @@
 ---
-title: MYDB 10. 服务端客户端的实现及其通信规则
-lang: zh
+title: MYDB 10. Implementation of Server, Client, and Their Communication Rules
+lang: en
 published: 2021-12-25T18:26:00+08:00
 tags: ["java", "mydb"]
 abbrlink: projects/mydb/mydb10
-description: "MYDB 采用 C/S 结构，类似于 MySQL，允许多个客户端通过 socket 连接到服务器，执行 SQL 查询并返回结果。通信采用了一种特殊的二进制格式，尽管也可以选择明文传输，以简化实现。服务端与客户端之间的基本传输结构确保了数据的有效交流和处理。"
+description: "MYDB adopts a classic Client/Server (C/S) architecture similar to MySQL, supporting multiple clients connecting to a server via sockets to execute SQL queries and return results. The communication uses a custom binary protocol, though plaintext transmission is also feasible for simplicity. The data transport structure between server and client ensures efficient data exchange and processing."
 ---
-本章涉及代码都在 [backend/server](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/server) 、 [client](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/client) 与 [transport](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/transport) 中。
+All the code discussed in this chapter can be found in [backend/server](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/server), [client](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/client), and [transport](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/transport).
 
-### 前言
+### Preface
 
-NYDB 被设计为 C/S 结构，类似于 MySQL。支持启动一个服务器，并有多个客户端去连接，通过 socket 通信，执行 SQL 返回结果。
+MYDB is designed with a Client/Server (C/S) architecture, much like MySQL. You can launch a server, and have multiple clients connect to it. Communication is done via sockets, allowing clients to execute SQL queries and receive the results.
 
-### C/S 通信
+### C/S Communication
 
-MYDB 使用了一种特殊的二进制格式，用于客户端和服务端通信。当然如果嫌麻烦的话，其实直接用明文也不是不可以。
+MYDB employs a custom binary protocol for client-server communication. Of course, if you feel this is too cumbersome, plain text transmission is also a possibility.
 
-传输的最基本结构，是 Package：
+The fundamental unit of transmission is the `Package`:
 
 ```java
 public class Package {
@@ -25,13 +25,13 @@ public class Package {
 }
 ```
 
-每个 Package 在发送前，由 Encoder 编码为字节数组，在对方收到后同样会由 Encoder 解码成 Package 对象。编码和解码的规则如下：
+Before sending, each `Package` is encoded into a byte array by an `Encoder`, and upon reception, it is decoded back into a `Package` object. The encoding and decoding format is as follows:
 
 ```
 [Flag][data]
 ```
 
-若 flag 为 0，表示发送的是数据，那么 data 即为这份数据本身；如果 flag 为 1，表示发送的是错误，data 是 Exception.getMessage() 的错误提示信息。如下：
+If `flag` is 0, the packet contains normal data, and `data` is the payload; if `flag` is 1, the packet signals an error, and `data` contains the error message from `Exception.getMessage()`. For example:
 
 ```java
 public class Encoder {
@@ -63,7 +63,7 @@ public class Encoder {
 }
 ```
 
-编码之后的信息会通过 Transporter 类，写入输出流发送出去。为了避免特殊字符造成问题，这里会将数据转成十六进制字符串（Hex String），并为信息末尾加上换行符。这样在发送和接收数据时，就可以很简单地使用 BufferedReader 和 Writer 来直接按行读写了。
+Once encoded, data is sent out over the network using the `Transporter` class, which writes to an output stream. To avoid issues with special characters, data is converted to a hexadecimal string with a newline appended at the end. This makes it straightforward to use `BufferedReader` and `Writer` to read and write data line by line:
 
 ```java
 public class Transporter {
@@ -107,7 +107,7 @@ public class Transporter {
 }
 ```
 
-Packager 则是 Encoder 和 Transporter 的结合体，直接对外提供 send 和 receive 方法：
+The `Packager` class wraps both the `Encoder` and `Transporter`, providing a simple interface for sending and receiving:
 
 ```java
 public class Packager {
@@ -135,13 +135,13 @@ public class Packager {
 }
 ```
 
-### Server 和 Client 的实现
+### Implementation of Server and Client
 
-Server 和 Client，偷懒直接使用了 Java 的 socket。
+Java's built-in sockets are used directly for both the server and client.
 
-Server 启动一个 ServerSocket 监听端口，当有请求到来时直接把请求丢给一个新线程处理。这部分应该直接背板了。
+The server starts a `ServerSocket` to listen for incoming connections, and spawns a new thread to handle each incoming request. This is basically textbook socket programming.
 
-HandleSocket 类实现了 Runnable 接口，在建立连接后初始化 Packager，随后就循环接收来自客户端的数据并处理：
+The `HandleSocket` class implements `Runnable`. After establishing a connection, it initializes the `Packager` and then enters a loop to keep receiving and processing data from the client:
 
 ```java
 Packager packager = null;
@@ -185,9 +185,9 @@ while(true) {
 }
 ```
 
-处理的核心是 Executor 类，Executor 调用 Parser 获取到对应语句的结构化信息对象，并根据对象的类型，调用 TBM 的不同方法进行处理。具体不再赘述。
+The core of the request handling lies in the `Executor` class, which invokes the `Parser` to obtain a structured object for the incoming SQL statement, and dispatches the request to different methods of the Table Manager (`TBM`) depending on the object type. The detailed implementation won't be covered here.
 
-top.guoziyang.mydb.backend.Launcher 类，则是服务器的启动入口。这个类解析了命令行参数。很重要的参数就是 -open 或者 -create。Launcher 根据两个参数，来决定是创建数据库文件，还是启动一个已有的数据库。
+The `top.guoziyang.mydb.backend.Launcher` class acts as the server's entry point. It parses command-line arguments, the most important being `-open` and `-create`. Depending on which is used, `Launcher` decides whether to create a new database file or open an existing one.
 
 ```java
 private static void createDB(String path) {
@@ -208,7 +208,7 @@ private static void openDB(String path, long mem) {
 }
 ```
 
-客户端连接服务器的过程，也是背板。客户端有一个简单的 Shell，实际上只是读入用户的输入，并调用 Client.execute()。
+The process for the client to connect to the server is highly straightforward. The client provides a simple shell, which reads user input and calls `Client.execute()`:
 
 ```java
 public byte[] execute(byte[] stat) throws Exception {
@@ -221,7 +221,7 @@ public byte[] execute(byte[] stat) throws Exception {
 }
 ```
 
-RoundTripper 类实际上实现了单次收发动作：
+The `RoundTripper` class simply implements a single send-receive transaction:
 
 ```java
 public Package roundTrip(Package pkg) throws Exception {
@@ -230,7 +230,7 @@ public Package roundTrip(Package pkg) throws Exception {
 }
 ```
 
-最后附上客户端的启动入口，很简单，把 Shell run 起来即可：
+Finally, here is the client’s entry point—just fire up the shell:
 
 ```java
 public class Launcher {
@@ -247,6 +247,6 @@ public class Launcher {
 }
 ```
 
-今天是 2021 年 12 月 26 日，圣诞节。
+Today is December 26, 2021—Christmas Day.
 
-战无不胜的毛泽东思想万岁！
+Long live the invincible thought of Mao Zedong!

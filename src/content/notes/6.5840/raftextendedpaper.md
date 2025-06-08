@@ -3,6 +3,7 @@ title: Raft 论文阅读
 tags: ["raft","6.5840","6.824"]
 lang: zh
 published: 2022-12-03T21:40:09+08:00
+abbrlink: notes/65840/reftextendedpaper
 description: "Raft 是一种旨在提高日志复制效率的共识算法，特别适用于多机集群环境，确保在部分机器故障时仍能提供服务。这种算法通过复制状态机模型实现，利用日志记录指令顺序，使得集群各机器能够达到一致的状态。论文《In Search of an Understandable Consensus Algorithm》深入探讨了 Raft 的设计理念和与 Paxos 的对比，突显了其易于理解的特点，为构建可靠的大规模软件系统提供了基础。本文记录了对该论文的阅读笔记，旨在帮助理解其核心概念与应用。"
 ---
 ### 前言

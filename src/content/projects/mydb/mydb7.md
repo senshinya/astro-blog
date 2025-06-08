@@ -3,6 +3,7 @@ title: MYDB 7. 死锁检测与 VM 的实现
 lang: zh
 published: 2021-12-23T21:20:00+08:00
 tags: ["java", "mydb"]
+abbrlink: projects/mydb/mydb7
 description: "VM 需要处理 MVCC 导致的版本跳跃及死锁问题。通过简单的标记方式，MYDB 能轻松撤销或回滚事务，确保 aborted 事务的数据不会影响其他事务。这种设计使得事务在处理并发时更为高效和可靠，避免了传统 2PL 方法常见的死锁风险，提升了整体系统的稳定性和性能。"
 ---
 本章涉及代码都在 [backend/vm](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/vm) 中。

@@ -3,6 +3,7 @@ title: MYDB 3. 数据页的缓存与管理
 lang: zh
 published: 2021-12-05T15:28:00+08:00
 tags: ["java", "mydb"]
+abbrlink: projects/mydb/mydb3
 description: "DM 模块将文件系统抽象为页面，并以此为单位进行数据的读写和缓存。默认设置的数据页大小为8K，便于在高负载情况下提升写入性能。借助已实现的通用缓存框架，接下来将专注于具体定义页面结构，以实现高效的页面缓存管理。"
 ---
 本章涉及代码都在 [backend/dm/pageCache](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm/pageCache) 和 [backend/dm/page](https://github.com/CN-GuoZiyang/MYDB/tree/master/src/main/java/top/guoziyang/mydb/backend/dm/page) 中。
