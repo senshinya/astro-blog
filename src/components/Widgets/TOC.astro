@@ -94,25 +94,20 @@ const filteredHeadings = headings.filter(heading =>
   --at-apply: 'mb-2.5 mt-1 list-none pl-0 2xl:(mb-1 space-y-1) space-y-1.1';
 }
 .toc-links-h2, .toc-links-h3, .toc-links-h4 {
-  --at-apply: 'text-balance text-sm font-normal no-underline 2xl:(text-3.2 text-secondary/25)';
+  --at-apply: 'text-balance text-sm font-normal no-underline 2xl:(text-3.2 c-secondary/25)';
   transition: color 0.15s ease-out, font-weight 0.15s ease-out;
 }
 .toc-link-active {
-  --at-apply: 'text-secondary/80';
-}
-.toc-links-h2.toc-link-active {
-  --at-apply: 'font-medium';
+  --at-apply: 'c-secondary/80 font-medium';
 }
 
 /* Hover Effect */
 #toc-container:hover :is(.toc-links-h2, .toc-links-h3, .toc-links-h4) {
-  --at-apply: '2xl:(text-secondary/60 hover:text-primary) hover:(text-secondary font-medium)';
+  --at-apply: '2xl:(c-secondary/60 hover:c-primary) hover:(c-secondary font-medium)';
 }
-#toc-container:hover :is(.toc-links-h3, .toc-links-h4) {
-  --at-apply: '2xl:(hover:font-normal)';
-}
+
 #toc-container:hover .toc-link-active {
-  --at-apply: '2xl:text-primary';
+  --at-apply: '2xl:c-primary';
 }
 
 /* Overflow and Scrollbar */

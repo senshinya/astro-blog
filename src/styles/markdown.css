@@ -19,10 +19,10 @@
   --at-apply: 'mb-4 mt-1.5em font-semibold';
 }
 .heti :where(h1) {
-  --at-apply: 'text-7 text-primary';
+  --at-apply: 'text-7 c-primary';
 }
 .heti :where(h2) {
-  --at-apply: 'text-6 text-primary';
+  --at-apply: 'text-6 c-primary';
 }
 .heti :where(h3) {
   --at-apply: 'text-5';
@@ -65,7 +65,7 @@
   --at-apply: 'mx-auto my-6';
 }
 .heti :where(figcaption) {
-  --at-apply: 'mt-2.5 text-center text-sm text-secondary/80';
+  --at-apply: 'mt-2.5 text-center text-sm c-secondary/80';
 }
 .heti :is(h1, h2, h3, h4, h5, h6, img, figure) + :is(img, figure) {
   --at-apply: 'mt-4';
@@ -120,7 +120,7 @@ html.dark .heti pre span {
   --at-apply: 'relative pl-8';
 }
 .heti code span.line::before {
-  --at-apply: 'absolute left-0 w-4 text-secondary/40 leading-1.9em';
+  --at-apply: 'absolute left-0 w-4 c-secondary/40 leading-1.9em';
   content: counter(line);
   counter-increment: line;
   direction: rtl;
@@ -237,7 +237,7 @@ html.dark .heti :where(u) {
 /* Keyboard Input */
 .heti :where(kbd) {
   --at-apply: 'inline-block px-0.4em py-0.3em text-0.85em font-bold leading-none tracking-0';
-  --at-apply: 'uno-round-border border-secondary/40 text-secondary';
+  --at-apply: 'uno-round-border border-secondary/40 c-secondary';
 }
 
 /* Highlighted Text */
