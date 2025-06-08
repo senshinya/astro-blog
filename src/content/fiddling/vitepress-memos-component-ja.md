@@ -1,48 +1,50 @@
 ---
-title: Implementing a Dynamic "Memos" (Shuoshuo) Feature in VitePress
-tags: ["Tech Tinkering", "VitePress", "Memos", "CloudFlare"]
-lang: en
+title: VitePressで動的なつぶやき機能を実装する
+tags: ["試行錯誤","VitePress","メモ","CloudFlare"]
+lang: ja
 published: 2025-01-29T21:58:00+08:00
 abbrlink: fiddling/vitepress-memos-component
-description: "In dynamic blogs, adding a 'Memos' feature can greatly enhance the user experience. Unlike the cumbersome process required by static blogs, this feature allows users to post short thoughts anytime and anywhere, lowering the psychological barrier for sharing. By leveraging CloudFlare Workers for backend logic and KV storage for data, developers can easily manage memos. On the frontend, a Vue component embedded in the VitePress framework provides a lively, interactive display of these dynamic entries, enriching the blog with real-time flair."
+description: "動的なブログを構築する際、つぶやき機能を追加するとユーザー体験が大幅に向上します。静的ブログの煩雑な手順に比べ、この機能はユーザーがいつでもどこでも短い思考を共有でき、投稿の心理的負担を軽減します。CloudFlare Workersを利用してバックエンドロジックを実装し、KVストレージと組み合わせることで、開発者はつぶやき内容を簡単に管理可能です。フロントエンドはVitePressフレームワークとVueコンポーネントの埋め込みにより、これらの動的情報を素早く表示し、ブログに生き生きとしたインタラクティブ性を加えます。"
 ---
-### Preface
+### はじめに
 
-Many dynamic blogs come with a "Memos" feature—a special type of blog post that, thanks to the real-time nature of dynamic platforms, allows you to jot down and publish thoughts on the fly.
+多くの動的ブログには「つぶやき」機能があります。これは本質的に特殊なブログ記事であり、動的ブログのリアルタイム性を活かして、書いたらすぐに発信できる仕組みです。
 
-Static blogs, on the other hand, require you to compile HTML either locally or on a server before deployment, which makes instant publishing a challenge. When writing a long blog post, it's no trouble to sit at a computer and push updates via Git—deploying isn't a hassle. But when it comes to drafting a quick memo, having to boot up your PC and wrestle with Git commands (let alone doing this on mobile!) becomes a bit of a mental hurdle. You start to think, "Maybe I'll just skip posting this one."
+静的ブログはローカルやサーバー上でHTMLに静的コンパイルしてからデプロイするため、リアルタイム性に欠けます。長文の記事を書くのはパソコンの前で行い、gitでプッシュしてデプロイするのはそれほど面倒ではありませんが、つぶやきを投稿するためにわざわざパソコンを開くのは心理的負担が大きいです。スマホでgit操作するのも煩雑で優雅とは言えず、結局「まあいいや」となりがちです。
 
-So, I set out to develop a backend and frontend solution for a memo system. The result? The [Memos](/en/memos) page on this blog. The backend is powered by CloudFlare Workers and KV storage, and I whipped up a simple admin page for management. The blog framework is VitePress, and the frontend is built as a Vue component, directly embedded as a dedicated memo page.
+そこで、つぶやきシステムのフロントエンドとバックエンドを一式実装しました。結果として本ブログの[碎碎念](/ja/memos)がそれです。バックエンドはCloudFlare Workersで実装し、ストレージは親切なKVに近接保存。管理ページも簡単に作りました。ブログフレームワークはVitePressで、フロントエンドはVueコンポーネントとして作成し、ページに直接埋め込んでつぶやきページとしています。
 
-Here’s a glimpse of the backend management interface:
-![Memo Management Page](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
+フロントエンドの見た目は割愛し、バックエンド管理ページの様子はこちらです。
+![Memo 管理ページ](https://blog-img.shinya.click/2025/8551751fe98e55c4159d28b9ff5b9473.png)
 
-### Backend: CloudFlare Workers + KV
+### バックエンド CloudFlare Workers + KV
 
-#### Overview
+#### 基本概要
 
-The backend offers these main features:
-- Add, delete, and update memos (basic CRUD)
-- Authentication for both the main page and all write endpoints—secure enough
-- Real-time Markdown preview (via marked.js)
+バックエンドは以下の機能を含みます：
+- つぶやきの追加・削除・編集（基本機能）
+- ページおよび全ての書き込みAPIに認証を設け、安全性を確保
+- Markdown形式のリアルタイムプレビュー（marked使用）
 
-There’s an `index` key stored in KV; its value is an array of uid strings, serving as the index for all memos. Each individual memo is stored under its unique `uid` as the key, with a value structure like:
+KVには`index`キーを保存し、値はUIDの配列で全つぶやきのインデックスとなります。その他のつぶやきはUIDをキーにしたエントリに保存し、値の形式は以下の通りです。
 
 ```js
 {
-    "uid":"unique id",
-    "createTime":"publish time",
-    "content":"memo content",
+    "uid":"ユニークID",
+    "createTime":"投稿日時",
+    "content":"つぶやき内容",
 }
 ```
 
-#### Implementation
+#### 実装
 
-First, create a dedicated CloudFlare KV Space to store your memos. Head to `Account Home → Storage & Database → KV`, click ‘Create’, and give it a memorable name—mine’s simply `memos`.
+まずCloudFlareのKVスペースを作成し、つぶやき関連のKVペアを保存します。場所は「アカウントホーム - ストレージとデータベース - KV」で作成。名前は重要ではなく、覚えやすければ良いです。ここでは簡単に`memos`と命名しました。
 
-Next, create a CloudFlare Worker for logic handling. Go to `Account Home → Compute (Workers) → Workers and Pages`, hit ‘Create’, and (again) give it a name—say, `memos-api`. Once it’s ready, click into your Worker for details, and under `Settings → Bindings`, add a new binding for `KV Namespace`. Set the variable name as `KV`, and select your freshly created KV Space (mine’s `memos`). Done! Now, code under `env.KV` directly accesses your memo KV data. Hit ‘Edit Code’ in the top right to get started.
+次にCloudFlare Workersを作成し、ロジック処理を担当させます。場所は「アカウントホーム - 計算（Workers）- WorkersとPages」で作成。名前も重要ではなく、ここでは`memos-api`としました。作成後、Workers名をクリックして詳細画面へ。設定の「バインド」からバインドを追加し、「KV名前空間」を選択。変数名は`KV`、KV名前空間は先ほど作成した`memos`を選びます。これでコード内で`env.KV`を使って`memos`KV空間を操作可能になります。最後に画面右上の「コード編集」ボタンを押します。
 
-Time for some coding magic! First, create an `index.html` file to house your admin page (HTML, CSS, and JS).
+以下、コードの説明です。
+
+まず`index.html`を作成し、管理ページのHTML・CSS・JSを格納します。
 
 ```html
 <!DOCTYPE html>
@@ -149,7 +151,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             transition: all 0.2s ease;
             border: 1px solid var(--border-color);
             height: auto;
-            /* 移除固定高度 */
+            /* 固定高さを削除 */
             overflow: hidden;
             position: relative;
             display: flex;
@@ -195,7 +197,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             font-size: 0.9rem;
             line-height: 1.4;
             max-height: 4.2em;
-            /* 显示 3 行文本 */
+            /* 3行分のテキストを表示 */
             overflow: hidden;
             display: -webkit-box;
             -webkit-line-clamp: 3;
@@ -252,7 +254,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             max-height: 150px;
             object-fit: contain;
             display: block;
-            /* 避免图片底部空隙 */
+            /* 画像下の隙間を防止 */
             margin: 5px 0;
         }
 
@@ -311,7 +313,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             margin-top: 10px;
         }
 
-        /* Responsive Design */
+        /* レスポンシブデザイン */
         @media (max-width: 768px) {
             .container {
                 flex-direction: column;
@@ -332,7 +334,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             }
         }
 
-        /* Markdown Preview Styles */
+        /* Markdownプレビュー用スタイル */
         .memo-preview h1,
         .memo-preview h2,
         .memo-preview h3 {
@@ -358,7 +360,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             overflow-x: auto;
         }
 
-        /* Loading Spinner */
+        /* ローディングスピナー */
         .loading {
             display: inline-block;
             width: 20px;
@@ -381,15 +383,15 @@ Time for some coding magic! First, create an `index.html` file to house your adm
     <div id="auth-panel">
         <form id="auth-form">
             <h2 style="margin-bottom: 1rem;">Memos 管理</h2>
-            <input type="password" id="password" placeholder="Enter password" required>
-            <button type="submit" style="width: 100%">登录</button>
+            <input type="password" id="password" placeholder="パスワードを入力" required>
+            <button type="submit" style="width: 100%">ログイン</button>
         </form>
     </div>
 
     <div class="container">
         <div class="memo-list">
             <div class="memo-list-header">
-                <span>已发布</span>
+                <span>公開済み</span>
                 <span id="memo-count"></span>
             </div>
             <div class="memo-items" id="memo-items"></div>
@@ -406,14 +408,14 @@ Time for some coding magic! First, create an `index.html` file to house your adm
 
         <div class="memo-detail">
             <div class="memo-detail-header">
-                <div class="memo-info" id="memo-info">新 Memo</div>
+                <div class="memo-info" id="memo-info">新規 Memo</div>
                 <button class="create-btn" onclick="createMemo()">
-                    <i class="fas fa-plus"></i> 发布新 Memo
+                    <i class="fas fa-plus"></i> 新規 Memo を投稿
                 </button>
             </div>
             <div class="memo-content">
                 <div class="memo-edit">
-                    <textarea id="memo-content" placeholder="Write your memo here..."></textarea>
+                    <textarea id="memo-content" placeholder="ここにメモを書いてください..."></textarea>
                 </div>
                 <div class="memo-preview" id="memo-preview"></div>
             </div>
@@ -422,14 +424,14 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                     <i class="fas fa-save"></i> 保存
                 </button>
                 <button onclick="deleteMemo()" class="danger" id="delete-btn">
-                    <i class="fas fa-trash"></i> 删除
+                    <i class="fas fa-trash"></i> 削除
                 </button>
             </div>
         </div>
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/marked/2.0.3/marked.min.js"></script>
-    <!-- JavaScript 代码与之前相同，但需要添加以下功能增强 -->
+    <!-- JavaScriptコードは以前と同様ですが、以下の機能強化を追加 -->
     <script>
         let password = '';
         let currentMemo = null;
@@ -438,7 +440,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
         let total = 0;
         let currentPageMap = {};
 
-        // Authentication
+        // 認証処理
         document.getElementById('auth-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             password = document.getElementById('password').value;
@@ -454,14 +456,14 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                     document.getElementById('auth-panel').style.display = 'none';
                     loadMemos();
                 } else {
-                    showNotification('密码错误', 'error');
+                    showNotification('パスワードが間違っています', 'error');
                 }
             } catch (error) {
-                showNotification('密码错误', 'error');
+                showNotification('パスワードが間違っています', 'error');
             }
         });
 
-        // Load memos
+        // メモ一覧を読み込む
         async function loadMemos() {
             try {
                 const response = await fetch(`/api/memos?offset=${offset}&limit=${limit}`);
@@ -473,9 +475,9 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                 }, {})
                 total = data.total;
                 updatePagination();
-                document.getElementById('memo-count').textContent = `${total} memos`;
+                document.getElementById('memo-count').textContent = `${total} 件のメモ`;
             } catch (error) {
-                showNotification('加载列表错误', 'error');
+                showNotification('リストの読み込みに失敗しました', 'error');
             }
         }
 
@@ -500,13 +502,13 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                 currentMemo = memo;
                 displayMemoDetail(memo);
 
-                // Update selected state
+                // 選択状態の更新
                 document.querySelectorAll('.memo-item').forEach(item => {
                     item.classList.remove('active');
                 });
                 document.querySelector(`.memo-item[data-id="${uid}"]`)?.classList.add('active');
             } catch (error) {
-                showNotification('加载 Memo 错误', 'error');
+                showNotification('Memoの読み込みに失敗しました', 'error');
             }
         }
 
@@ -526,7 +528,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
         async function saveMemo() {
             const content = document.getElementById('memo-content').value;
             if (!content.trim()) {
-                showNotification('Memo 内容不得为空', 'error');
+                showNotification('Memoの内容は空にできません', 'error');
                 return;
             }
 
@@ -534,7 +536,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                 showLoading(true);
 
                 if (currentMemo) {
-                    // Update existing memo
+                    // 既存のメモを更新
                     await fetch(`/api/memos/${currentMemo.uid}`, {
                         method: 'PUT',
                         headers: {
@@ -544,7 +546,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                         body: JSON.stringify({ content })
                     });
                 } else {
-                    // Create new memo
+                    // 新規メモを作成
                     await fetch('/api/memos', {
                         method: 'POST',
                         headers: {
@@ -555,10 +557,10 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                     });
                 }
 
-                showNotification('保存 Memo 成功');
+                showNotification('Memoを保存しました');
                 loadMemos();
             } catch (error) {
-                showNotification('保存 Memo 失败', 'error');
+                showNotification('Memoの保存に失敗しました', 'error');
             } finally {
                 showLoading(false);
             }
@@ -567,7 +569,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
         async function deleteMemo() {
             if (!currentMemo) return;
 
-            if (confirm('确定要删除这条 Memo 吗？')) {
+            if (confirm('このMemoを削除してもよろしいですか？')) {
                 try {
                     showLoading(true);
                     await fetch(`/api/memos/${currentMemo.uid}`, {
@@ -576,11 +578,11 @@ Time for some coding magic! First, create an `index.html` file to house your adm
                             'Authorization': password
                         }
                     });
-                    showNotification('删除 Memo 成功');
+                    showNotification('Memoを削除しました');
                     loadMemos();
                     clearMemoDetail();
                 } catch (error) {
-                    showNotification('删除 Memo 失败', 'error');
+                    showNotification('Memoの削除に失敗しました', 'error');
                 } finally {
                     showLoading(false);
                 }
@@ -593,7 +595,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
         }
 
         function clearMemoDetail() {
-            document.getElementById('memo-info').innerHTML = '新 Memo';
+            document.getElementById('memo-info').innerHTML = '新規 Memo';
             document.getElementById('memo-content').value = '';
             document.getElementById('memo-preview').innerHTML = '';
         }
@@ -616,7 +618,7 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             const currentPage = Math.floor(offset / limit) + 1;
             const totalPages = Math.ceil(total / limit);
             document.getElementById('page-info').textContent =
-                `Page ${currentPage} of ${totalPages}`;
+                `ページ ${currentPage} / ${totalPages}`;
         }
 
         function showLoading(show) {
@@ -646,14 +648,14 @@ Time for some coding magic! First, create an `index.html` file to house your adm
             setTimeout(() => notification.remove(), 3000);
         }
 
-        // 用于防止 XSS 攻击的辅助函数
+        // XSS攻撃防止のための補助関数
         function escapeHtml(html) {
             const div = document.createElement('div');
             div.textContent = html;
             return div.innerHTML;
         }
 
-        // 初始化 marked 配置
+        // markedの初期設定
         marked.setOptions({
             breaks: true,
             gfm: true,
@@ -665,22 +667,24 @@ Time for some coding magic! First, create an `index.html` file to house your adm
 </html>
 ```
 
-As you can see from the JS code, the backend includes the following API endpoints:
-- `POST /api/auth`: Page authentication
-- `GET /api/memos`: Fetch memos (with pagination)
-- `POST /api/memos`: Publish a new memo
-- `PUT /api/memos/{uid}`: Update a memo
-- `DELETE /api/memos/{uid}`: Delete a memo
+JSコードからわかるように、バックエンドは以下のエンドポイントを持ちます。
 
-Next, write the logic in `worker.js` to implement these endpoints.
+- `POST /api/auth`：ページ認証
+- `GET /api/memos`：つぶやき詳細取得（ページネーション対応）
+- `POST /api/memos`：新規つぶやき投稿
+- `PUT /api/memos/{uid}`：つぶやき更新
+- `DELETE /api/memos/{uid}`：つぶやき削除
+
+続いて`worker.js`を編集し、これらのエンドポイントを実装します。
 
 ```js
 import html from './index.html';
 
-const CORRECT_PASSWORD = 'CORRECT_PASSWORD';
-const CALLBACK_URL = 'https://CALLBACK_URL';
-const ALLOWED_ORIGINS = ['https://example.com'];
+const CORRECT_PASSWORD = 'CORRECT_PASSWORD';        // パスワードを設定    // [!code highlight]
+const CALLBACK_URL = 'https://CALLBACK_URL';        // コールバックURLを設定   // [!code highlight]
+const ALLOWED_ORIGINS = ['https://example.com'];    // 許可するドメインリスト  // [!code highlight]
 
+// ランダムUID生成
 function generateUID() {
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
   let result = '';
@@ -690,7 +694,7 @@ function generateUID() {
   }
   return result;
 }
-
+// CORS処理
 function handleCORS(request) {
   const origin = request.headers.get('Origin');
   const allowedOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
@@ -705,14 +709,14 @@ function handleCORS(request) {
 }
 function getCurrentTimeInISOFormat() {
   const now = new Date();
-
+  // 各パーツ取得
   const year = now.getUTCFullYear();
-  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // 月份从零开始
+  const month = String(now.getUTCMonth() + 1).padStart(2, '0'); // 月は0始まり
   const day = String(now.getUTCDate()).padStart(2, '0');
   const hours = String(now.getUTCHours()).padStart(2, '0');
   const minutes = String(now.getUTCMinutes()).padStart(2, '0');
   const seconds = String(now.getUTCSeconds()).padStart(2, '0');
-
+  // ISO 8601形式の文字列に組み立て
   return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}Z`;
 }
 async function handleRequest(request, env) {
@@ -736,18 +740,19 @@ async function handleRequest(request, env) {
   }
   const corsHeaders = handleCORS(request);
   
+  // CORSプリフライトリクエスト処理
   if (request.method === 'OPTIONS') {
     return new Response(null, {
       headers: handleCORS(request),
     });
   }
-
+  // 管理ページ
   if (url.pathname === '/manage') {
     return new Response(html, {
       headers: { 'Content-Type': 'text/html' },
     });
   }
-
+  // パスワード認証
   if (url.pathname === '/api/auth' && request.method === 'POST') {
     const { password } = await request.json();
     return new Response(
@@ -760,8 +765,9 @@ async function handleRequest(request, env) {
       }
     );
   }
-
+  // APIルーティング処理
   if (url.pathname.startsWith('/api/memos')) {
+    // つぶやき一覧取得
     if (request.method === 'GET') {
       const offset = parseInt(url.searchParams.get('offset')) || 0;
       const limit = parseInt(url.searchParams.get('limit')) || 10;
@@ -784,12 +790,14 @@ async function handleRequest(request, env) {
         },
       });
     }
+    // 認証が必要な操作
     if (!validateAuth(request)) {
       return new Response('Unauthorized', {
         status: 401,
         headers: corsHeaders
       });
     }
+    // 新規つぶやき投稿
     if (request.method === 'POST') {
       const { content } = await request.json();
       if (!content || !content.trim()) {
@@ -825,6 +833,7 @@ async function handleRequest(request, env) {
         },
       });
     }
+    // つぶやき編集
     if (request.method === 'PUT') {
       const uid = url.pathname.split('/').pop();
       const { content } = await request.json();
@@ -844,7 +853,7 @@ async function handleRequest(request, env) {
       const post = JSON.parse(postStr);
       post.content = content.trim();
       await env.KV.put(uid, JSON.stringify(post));
-
+      // コールバックが必要か判定
       if (await shouldNotify(uid)) {
         await executeCallback();
       }
@@ -855,6 +864,7 @@ async function handleRequest(request, env) {
         },
       });
     }
+    // つぶやき削除
     if (request.method === 'DELETE') {
       const uid = url.pathname.split('/').pop();
       const indexStr = await env.KV.get('index');
@@ -900,31 +910,31 @@ export default {
   },
 };
 ```
+最上部の3つの定数は設定が必要です：
 
-Be sure to set these three top constants:
-- `CORRECT_PASSWORD`: page/admin password
-- `CALLBACK_URL`: a callback URL to trigger after publishing, updating, or deleting a memo
-- `ALLOWED_ORIGINS`: list of allowed domains for CORS; at minimum, your blog and admin domains
+- `CORRECT_PASSWORD`：ページのパスワード
+- `CALLBACK_URL`：新規投稿や更新・削除後に呼び出すコールバックURL
+- `ALLOWED_ORIGINS`：クロスオリジン対応のため許可するドメインリスト。最低でもブログのドメインと管理ページのドメインの2つを含めること。
 
-Once configured, hit "Publish".
+設定が完了したら公開ボタンを押します。
 
-Due to firewall restrictions, the default `workers.dev` domain is hard to access—it's best to configure a custom domain for your worker. In the memos Worker details page under `Settings → Triggers`, add a custom domain that's managed via Cloudflare. Be sure to add this domain to your `ALLOWED_ORIGINS` array in `worker.js`.
+中国のネット環境の影響で、デフォルトの`workers.dev`ドメインはアクセスが困難な場合が多いので、Workerに新しいドメインを設定するのが望ましいです。`memos`詳細ページの「設定 - ドメインとルーティング」でカスタムドメインを追加し、Cloudflareで管理しているドメインを入力します。このドメインも`worker.js`の`ALLOWED_ORIGINS`に追加してください。
 
-Once that’s sorted, you can use the admin page at `https://{your-domain}/manage`, log in with your password, and enjoy the management experience!
+これで管理ページが使えるようになります。管理ページのURLは`https://{あなたのドメイン}/manage`です。アクセス時にパスワード入力が求められます。入力後は快適に管理できます！
 
-### Frontend
+### フロントエンド
 
-Thanks to VitePress, embedding the front end is a breeze—just build your memo UI as a Vue component.
+VitePressのおかげで、Vueコンポーネントとしてつぶやきのフロントエンドを簡単に作成し、ブログに埋め込めます。
 
-First, install the markedjs dependency using pnpm:
+まずmarkedjs依存をインストールします。pnpmなら以下のコマンドを実行。
 
 ```shell
 pnpm add marked
 ```
 
-In your blog's theme directory (usually `docs/.vitepress/theme/index.ts`, but the path and extension may vary), create a `components` folder if it doesn't already exist, then add `memos.vue` inside:
+ブログのテーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`、ファイルパスや拡張子は環境により異なる場合あり）と同じ階層に`components`フォルダを作成（既存なら不要）、その中に`memos.vue`を新規作成します。
 
-```js
+```vue
 <template>
     <div class="memos-container">
         <div v-for="memo of memoList" :key="memo.uid">
@@ -938,7 +948,7 @@ In your blog's theme directory (usually `docs/.vitepress/theme/index.ts`, but th
         </div>
         <div v-if="hasMore" class="load-more">
             <button @click="loadMoreMemos" :disabled="isLoading" class="load-more-button">
-                <span v-if="!isLoading">Load More</span>
+                <span v-if="!isLoading">もっと読み込む</span>
                 <span v-else class="loading-spinner"></span>
             </button>
         </div>
@@ -968,8 +978,10 @@ interface memo {
 }
 
 function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shanghai'): string {
+    // Dateオブジェクトを作成
     const date = new Date(dateString);
 
+    // 必要な時間要素を抽出
     const options: Intl.DateTimeFormatOptions = {
         timeZone: timeZone,
         year: 'numeric',
@@ -978,12 +990,13 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
         hour: '2-digit',
         minute: '2-digit',
         second: '2-digit',
-        hour12: false
+        hour12: false // 24時間制を使用
     };
 
     const formatter = new Intl.DateTimeFormat('zh-CN', options);
     const parts = formatter.formatToParts(date);
 
+    // 最終的な出力形式を構築
     const year = parts.find(part => part.type === 'year')?.value;
     const month = parts.find(part => part.type === 'month')?.value;
     const day = parts.find(part => part.type === 'day')?.value;
@@ -991,13 +1004,14 @@ function convertToLocalTime(dateString: string, timeZone: string = 'Asia/Shangha
     const minute = parts.find(part => part.type === 'minute')?.value;
     const second = parts.find(part => part.type === 'second')?.value;
 
+    // 目標フォーマットに連結
     return `${year}-${month}-${day} ${hour}:${minute}:${second}`;
 }
 
 const PAGE_SIZE = 10;
 const data = reactive({
     memoList: [] as memo[],
-    offset: 10,
+    offset: 10, // ファイルから10件読み込んだので初期offsetは10
     hasMore: true,
     isLoading: false
 })
@@ -1025,6 +1039,7 @@ function processMemos(memos: memo[]) {
   }));
 }
 
+// 初期データのセットアップ
 onMounted(() => {
   const initialMemos = memosRaw.data as memo[];
   data.memoList = processMemos(initialMemos);
@@ -1035,7 +1050,7 @@ async function loadMoreMemos() {
   
   data.isLoading = true;
   try {
-    const url = `https://{your-domain}/api/memos?limit=${PAGE_SIZE}&offset=${data.offset}`;   // [!code highlight]
+    const url = `https://{あなたのドメイン}/api/memos?limit=${PAGE_SIZE}&offset=${data.offset}`;   // [!code highlight]
     const response = await fetch(url);
     const result: memosRes = await response.json();
     
@@ -1044,7 +1059,7 @@ async function loadMoreMemos() {
     data.offset += result.data.length;
     data.hasMore = result.hasMore;
   } catch (error) {
-    console.error('Failed to load memos:', error);
+    console.error('メモの読み込みに失敗しました:', error);
   } finally {
     data.isLoading = false;
   }
@@ -1119,8 +1134,8 @@ async function loadMoreMemos() {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    width: 120px;
-    height: 40px;
+    width: 120px; // 固定幅
+    height: 40px; // 固定高さ
     background-color: transparent;
     color: var(--vp-c-text-2);
     border: 1px solid var(--vp-c-divider);
@@ -1163,22 +1178,22 @@ async function loadMoreMemos() {
 </style>
 ```
 
-Be sure to replace `{your-domain}` with your actual CloudFlare Worker domain!
+`{あなたのドメイン}`はCloudFlare Workerのドメインに置き換えてください。
 
-Sharp-eyed readers may notice that initial memo content is loaded from a local JSON file (`import memosRaw from '../../../../memos.json'`), not directly from the API. Only when you click "Load More" does it fetch additional data from the Worker. Why?
+鋭い方はお気づきかもしれませんが、このコンポーネントの初期読み込みはWorkerのAPIから取得しているのではなく、JSONファイル（`import memosRaw from '../../../../memos.json'`）から取得しています。読み込み時に「もっと読み込む」を押すとWorkerのAPIから追加取得します。なぜでしょうか？
 
-- **User Experience**: If the initial data is fetched live via API, the page appears blank during loading, which isn’t great UX.
-- **Saving Money**: CloudFlare Worker’s free tier is request-limited. Fetching the initial batch statically greatly reduces the number of API calls.
+- UXの観点から、つぶやきページに入った際、初期データをAPIから取得するとデータ取得まで画面が空白になり、体験が悪くなるため
+- <mark>コスト節約</mark>の観点から、CloudFlare Worker無料枠はリクエスト回数制限があるため、初期データを静的に取得することでリクエスト数を大幅に減らせるため
 
-The `memos.json` file is generated at build time, grabbing the first ten memos via the API. As such, the Worker code includes a `CALLBACK_URL`—when you publish, delete, or update one of the first ten memos, it triggers a site rebuild, keeping your static data fresh. If you handle everything dynamically, you can skip this callback.
+この`memos.json`はビルド時にAPIから取得した最新10件のつぶやきです。だからWorkerコードに`CALLBACK_URL`があり、新規投稿や上位10件の更新・削除時に再ビルドをトリガーするためのコールバックURLを設定しています。完全に動的取得にしたい場合はこのコールバックは不要です。
 
-Use the code below to generate `memos.json` at build time. In your theme directory (usually `docs/.vitepress/theme`), create a `utils` folder and add `memos.js`:
+以下のコードはビルド時に`memos.json`を生成するためのものです。テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）と同じ階層に`utils`フォルダを作成（既存なら不要）、その中に`memos.js`を作成します。
 
 ```js
 import https from 'https';
 import { promises as fs } from 'fs';
 
-const url = 'https://{your-domain}/api/memos?limit=10';// [!code highlight]
+const url = 'https://{あなたのドメイン}/api/memos?limit=10';// [!code highlight]
 
 const requestOptions = {
     headers: {
@@ -1186,31 +1201,36 @@ const requestOptions = {
     }
 };
 
+// GETリクエストを送信
 https.get(url, requestOptions, (resp) => {
   let data = [];
 
+  // データを逐次受信
   resp.on('data', (chunk) => {
     data.push(chunk);
   });
 
+  // 受信完了
   resp.on('end', async () => {
     try {
+      // Buffer配列を結合
       const buffer = Buffer.concat(data);
-      const decodedData = buffer.toString('utf-8');
+      const decodedData = buffer.toString('utf-8'); // UTF-8エンコードと仮定
 
+      // JSONデータをファイルに保存
       await fs.writeFile('memos.json', decodedData);
-      console.log('JSON Saved to data.json');
+      console.log('JSONデータをdata.jsonに保存しました');
     } catch (e) {
-      console.error('Error parsing JSON:', e);
+      console.error('JSON解析エラー:', e);
     }
   });
 
 }).on('error', (err) => {
-  console.error('Error getting data:', err);
+  console.error('データ取得エラー:', err);
 });
 ```
 
-Then, update your project's root `package.json` to run `memos.js` before dev/build. Here’s an example for reference:
+続いてブログルートの`package.json`を編集し、devとbuildコマンドの前に`node docs/.vitepress/theme/utils/memos.js`を追加します。追加位置は環境により異なりますが、例として：
 
 ```json
 {
@@ -1224,11 +1244,13 @@ Then, update your project's root `package.json` to run `memos.js` before dev/bui
 }
 ```
 
-This way, every time you run dev or build, the first thing that happens is generation of `memos.json` in your project's root. Be sure to adjust your import path in `memos.vue` if your directory structure differs.
+こうすることでdev・build時にまず`memos.js`が呼ばれ、ブログルートに`memos.json`が生成されます。パスはディレクトリ構成に応じて`memos.vue`のimportパスも調整してください。
 
-Now that both the component and the data are ready, register `Memos` as a global component. In your theme config file (again, usually `docs/.vitepress/theme/index.ts`):
+これでコンポーネントとデータの準備が整いました。次にこのコンポーネントをグローバル登録します。
 
-```js
+テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）でコンポーネントをインポートし、登録します。
+
+```ts
 ...
 import Memos from './components/memos.vue'
 ...
@@ -1241,19 +1263,27 @@ export default {
 } satisfies Theme
 ```
 
-With this setup, you can now use `<Memos />` anywhere in your blog.
+これでブログのどこでも`<Memos />`でこのコンポーネントを呼び出せます。
 
-For a dedicated memo page, simply create a new page.
+最後に、このコンポーネントを置く単一ページを作成します。
 
-> Never used a custom single page in VitePress before?
->
-> Here’s how: add a `pages` folder in the root, then—in your core VitePress config (not the theme one, usually `docs/.vitepress/config.ts`)—add a rewrites rule: `'pages/:file.md': ':file.md'`. This lets you access everything in `pages/` directly via `/{filename}`. More info in the [official docs](https://vitepress.dev/guide/routing#route-rewrites).
+> え？VitePressで単一ページを使ったことがない？
+> 
+> では、ルートに`pages`フォルダを作成し、VitePressのコア設定ファイル（テーマ設定ファイルではなく、通常は`docs/.vitepress/config.ts`）に以下のrewritesルールを追加してください。
+> 
+> ```ts
+> rewrites: {
+>   'pages/:file.md': ':file.md'
+> }
+> ```
+> 
+> これで`pages`配下のファイルが`/ファイル名`でアクセス可能になります。rewritesの詳細は[公式ドキュメント](https://vitepress.dev/guide/routing#route-rewrites)を参照。
 
-Add a `balabala.md` file in your `pages` folder with the following content:
+`pages`フォルダに`balabala.md`を作成し、内容は以下。
 
 ```markdown
 ---
-title: Memos
+title: 碎碎念
 hidden: true
 comment: false
 sidebar: false
@@ -1265,4 +1295,4 @@ showMeta: false
 <Memos />
 ```
 
-And that's all! Done and dusted.
+これで完成です。お疲れさまでした。

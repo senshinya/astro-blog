@@ -18,7 +18,7 @@ Just as I was thoroughly enmeshed in Apple’s walled garden, my partner hit me 
 
 > Any lack of skill can surely be compensated for with superior hardware and software!
 
-Of course, this was yet another excuse to switch phones. Honestly, during my last [Kansai trip](/travels/kansai-202504), my friend’s camera left a deep impression, especially that long zoom. But I’m naturally lazy and don’t like post-editing, so I figured why not get a phone that at least has solid lenses and color science to satisfy my impulsive shutter finger.
+Of course, this was yet another excuse to switch phones. Honestly, during my last [Kansai trip](/en/travels/kansai-202504), my friend’s camera left a deep impression, especially that long zoom. But I’m naturally lazy and don’t like post-editing, so I figured why not get a phone that at least has solid lenses and color science to satisfy my impulsive shutter finger.
 
 This year, all three major Chinese brands released their “Ultra” flagships—Vivo X200 Ultra, Oppo Find X8 Ultra, Xiaomi 15 Ultra. I immediately ruled out Xiaomi ([<del>Lei Jun! Jin Fan!</del>]), and while Vivo’s long zoom is a concert monster, I never seem able to get concert tickets anyway. In the end, I went with Oppo Find X8 Ultra, which has a 1-inch sensor on its main camera. After a month of use, the hardest part has been migrating away from the Apple ecosystem—especially since many apps are iOS-only and the Android app landscape is inconsistent, finding replacements took a lot of work. With the bootloader locked down, rooting is out of the question, so I just have to accept certain compromises.
 

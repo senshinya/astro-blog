@@ -53,7 +53,7 @@ export const themeConfig: ThemeConfig = {
     locale: 'zh', // de, en, es, fr, ja, ko, pl, pt, ru, zh, zh-tw
     // more languages
     // not fill in the locale code above again
-    moreLocales: ['en'], // ['zh', 'zh-tw', 'ja', 'en', 'es', 'ru']
+    moreLocales: ['en', 'ja'], // ['zh', 'zh-tw', 'ja', 'en', 'es', 'ru']
     // font styles for post text
     fontStyle: 'sans', // sans, serif
     // date format for posts
@@ -164,7 +164,7 @@ export const themeConfig: ThemeConfig = {
         url: 'https://t.me/senshinya',
       },
       {
-        name: '开往',
+        name: 'Travelling',
         url: 'https://www.travellings.cn/go.html',
       },
     ],

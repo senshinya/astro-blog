@@ -20,5 +20,16 @@ export const ui = {
     friends: 'Friends',
     about: 'About',
     toc: 'Table of Contents',
+  },
+  'ja': {
+    title: '信也のブログ',
+    subtitle: 'コーダー',
+    description: 'インターネット上のプライベート空間',
+    posts: '記事',
+    tags: 'タグ',
+    memos: '独り言',
+    friends: '友達',
+    about: '概要',
+    toc: '目次',
   }
 }

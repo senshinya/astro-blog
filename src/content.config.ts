@@ -41,8 +41,14 @@ const travels = defineCollection({
     title: z.string(),
     published: z.date(),
     subtitle: z.string(),
-    slug: z.string(),
+    posttitle: z.string(),
     coverImage: z.string(),
+    draft: z.boolean().optional().default(false),
+    lang: z.enum(['', ...allLocales]).optional().default(''),
+    abbrlink: z.string().optional().default('').refine(
+      abbrlink => !abbrlink || /^[a-z0-9\-\/]*$/.test(abbrlink),
+      { message: 'Abbrlink can only contain lowercase letters, numbers and hyphens' },
+    ),
     description: z.string(),
     days: z.array(
       z.object({

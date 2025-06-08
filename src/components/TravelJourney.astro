@@ -1,16 +1,5 @@
 ---
-import { getCollection } from "astro:content";
-
-const { slug } = Astro.props;
-
-// 获取指定 slug 的旅行数据
-const allTravels = await getCollection("travels");
-const travel = allTravels.find((entry) => entry.data.slug === slug);
-
-if (!travel) {
-  throw new Error(`找不到 slug 为 "${slug}" 的旅行记录`);
-}
-// const { title, subtitle, coverImage, introduction, days } = travel.data;
+const { travel } = Astro.props;
 ---
 
 <div class="travel-journey">

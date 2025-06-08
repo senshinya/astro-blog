@@ -93,6 +93,30 @@ async function _getPosts(lang?: string) {
 export const getPosts = memoize(_getPosts)
 
 /**
+ * Get all travels
+ * @param lang The language code to filter by, defaults to site's default language
+ * @returns Travels filtered by language, sorted by date
+ */
+async function _getTravels(lang?: string) {
+  const currentLang = lang ?? defaultLocale
+
+  const filteredTravels = await getCollection(
+    'travels',
+    ({ data }: CollectionEntry<'travels'>) => {
+      // Show drafts in dev mode only
+      const shouldInclude = import.meta.env.DEV || !data.draft
+      return shouldInclude && (data.lang === currentLang || data.lang === '')
+    },
+  )
+
+  return filteredTravels.sort((a, b) =>
+    b.data.published.valueOf() - a.data.published.valueOf(),
+  )
+}
+// Export memoized version
+export const getTravels = memoize(_getTravels)
+
+/**
  * Get all non-pinned posts
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Regular posts (non-pinned), filtered by language
@@ -125,7 +149,7 @@ export const getPinnedPosts = memoize(_getPinnedPosts)
  */
 async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
   const posts = await getRegularPosts(lang)
-  const travels = await getCollection('travels')
+  const travels = await getTravels(lang)
 
   const yearMap = new Map<number, Post[]>()
 
@@ -136,23 +160,21 @@ async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
     }
     yearMap.get(year)!.push(post)
   })
-  if ((lang || defaultLocale) === defaultLocale) {
-    travels.forEach((travel: CollectionEntry<'travels'>) => {
-      const year = travel.data.published.getFullYear()
-      if (!yearMap.has(year)) {
-        yearMap.set(year, [])
+  travels.forEach((travel: CollectionEntry<'travels'>) => {
+    const year = travel.data.published.getFullYear()
+    if (!yearMap.has(year)) {
+      yearMap.set(year, [])
+    }
+    travel.id = `travels/${travel.id}`
+    travel.data.title = `${travel.data.posttitle}`
+    travel.data.description = travel.data.description.replaceAll(/<br \/>/g, '')
+    yearMap.get(year)!.push({
+      ...travel,
+      remarkPluginFrontmatter: {
+        minutes: 10,
       }
-      travel.id = `travels/${travel.id}`
-      travel.data.title = `游记：${travel.data.title} (${travel.data.subtitle})`
-      travel.data.description = travel.data.description.replaceAll(/<br \/>/g, '')
-      yearMap.get(year)!.push({
-        ...travel,
-        remarkPluginFrontmatter: {
-          minutes: 10,
-        }
-      } as unknown as Post)
-    })
-  }
+    } as unknown as Post)
+  })
 
   yearMap.forEach((yearPosts) => {
     yearPosts.sort((a, b) => {
