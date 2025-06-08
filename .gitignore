@@ -27,3 +27,4 @@ pnpm-debug.log*
 !.vscode/settings.json
 
 memos.json
+service-account-key.json
