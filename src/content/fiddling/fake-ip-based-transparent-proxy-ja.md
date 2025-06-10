@@ -69,7 +69,7 @@ bash <(curl -fsSL https://sing-box.app/deb-install.sh)
 
 他のディストリビューションのインストール方法は [公式サイト](https://sing-box.sagernet.org/installation/package-manager/#__tabbed_2_1) を参照してください。
 
-インストール後、systemd サービスが自動作成されます。sing-box の systemd サービスは少し特殊で、定義ファイルは `/lib/systemd/system/sing-box.service`にあります。このファイルを編集し、`ExecStart` の前に以下 3 行を追加します。
+インストール後、systemd サービスが自動作成されます。sing-box の systemd サービスは少し特殊で、定義ファイルは `/lib/systemd/system/sing-box.service` にあります。このファイルを編集し、`ExecStart` の前に以下 3 行を追加します。
 
 ```shell
 ExecStartPre  = +/usr/bin/bash /etc/sing-box/clean.sh
@@ -77,9 +77,9 @@ ExecStartPost = +/usr/bin/bash /etc/sing-box/iptables.sh
 ExecStopPost  = +/usr/bin/bash /etc/sing-box/clean.sh
 ```
 
-これは前回の方案と同様に、起動時にルーティング設定を行い、停止時にクリーンアップするためです。sing-box の全設定は `/etc/sing-box`にあり、デフォルト設定ファイルは`/etc/sing-box/config.json` なので、ここも統一します。
+これは前回の方案と同様に、起動時にルーティング設定を行い、停止時にクリーンアップするためです。sing-box の全設定は `/etc/sing-box` にあり、デフォルト設定ファイルは `/etc/sing-box/config.json` なので、ここも統一します。
 
-`/etc/sing-box/iptables.sh`と `/etc/sing-box/clean.sh` を以下のように作成します。
+`/etc/sing-box/iptables.sh` と `/etc/sing-box/clean.sh` を以下のように作成します。
 
 ```shell
 #!/usr/bin/env bash

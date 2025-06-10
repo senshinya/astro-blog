@@ -70,7 +70,7 @@ dns-nameservers 127.0.0.1
 
 この設定について：
 - `enp1s0` は私のネットワークカード名です。ご自身の環境に合わせて`ip a`コマンドで確認し、適切な名前に変更してください。
-- IPv4 ネットワークは静的設定（`inet static`）で、IP を `192.168.7.2/24`に固定し、ゲートウェイは主ルーターの`192.168.7.1`を指定しています。DNS は設定完了前は有効な DNS サーバーに設定し、AdguardHome 設定完了後に`127.0.0.1` に変更してください。設定途中でネット接続ができなくなるのを防ぐためです。
+- IPv4 ネットワークは静的設定（`inet static`）で、IP を `192.168.7.2/24`に固定し、ゲートウェイは主ルーターの `192.168.7.1` を指定しています。DNS は設定完了前は有効な DNS サーバーに設定し、AdguardHome 設定完了後に `127.0.0.1` に変更してください。設定途中でネット接続ができなくなるのを防ぐためです。
 
 設定保存後、以下のコマンドでネットワークを再起動します。
 
@@ -148,7 +148,7 @@ install -ps AdGuardHome /usr/local/bin/adguardhome
 mkdir -p /var/lib/adguardhome
 ```
 
-`/etc/systemd/system/adguardhome.service`を以下の内容で作成します。設定ファイルは `/var/lib/adguardhome/AdGuardHome.yaml` です。
+`/etc/systemd/system/adguardhome.service` を以下の内容で作成します。設定ファイルは `/var/lib/adguardhome/AdGuardHome.yaml` です。
 
 ```ini
 [Unit]
@@ -239,7 +239,7 @@ mkdir -p /var/lib/clash
 useradd -M -s /usr/sbin/nologin clash
 ```
 
-`/etc/systemd/system/clash.service`を以下の内容で作成します。設定ファイルは `/var/lib/clash/config.yaml` です。
+`/etc/systemd/system/clash.service` を以下の内容で作成します。設定ファイルは `/var/lib/clash/config.yaml` です。
 
 ```ini
 [Unit]
@@ -266,7 +266,7 @@ ExecStopPost  = +/usr/bin/bash /var/lib/clash/clean.sh
 
 このファイルからわかる通り、clash バイナリは `clash:clash` ユーザー権限で実行されます。これは clash 自身が発するトラフィックと、clash が転送するトラフィックを区別しやすくするためです。
 
-`ExecStartPost`と `ExecStopPost`で`iptables.sh`と`clean.sh` を実行し、ルーティングテーブルの設定とクリアを行います。
+`ExecStartPost` と `ExecStopPost`で `iptables.sh` と`clean.sh` を実行し、ルーティングテーブルの設定とクリアを行います。
 
 iptables.sh と clean.sh の内容は以下の通りです。
 

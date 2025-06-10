@@ -40,7 +40,7 @@ KV には `index` キーを保存し、値は UID の配列で全つぶやきの
 
 まず CloudFlare の KV スペースを作成し、つぶやき関連の KV ペアを保存します。場所は「アカウントホーム - ストレージとデータベース - KV」で作成。名前は重要ではなく、覚えやすければ良いです。ここでは簡単に `memos` と命名しました。
 
-次に CloudFlare Workers を作成し、ロジック処理を担当させます。場所は「アカウントホーム - 計算（Workers）- Workers と Pages」で作成。名前も重要ではなく、ここでは `memos-api`としました。作成後、Workers 名をクリックして詳細画面へ。設定の「バインド」からバインドを追加し、「KV 名前空間」を選択。変数名は`KV`、KV 名前空間は先ほど作成した`memos`を選びます。これでコード内で`env.KV` を使って`memos`KV 空間を操作可能になります。最後に画面右上の「コード編集」ボタンを押します。
+次に CloudFlare Workers を作成し、ロジック処理を担当させます。場所は「アカウントホーム - 計算（Workers）- Workers と Pages」で作成。名前も重要ではなく、ここでは `memos-api` としました。作成後、Workers 名をクリックして詳細画面へ。設定の「バインド」からバインドを追加し、「KV 名前空間」を選択。変数名は `KV`、KV 名前空間は先ほど作成した `memos` を選びます。これでコード内で`env.KV` を使って `memos`KV 空間を操作可能になります。最後に画面右上の「コード編集」ボタンを押します。
 
 以下、コードの説明です。
 
@@ -918,7 +918,7 @@ export default {
 
 設定が完了したら公開ボタンを押します。
 
-中国のネット環境の影響で、デフォルトの `workers.dev`ドメインはアクセスが困難な場合が多いので、Worker に新しいドメインを設定するのが望ましいです。`memos` 詳細ページの「設定 - ドメインとルーティング」でカスタムドメインを追加し、Cloudflare で管理しているドメインを入力します。このドメインも `worker.js`の`ALLOWED_ORIGINS` に追加してください。
+中国のネット環境の影響で、デフォルトの `workers.dev` ドメインはアクセスが困難な場合が多いので、Worker に新しいドメインを設定するのが望ましいです。`memos` 詳細ページの「設定 - ドメインとルーティング」でカスタムドメインを追加し、Cloudflare で管理しているドメインを入力します。このドメインも `worker.js` の `ALLOWED_ORIGINS` に追加してください。
 
 これで管理ページが使えるようになります。管理ページの URL は `https://{あなたのドメイン}/manage` です。アクセス時にパスワード入力が求められます。入力後は快適に管理できます！
 
@@ -932,7 +932,7 @@ VitePress のおかげで、Vue コンポーネントとしてつぶやきのフ
 pnpm add marked
 ```
 
-ブログのテーマ設定ファイル（通常は `docs/.vitepress/theme/index.ts`、ファイルパスや拡張子は環境により異なる場合あり）と同じ階層に`components`フォルダを作成（既存なら不要）、その中に`memos.vue` を新規作成します。
+ブログのテーマ設定ファイル（通常は `docs/.vitepress/theme/index.ts`、ファイルパスや拡張子は環境により異なる場合あり）と同じ階層に `components` フォルダを作成（既存なら不要）、その中に`memos.vue` を新規作成します。
 
 ```vue
 <template>
@@ -1185,9 +1185,9 @@ async function loadMoreMemos() {
 - UX の観点から、つぶやきページに入った際、初期データを API から取得するとデータ取得まで画面が空白になり、体験が悪くなるため
 - <mark>コスト節約</mark>の観点から、CloudFlare Worker 無料枠はリクエスト回数制限があるため、初期データを静的に取得することでリクエスト数を大幅に減らせるため
 
-この `memos.json`はビルド時に API から取得した最新 10 件のつぶやきです。だから Worker コードに`CALLBACK_URL` があり、新規投稿や上位 10 件の更新・削除時に再ビルドをトリガーするためのコールバック URL を設定しています。完全に動的取得にしたい場合はこのコールバックは不要です。
+この `memos.json` はビルド時に API から取得した最新 10 件のつぶやきです。だから Worker コードに `CALLBACK_URL` があり、新規投稿や上位 10 件の更新・削除時に再ビルドをトリガーするためのコールバック URL を設定しています。完全に動的取得にしたい場合はこのコールバックは不要です。
 
-以下のコードはビルド時に `memos.json`を生成するためのものです。テーマ設定ファイル（通常は`docs/.vitepress/theme/index.ts`）と同じ階層に`utils`フォルダを作成（既存なら不要）、その中に`memos.js` を作成します。
+以下のコードはビルド時に `memos.json`を生成するためのものです。テーマ設定ファイル（通常は `docs/.vitepress/theme/index.ts`）と同じ階層に`utils` フォルダを作成（既存なら不要）、その中に`memos.js` を作成します。
 
 ```js
 import https from 'https';
@@ -1244,7 +1244,7 @@ https.get(url, requestOptions, (resp) => {
 }
 ```
 
-こうすることで dev・build 時にまず `memos.js`が呼ばれ、ブログルートに`memos.json`が生成されます。パスはディレクトリ構成に応じて`memos.vue` の import パスも調整してください。
+こうすることで dev・build 時にまず `memos.js`が呼ばれ、ブログルートに `memos.json` が生成されます。パスはディレクトリ構成に応じて`memos.vue` の import パスも調整してください。
 
 これでコンポーネントとデータの準備が整いました。次にこのコンポーネントをグローバル登録します。
 
@@ -1269,7 +1269,7 @@ export default {
 
 > え？VitePress で単一ページを使ったことがない？
 > 
-> では、ルートに `pages` フォルダを作成し、VitePress のコア設定ファイル（テーマ設定ファイルではなく、通常は`docs/.vitepress/config.ts`）に以下の rewrites ルールを追加してください。
+> では、ルートに `pages` フォルダを作成し、VitePress のコア設定ファイル（テーマ設定ファイルではなく、通常は `docs/.vitepress/config.ts`）に以下の rewrites ルールを追加してください。
 > 
 > ```ts
 > rewrites: {
@@ -1277,9 +1277,9 @@ export default {
 > }
 > ```
 > 
-> これで `pages`配下のファイルが`/ファイル名` でアクセス可能になります。rewrites の詳細は [公式ドキュメント](https://vitepress.dev/guide/routing#route-rewrites) を参照。
+> これで `pages` 配下のファイルが `/ファイル名` でアクセス可能になります。rewrites の詳細は [公式ドキュメント](https://vitepress.dev/guide/routing#route-rewrites) を参照。
 
-`pages`フォルダに `balabala.md` を作成し、内容は以下。
+`pages` フォルダに `balabala.md` を作成し、内容は以下。
 
 ```markdown
 ---

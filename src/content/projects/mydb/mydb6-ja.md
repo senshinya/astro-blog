@@ -142,7 +142,7 @@ public void setXmax(long xid) {
 }
 ```
 
-`before()`と `after()` は DataItem の節で既に定められたデータ項目の変更ルールです。
+`before()` と `after()` は DataItem の節で既に定められたデータ項目の変更ルールです。
 
 ### トランザクションの分離レベル
 

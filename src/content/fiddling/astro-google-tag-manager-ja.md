@@ -50,7 +50,7 @@ description: "ブログをAstroフレームワークに移行した後、従来�
 - `type="text/partytown"` はスクリプトが partytown によって実行され、メインスレッドでは実行されないことを示します。
 - `gtag` 関数は window オブジェクトの関数変数として定義しなければなりません。関数宣言として定義すると動作しません（非常に奇妙です）。
 
-Astro の設定ファイル（`astro.config.ts`や `astro.config.mjs` など）に以下の設定を追加します。
+Astro の設定ファイル（`astro.config.ts` や `astro.config.mjs` など）に以下の設定を追加します。
 
 ```js
 import partytown from '@astrojs/partytown'
@@ -61,6 +61,6 @@ export default defineConfig({
 });
 ```
 
-多くのチュートリアルでは `gtag`を`forward` 配列に追加する必要があることに触れていません。
+多くのチュートリアルでは `gtag` を `forward` 配列に追加する必要があることに触れていません。
 
 これで完了です！デプロイ後、Google Analytics の統計データが正常に送信されるようになります。

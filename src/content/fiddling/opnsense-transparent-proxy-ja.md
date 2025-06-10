@@ -28,7 +28,7 @@ OPNsense の基本的なインストール手順は割愛します。ネット�
 
 DNS 解決とトラフィック処理は clash に依存するため、まず clash をインストールします。
 
-OPNsense に SSH でログイン（SSH の有効化方法は STFW）し、`/usr/local/clash`フォルダを作成します。ここに clash のバイナリ、設定ファイル、その他関連ファイルを置きます。clash のバイナリは scp で転送することを推奨します（メインルーターはまだ VPN 未設定のため、直接ダウンロードは遅いです）。clash のバイナリは `clash`にリネームし、設定ファイルは`config.yaml` とします。
+OPNsense に SSH でログイン（SSH の有効化方法は STFW）し、`/usr/local/clash` フォルダを作成します。ここに clash のバイナリ、設定ファイル、その他関連ファイルを置きます。clash のバイナリは scp で転送することを推奨します（メインルーターはまだ VPN 未設定のため、直接ダウンロードは遅いです）。clash のバイナリは `clash` にリネームし、設定ファイルは `config.yaml` とします。
 
 mihomo の [リリースページ](https://github.com/MetaCubeX/mihomo/releases) から最新のカーネル版をダウンロードしてください。FreeBSD 版を選び、マシンのアーキテクチャに応じて 386、amd64、arm64 を選択します。amd64 で clash 実行時に以下のエラーが出る場合は、`amd64-compatible` 版をダウンロードしてください。
 
@@ -54,7 +54,7 @@ DNS は 5353 ポートで待ち受け、OPNsense の内蔵 DNS の上流とし�
 
 #### clash サービスの登録
 
-`/usr/local/etc/rc.d/clash`と `/usr/local/opnsense/service/conf/actions.d/actions_clash.conf` を新規作成し、clash をシステムサービスとして登録します。
+`/usr/local/etc/rc.d/clash` と `/usr/local/opnsense/service/conf/actions.d/actions_clash.conf` を新規作成し、clash をシステムサービスとして登録します。
 
 ```shell
 #!/bin/sh
@@ -174,7 +174,7 @@ $ pkg update
 
 OPNsense には標準で Squid プロキシが組み込まれていますが、これは HTTP/HTTPS トラフィックのみを代理し、通常の TCP/UDP トラフィックは代理できません。そのため、tun2socks プロジェクトを利用し、TCP/UDP トラフィックを clash に導入する迂回策を採用します。
 
-`/usr/local/tun2socks` フォルダを作成し、[Github Releases](https://github.com/xjasonlyu/tun2socks/releases) から最新の FreeBSD バイナリをダウンロードしてフォルダに置き、`tun2socks`にリネームします。設定ファイル `/usr/local/tun2socks/config.yaml` を新規作成します。
+`/usr/local/tun2socks` フォルダを作成し、[Github Releases](https://github.com/xjasonlyu/tun2socks/releases) から最新の FreeBSD バイナリをダウンロードしてフォルダに置き、`tun2socks` にリネームします。設定ファイル `/usr/local/tun2socks/config.yaml` を新規作成します。
 
 ```yaml
 # debug / info / warning / error / silent
@@ -200,7 +200,7 @@ udp-timeout: 120s
 
 #### サービスの登録
 
-`/usr/local/etc/rc.d/tun2socks`と `/usr/local/opnsense/service/conf/actions.d/actions_tun2socks.conf` を新規作成します。
+`/usr/local/etc/rc.d/tun2socks` と `/usr/local/opnsense/service/conf/actions.d/actions_tun2socks.conf` を新規作成します。
 
 ```shell
 #!/bin/sh
