@@ -2,23 +2,37 @@
 import { gsap } from 'gsap'
 
 function setupPostPageAnimation() {
-  // Animated Elements
-  const postContent = document.getElementById('gsap-post-page-content')
-  const postContentChildren = postContent ? Array.from(postContent.children) : []
+  if (document.documentElement.classList.contains('reduce-motion')) {
+    return
+  }
+
+  // Post Content + Tags + Comments
+  const postContent = document.getElementById('gsap-post-content')
+  if (!postContent) {
+    return
+  }
+
+  const postContentChildren = Array.from(postContent.children)
+  const tagsElement = document.getElementById('gsap-post-tags')
+  const giscusElement = document.getElementById('giscus')
+  const walineElement = document.getElementById('waline')
+  const allElements = [...postContentChildren, tagsElement, giscusElement, walineElement].filter(Boolean)
+
+  // TOC + Back Button + Post Date
   const tocContainer = document.getElementById('toc-container')
   const tocIcon = document.getElementById('toc-desktop-icon')
   const tocList = document.getElementById('toc-links-list')
   const tocListChildren = tocList ? Array.from(tocList.children) : []
   const backButton = document.getElementById('back-button')
-  const postDate = document.getElementById('gsap-post-page-date')
+  const postDate = document.getElementById('gsap-post-date')
 
   // Screen Size Check
   const isLargeScreen = window.matchMedia('(min-width: 1024px)').matches
   const isSmallScreen = window.matchMedia('(max-width: 1535px)').matches
 
   if (isLargeScreen) {
-    // First 14 elements of post content
-    gsap.to(postContentChildren.slice(0, 14), {
+    // First 14 elements of post page animation on desktop
+    gsap.to(allElements.slice(0, 14), {
       opacity: 1,
       y: 0,
       duration: 0.5,
@@ -26,9 +40,9 @@ function setupPostPageAnimation() {
       ease: 'power2.out',
       stagger: 0.05,
     })
-    // Rest elements of post content as the 15th element
-    if (postContentChildren.length > 14) {
-      gsap.to(postContentChildren.slice(14), {
+    // Rest elements as the 15th element
+    if (allElements.length > 14) {
+      gsap.to(allElements.slice(14), {
         opacity: 1,
         y: 0,
         duration: 0.5,
@@ -83,7 +97,7 @@ function setupPostPageAnimation() {
     }
   }
   else {
-    // First 7 elements of post content
+    // First 7 elements of post content animation on mobile
     gsap.to(postContentChildren.slice(0, 7), {
       opacity: 1,
       y: 0,
@@ -94,7 +108,7 @@ function setupPostPageAnimation() {
     })
   }
 
-  // TOC Container
+  // TOC container animation for non-2xl screens
   if (isSmallScreen && tocContainer) {
     gsap.to(tocContainer, {
       opacity: 1,

@@ -60,8 +60,9 @@ function setupWaline() {
 // Create an intersection observer to lazy load Waline comments when the container enters viewport
 function lazySetupWaline() {
   const walineContainer = document.getElementById('waline')
-  if (!walineContainer)
+  if (!walineContainer) {
     return
+  }
 
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {

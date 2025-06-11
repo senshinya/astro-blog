@@ -17,14 +17,14 @@ const { currentLang } = getPageInfo(Astro.url.pathname)
 const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 
 const { title, subtitle, description, author, url, favicon, i18nTitle } = themeConfig.site
-const { mode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
-const { katex: katexEnabled } = themeConfig.global
+const { mode: defaultMode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
+const { katex: katexEnabled, reduceMotion } = themeConfig.global
 const { enabled: commentEnabled = false, waline: { serverURL: walineServerURL = '' } = {} } = themeConfig.comment ?? {}
 const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalyticsID = '', apiflashKey = '' } = themeConfig.seo ?? {}
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
-const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
+const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload ?? {}
 
-const initMetaTheme = mode === 'dark' ? darkMode : lightMode
+const initMetaTheme = defaultMode === 'dark' ? darkMode : lightMode
 const siteTitle = i18nTitle ? currentUI.title : title
 const siteSubtitle = i18nTitle ? currentUI.subtitle : subtitle
 const siteDescription = i18nTitle ? currentUI.description : description
@@ -98,18 +98,26 @@ const pageImage = postSlug
 <!-- Theme Toggle -->
 <script
   is:inline
-  define:vars={{ defaultMode: themeConfig.color.mode, lightMode, darkMode }}
+  define:vars={{
+    defaultMode,
+    lightMode,
+    darkMode,
+    reduceMotion,
+ }}
 >
 // Check if current theme is dark mode
 // Priority: Local storage theme > Default theme > System preference
 function isCurrentDark() {
   const currentTheme = localStorage.getItem('theme')
-  if (currentTheme)
+  if (currentTheme) {
     return currentTheme === 'dark'
-  if (defaultMode === 'light')
+  }
+  if (defaultMode === 'light') {
     return false
-  if (defaultMode === 'dark')
+  }
+  if (defaultMode === 'dark') {
     return true
+  }
 
   return window.matchMedia('(prefers-color-scheme: dark)').matches
 }
@@ -122,15 +130,27 @@ function initTheme(doc = document) {
   metaTheme?.setAttribute('content', isDark ? darkMode : lightMode)
 }
 
-// Function 1: Initialize theme on first load
-initTheme()
+// Check and init motion preference
+function initMotionPref(doc = document) {
+  // Priority: Site config > System motion preference > View Transition support
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  const supportsViewTransitions = 'startViewTransition' in doc
+  const shouldReduceMotion = reduceMotion || prefersReducedMotion || !supportsViewTransitions
+  doc.documentElement.classList.toggle('reduce-motion', shouldReduceMotion)
+  doc.documentElement.classList.add('js')
+}
 
-// Function 2: Update theme before page transition to prevent flashing
+// 1. Initialize theme on first load
+initTheme()
+initMotionPref()
+
+// 2. Update theme before page transition to prevent flashing
 document.addEventListener('astro:before-swap', ({ newDocument }) => {
   initTheme(newDocument)
+  initMotionPref(newDocument)
 })
 
-// Function 3: listen to system theme changes in real-time
+// 3. Listen to system theme changes in real-time
 window
   .matchMedia('(prefers-color-scheme: dark)')
   .addEventListener('change', ({ matches: isDark }) => {

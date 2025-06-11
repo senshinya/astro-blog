@@ -3,12 +3,14 @@ import { visit } from 'unist-util-visit'
 export function remarkGithubCard() {
   return (tree) => {
     visit(tree, 'leafDirective', (node) => {
-      if (node.name !== 'github')
+      if (node.name !== 'github') {
         return
+      }
 
       const repo = node.attributes?.repo ?? ''
-      if (!repo)
+      if (!repo) {
         return
+      }
 
       const [owner, name] = repo.split('/')
       if (!owner || !name) {

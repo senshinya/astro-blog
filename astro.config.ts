@@ -25,8 +25,7 @@ import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
 
 const url = themeConfig.site.url
 const locale = themeConfig.global.locale
-const linkPrefetch = themeConfig.preload.linkPrefetch
-const imageHostURL = themeConfig.preload.imageHostURL
+const imageHostURL = themeConfig.preload?.imageHostURL
 // Configure domains and remotePatterns to optimize remote images in Markdown files using ![alt](src) syntax
 // Docs: https://docs.astro.build/en/guides/images/#authorizing-remote-images
 const imageConfig = imageHostURL
@@ -39,7 +38,7 @@ export default defineConfig({
   trailingSlash: 'ignore',
   prefetch: {
     prefetchAll: true,
-    defaultStrategy: linkPrefetch,
+    defaultStrategy: 'viewport', // hover, tap, viewport, load
   },
   ...imageConfig,
   i18n: {

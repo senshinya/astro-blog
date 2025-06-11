@@ -67,8 +67,9 @@ function createPixelArray(pixels: Uint8Array | Uint8ClampedArray, pixelCount: nu
 
   for (let i = 0; i < pixelCount; i += quality) {
     const offset = i * 4
-    if (offset > maxOffset)
+    if (offset > maxOffset) {
       break
+    }
 
     pixelArray.push([
       pixels[offset], // r
@@ -101,8 +102,9 @@ async function loadImg(img: Buffer | string) {
       instance.metadata(),
     ])
 
-    if (!format)
+    if (!format) {
       throw new Error('Invalid image format')
+    }
     return await getPixels(buffer, format)
   }
   catch (error) {
@@ -310,10 +312,12 @@ async function getImageLqipValue(filePath: string, existingLqipMap: LqipMap): Pr
 
 // Report final results
 function reportResults(stats: LqipProcessingStats): void {
-  if (stats.successful > 0)
-    console.log(`✨ Successfully processed ${stats.successful} images`)
-  if (stats.failed > 0)
-    console.log(`⚠️ Failed to process ${stats.failed} images`)
+  if (stats.successful > 0) {
+    console.log(`✓ Successfully processed ${stats.successful} images`)
+  }
+  if (stats.failed > 0) {
+    console.error(`✗ Failed to process ${stats.failed} images`)
+  }
   console.log(`📁 LQIP mapping saved to ${lqipMapPath}`)
 }
 

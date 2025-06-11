@@ -3,20 +3,25 @@ import { visit } from 'unist-util-visit'
 export function rehypeImgToFigure() {
   return (tree) => {
     visit(tree, 'element', (node) => {
-      if (node.tagName !== 'p')
+      if (node.tagName !== 'p') {
         return
-      if (node.children?.length !== 1)
+      }
+      if (node.children?.length !== 1) {
         return
+      }
 
       const imgNode = node.children[0]
-      if (imgNode?.tagName !== 'img')
+      if (imgNode?.tagName !== 'img') {
         return
+      }
 
       const altText = imgNode.properties?.alt
-      if (!altText)
+      if (!altText) {
         return
-      if (altText.startsWith('_'))
+      }
+      if (altText.startsWith('_')) {
         return
+      }
 
       node.tagName = 'figure'
       node.children = [

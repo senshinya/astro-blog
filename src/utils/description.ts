@@ -45,8 +45,9 @@ export function generateExcerpt(
   scene: ExcerptScene,
   lang: string,
 ): string {
-  if (!content)
+  if (!content) {
     return ''
+  }
 
   // Remove HTML comments and Markdown headings
   const contentWithoutHeadings = content
@@ -73,8 +74,9 @@ export function generateExcerpt(
     .replace(/([。？！："」』])\s+/g, '$1')
   const excerpt = normalizedText.slice(0, length).trim()
   // Remove trailing punctuation from the excerpt
-  if (normalizedText.length > length)
+  if (normalizedText.length > length) {
     return `${excerpt.replace(/\p{P}+$/u, '')}...`
+  }
   return excerpt
 }
 
@@ -84,8 +86,9 @@ export function generateDescription(
   scene: ExcerptScene,
 ): string {
   // Prioritize existing description
-  if (post.data.description)
+  if (post.data.description) {
     return post.data.description
+  }
 
   const lang = post.data.lang ?? defaultLocale
   return generateExcerpt(post.body || '', scene, lang)

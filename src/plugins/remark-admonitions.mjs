@@ -34,8 +34,9 @@ export function remarkAdmonitions() {
     // Handle :::type syntax
     visit(tree, 'containerDirective', (node) => {
       const type = node.name
-      if (!ADMONITION_TYPES[type])
+      if (!ADMONITION_TYPES[type]) {
         return
+      }
 
       let title = ADMONITION_TYPES[type]
       const firstChild = node.children?.[0]
@@ -57,21 +58,26 @@ export function remarkAdmonitions() {
 
     // Handle > [!TYPE] syntax
     visit(tree, 'blockquote', (node) => {
-      if (!node.children?.length)
+      if (!node.children?.length) {
         return
-      if (node.children[0].type !== 'paragraph')
+      }
+      if (node.children[0].type !== 'paragraph') {
         return
+      }
 
       const paragraph = node.children[0]
-      if (!paragraph.children?.length)
+      if (!paragraph.children?.length) {
         return
-      if (paragraph.children[0].type !== 'text')
+      }
+      if (paragraph.children[0].type !== 'text') {
         return
+      }
 
       const textNode = paragraph.children[0]
       const match = textNode.value.match(GITHUB_ADMONITION_REGEX)
-      if (!match)
+      if (!match) {
         return
+      }
 
       const type = match[1].toLowerCase()
       const title = ADMONITION_TYPES[type]

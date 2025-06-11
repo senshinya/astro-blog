@@ -20,7 +20,6 @@ export default defineConfig({
         dark: {
           colors: {
             ...dark,
-            highlight: 'oklch(0.93 0.195089 103.2532 / 0.2)', // rgba(255,235,0,0.2)
             note: 'oklch(70.7% 0.165 254.624 / 0.8)', // blue-400
             tip: 'oklch(76.5% 0.177 163.223 / 0.8)', // emerald-400
             important: 'oklch(71.4% 0.203 305.504 / 0.8)', // purple-400
@@ -34,7 +33,6 @@ export default defineConfig({
   theme: {
     colors: {
       ...light,
-      highlight: 'oklch(0.93 0.195089 103.2532 / 0.5)', // rgba(255,235,0,0.5)
       note: 'oklch(48.8% 0.243 264.376 / 0.8)', // blue-700
       tip: 'oklch(50.8% 0.118 165.612 / 0.8)', // emerald-700
       important: 'oklch(49.6% 0.265 301.924 / 0.8)', // purple-700
@@ -61,8 +59,9 @@ export default defineConfig({
   },
   variants: [
     (matcher) => {
-      if (!matcher.startsWith('cjk:'))
+      if (!matcher.startsWith('cjk:')) {
         return matcher
+      }
       return {
         matcher: matcher.slice(4),
         selector: s => `${s}:is(:lang(zh), :lang(ja), :lang(ko))`,

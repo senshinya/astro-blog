@@ -29,8 +29,9 @@ function initBackToTop() {
   const sentinel = document.getElementById('top-sentinel')
   backToTopButton = document.getElementById('back-to-top-button') as HTMLButtonElement
 
-  if (!sentinel || !backToTopButton)
+  if (!sentinel || !backToTopButton) {
     return
+  }
 
   // Initialize IntersectionObserver
   observer = new IntersectionObserver(

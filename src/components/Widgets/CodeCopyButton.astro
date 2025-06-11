@@ -87,8 +87,9 @@ function setupCodeCopyButtons() {
 
 // Use event delegation for better performance
 document.addEventListener('click', (e) => {
-  if (!(e.target instanceof HTMLElement))
+  if (!(e.target instanceof HTMLElement)) {
     return
+  }
 
   // Find closest button element if clicked on button or child element
   const button = e.target.closest('.code-copy-button') as HTMLButtonElement | null

@@ -32,7 +32,7 @@ const nextUrl = isTag
 <div
   class:list={[
   'absolute right-7.25vw top-14.6 flex gap-6 min-[823px]:max-[1024px]:right-[calc(50vw-22rem)]',
-  'lg:(fixed bottom-48 right-[max(5rem,calc(50vw-35rem))] top-auto w-14rem)',
+  'lg:(fixed bottom-[min(10.27rem+1.92vw,12rem)] right-[max(5rem,calc(50vw-35rem))] top-auto w-14rem)',
 ]}
 >
   <!-- Language Switcher -->
@@ -87,13 +87,14 @@ function updateTheme() {
 function setupThemeToggle() {
   // Locate theme toggle button
   const themeToggleButton = document.getElementById('theme-toggle-button')
-  if (!themeToggleButton)
+  if (!themeToggleButton) {
     return
+  }
 
   // Add click listener to the button
   themeToggleButton.addEventListener('click', () => {
     // If reduceMotion is enabled or browser doesn't support View Transitions API, update theme directly
-    if (document.documentElement.classList.contains('reduce-motion') || !document.startViewTransition) {
+    if (document.documentElement.classList.contains('reduce-motion')) {
       updateTheme()
       return
     }

@@ -65,6 +65,7 @@
     "astrojs",
     "attributify",
     "autocorrect",
+    "backref",
     "bbbi",
     "bitdepth",
     "Blockquotes",
@@ -75,6 +76,8 @@
     "dhakar",
     "Disqus",
     "esno",
+    "Español",
+    "Français",
     "Frontmatter",
     "Fuwriu",
     "Giscus",
@@ -117,6 +120,7 @@
     "vite",
     "waline",
     "webp",
-    "Переверстка"
+    "Переверстка",
+    "Русский"
   ]
 }

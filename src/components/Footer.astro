@@ -1,5 +1,4 @@
 ---
-import LinkWrapper from '@/components/LinkWrapper.astro'
 import { defaultLocale, themeConfig } from '@/config'
 import { getLangFromPath } from '@/i18n/lang'
 
@@ -23,6 +22,8 @@ const links = socialLinks.map(({ name, url, ...rest }) => {
 
   return { name, url, ...rest }
 })
+
+const footerLinkClass = 'highlight-hover py-0.8 transition-colors after:bottom-0.35em hover:c-primary'
 ---
 
 <footer
@@ -32,7 +33,7 @@ const links = socialLinks.map(({ name, url, ...rest }) => {
   <p>
     {links.map((link, index) => (
       <>
-        <LinkWrapper href={link.url} text={link.name} />&nbsp;{index < links.length - 1 && '/'}
+        <a class={footerLinkClass} href={link.url} target="_blank" rel="noopener noreferrer">{link.name}</a>&nbsp;{index < links.length - 1 && '/'}
       </>
     ))}
   </p>
@@ -42,7 +43,7 @@ const links = socialLinks.map(({ name, url, ...rest }) => {
   </p>
 
   <p>
-    Powered by <LinkWrapper href="https://astro.build/" text="Astro" />&nbsp;and <LinkWrapper href="https://github.com/radishzzz/astro-theme-retypeset" text="Retypeset" />
+    Powered by <a class={footerLinkClass} href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> and <a class={footerLinkClass} href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
   </p>
 
   <p>

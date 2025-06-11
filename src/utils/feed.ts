@@ -37,12 +37,14 @@ const getOptimizedImageUrl = memoize(async (srcPath: string, baseUrl: string) =>
   const rawImagePath = `/src/content/${prefixRemoved}`
   const rawImageModule = imagesGlob[rawImagePath]
 
-  if (!rawImageModule)
+  if (!rawImageModule) {
     return null
+  }
 
   const rawImageMetadata = await rawImageModule().then(res => res.default).catch(() => null)
-  if (!rawImageMetadata)
+  if (!rawImageMetadata) {
     return null
+  }
 
   const processedImageData = await getImage({ src: rawImageMetadata })
   return new URL(processedImageData.src, baseUrl).toString()
@@ -63,14 +65,16 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
   for (const img of images) {
     const src = img.getAttribute('src')
 
-    if (!src)
+    if (!src) {
       continue
+    }
 
     imagePromises.push((async () => {
       try {
         // Skip if not a relative or public image path
-        if (!src.startsWith('./') && !src.startsWith('../') && !src.startsWith('/images'))
+        if (!src.startsWith('./') && !src.startsWith('../') && !src.startsWith('/images')) {
           return
+        }
 
         // Process images from src/content/_images directory
         if (src.startsWith('./') || src.startsWith('../')) {
@@ -124,7 +128,8 @@ export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
   const useI18nTitle = themeConfig.site.i18nTitle
   const siteTitle = useI18nTitle ? currentUI.title : title
   const siteDescription = useI18nTitle ? currentUI.description : description
-  const siteURL = lang ? `${url}/${lang}` : url
+  const baseUrl = lang ? `${url}/${lang}` : url
+  const siteURL = baseUrl.endsWith('/') ? baseUrl : `${baseUrl}/`
   const author: Author = {
     name: siteAuthor,
     link: url,
@@ -161,7 +166,7 @@ export async function generateFeed({ lang }: GenerateFeedOptions = {}) {
 
   // Add posts to feed
   for (const post of limitedPosts) {
-    const postLink = generatePostUrl(post, url)
+    const postLink = generatePostUrl(post, siteURL)
 
     // Optimize content processing
     const postContent = post.body

@@ -26,8 +26,9 @@ function getPostPath(post: Post) {
   const postPath = post.data.abbrlink || post.id
 
   // If no language specified or is default language, return root path
-  if (!lang || lang === defaultLocale)
+  if (!lang || lang === defaultLocale) {
     return `/${postPath}/`
+  }
 
   // Add language prefix for non-default languages
   return `/${lang}/${postPath}/`

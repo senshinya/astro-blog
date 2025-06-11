@@ -53,8 +53,9 @@ const shouldRender = Boolean(repo && repoID && categoryID)
 
   function setupGiscus() {
     const giscusContainer = document.getElementById('giscus')
-    if (!giscusContainer)
+    if (!giscusContainer) {
       return
+    }
 
     giscusContainer.innerHTML = ''
 
@@ -86,8 +87,9 @@ const shouldRender = Boolean(repo && repoID && categoryID)
     }
 
     // Add category conditionally
-    if (category)
+    if (category) {
       dataAttributes.category = category
+    }
 
     // Apply all attributes
     Object.assign(script.dataset, dataAttributes)
@@ -102,8 +104,9 @@ const shouldRender = Boolean(repo && repoID && categoryID)
 
   function updateGiscusTheme() {
     const iframe = document.querySelector('.giscus-frame')
-    if (!iframe || !iframe.contentWindow)
+    if (!iframe || !iframe.contentWindow) {
       return
+    }
 
     try {
       iframe.contentWindow.postMessage(

@@ -3,12 +3,15 @@ import { visit } from 'unist-util-visit'
 export function rehypeUnwrapImg() {
   return (tree) => {
     visit(tree, 'element', (node, index, parent) => {
-      if (node.tagName !== 'p')
+      if (node.tagName !== 'p') {
         return
-      if (!node.children?.length)
+      }
+      if (!node.children?.length) {
         return
-      if (!parent)
+      }
+      if (!parent) {
         return
+      }
 
       const imgNodes = []
 

@@ -68,7 +68,7 @@ h4:hover .heading-anchor-link svg:hover {
 /* Code Copy Button */
 .code-copy-button {
   --at-apply: 'absolute right-2.2 top-2.2 z-99 aspect-square w-8 cursor-pointer uno-round-border border-secondary/15';
-  --at-apply: 'bg-background c-secondary/80 op-100 hover:(border-primary/15 c-primary/80) lg:op-0';
+  --at-apply: 'bg-background c-secondary/80 op-0 hover:(border-primary/15 c-primary/80)';
   transition: opacity 300ms ease-out, background-color 150ms ease-out;
 }
 .code-block-wrapper:hover .code-copy-button {

@@ -6,13 +6,15 @@ const pswp = import('photoswipe')
 
 function setupPhotoSwipe() {
   const bodyElement = document.body
-  if (bodyElement.hasAttribute('data-photoswipe-initialized'))
+  if (bodyElement.hasAttribute('data-photoswipe-initialized')) {
     return
+  }
 
   const article = document.querySelector('article.heti')
   const images = article?.getElementsByTagName('img') ?? []
-  if (images.length === 0)
+  if (images.length === 0) {
     return
+  }
 
   const { innerWidth, innerHeight } = window
 
@@ -35,8 +37,9 @@ function setupPhotoSwipe() {
 
   // Set image dimensions
   lightbox.addFilter('domItemData', (itemData, element) => {
-    if (!(element instanceof HTMLImageElement))
+    if (!(element instanceof HTMLImageElement)) {
       return itemData
+    }
 
     // Set image source
     itemData.src = element.src

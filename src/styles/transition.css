@@ -28,47 +28,53 @@ html[data-theme-changing] [data-disable-theme-transition] {
 
 /* Fallback transition for browsers not supporting view-transitions or when reduceMotion enabled */
 @supports not (view-transition-name: none) {
-  html {
+  html:not(.reduce-motion) {
     --at-apply: 'transition-colors duration-300 ease-out';
   }
 }
 html.reduce-motion {
-  --at-apply: 'transition-colors duration-300 ease-out';
+  transition: none;
 }
 
 /* GSAP Animation Elements Initial States >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 @media (min-width: 1024px) {
-  html:not(.reduce-motion) #gsap-post-page-content > * {
+  /* Post Content + Tags + Comments */
+  html.js:not(.reduce-motion) #gsap-post-content > *,
+  html.js:not(.reduce-motion) #gsap-post-tags,
+  html.js:not(.reduce-motion) #giscus,
+  html.js:not(.reduce-motion) #waline {
     opacity: 0;
     transform: translateY(3rem);
   }
-  html:not(.reduce-motion) #gsap-post-page-date {
-    opacity: 0;
-    transform: translateY(1.5rem);
-  }
-  html:not(.reduce-motion) #back-button {
-    opacity: 0;
-    transform: translateX(0.5rem);
-  }
-  html:not(.reduce-motion) #toc-desktop-icon {
+
+  /* TOC + Back Button + Post Date */
+  html.js:not(.reduce-motion) #toc-desktop-icon {
     opacity: 0;
     transform: translateY(0.5rem);
   }
-  html:not(.reduce-motion) #toc-links-list > * {
+  html.js:not(.reduce-motion) #toc-links-list > * {
+    opacity: 0;
+    transform: translateY(1.5rem);
+  }
+  html.js:not(.reduce-motion) #back-button {
+    opacity: 0;
+    transform: translateX(0.5rem);
+  }
+  html.js:not(.reduce-motion) #gsap-post-date {
     opacity: 0;
     transform: translateY(1.5rem);
   }
 }
 
 @media (max-width: 1023px) {
-  html:not(.reduce-motion) #gsap-post-page-content > :nth-child(-n+7) {
+  html.js:not(.reduce-motion) #gsap-post-content > :nth-child(-n+7) {
     opacity: 0;
     transform: translateY(3rem);
   }
 }
 
 @media (max-width: 1535px) {
-  html:not(.reduce-motion) #toc-container {
+  html.js:not(.reduce-motion) #toc-container {
     opacity: 0;
     transform: translateY(3rem);
   }
