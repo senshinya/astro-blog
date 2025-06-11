@@ -6,7 +6,7 @@ const { title } = Astro.props
 const fontStyle =
   themeConfig.global.fontStyle === "serif" ? "font-serif" : "font-sans";
 const { googleAnalyticsID = '', umamiAnalyticsID = '' } = themeConfig.seo ?? {}
-const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload
+const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload ?? {}
 ---
 
 <html
