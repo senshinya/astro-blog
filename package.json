@@ -5,8 +5,8 @@
   "packageManager": "bun@1.2.12",
   "repository": "https://github.com/radishzzz/astro-theme-retypeset",
   "scripts": {
-    "dev": "node src/utils/memos.js && astro check && astro dev",
-    "build": "node src/utils/memos.js && astro check && astro build && bun run generate-lqip && bun run apply-lqip && bun run pagefind",
+    "dev": "bun run memos && astro check && astro dev",
+    "build": "bun run memos && astro check && astro build && bun run generate-lqip && bun run apply-lqip && bun run pagefind",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
@@ -17,7 +17,8 @@
     "apply-lqip": "esno scripts/apply-lqip.ts",
     "update-theme": "esno scripts/update-theme.ts",
     "update-vendors": "curl -L https://unpkg.com/@waline/client@latest/dist/waline.css -o public/vendors/waline/waline.css && curl -L https://unpkg.com/@waline/client@latest/dist/waline.js -o public/vendors/waline/waline.js",
-    "pagefind": "pagefind --site dist"
+    "pagefind": "pagefind --site dist",
+    "memos": "node scripts/memos.js"
   },
   "dependencies": {
     "@astrojs/mdx": "^4.3.0",
