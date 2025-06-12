@@ -1,6 +1,11 @@
 ---
+// 获取当前语言和UI文案
+import { getLangFromPath } from "@/i18n/lang";
+import { ui } from "@/i18n/ui";
 // 是否是开发模式
 const isDev = import.meta.env.DEV;
+const currentLang = getLangFromPath(Astro.url.pathname);
+const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh;
 ---
 
 <div
@@ -29,7 +34,7 @@ const isDev = import.meta.env.DEV;
           <input
             id="search-input"
             type="text"
-            placeholder="搜索文章..."
+            placeholder={currentUI.search.placeholder}
             class="w-full uno-round-border border-secondary/15 bg-background py-3 pl-10 pr-16 c-primary placeholder-secondary/60 focus:(border-primary/40 ring-2 ring-primary/10) outline-none transition-all duration-200"
             autocomplete="off"
             spellcheck="false"
@@ -60,7 +65,7 @@ const isDev = import.meta.env.DEV;
               stroke-width="2"
               d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
           </svg>
-          <p class="mt-4 text-sm">输入关键词开始搜索</p>
+          <p class="mt-4 text-sm">{currentUI.search.emptyState}</p>
         </div>
 
         <!-- 加载状态 -->
@@ -69,7 +74,9 @@ const isDev = import.meta.env.DEV;
             class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary/60 border-t-transparent"
           >
           </div>
-          <p class="mt-4 text-sm c-secondary/70">搜索中...</p>
+          <p class="mt-4 text-sm c-secondary/70">
+            {currentUI.search.loadingState}
+          </p>
         </div>
 
         <!-- 无结果状态 -->
@@ -90,7 +97,7 @@ const isDev = import.meta.env.DEV;
               d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.54-1.006-6.025-2.75M15 17H9v4l3-2 3 2v-4z"
             ></path>
           </svg>
-          <p class="mt-4 text-sm">未找到相关内容</p>
+          <p class="mt-4 text-sm">{currentUI.search.noResultsState}</p>
         </div>
 
         <!-- 结果列表 -->
@@ -115,32 +122,34 @@ const isDev = import.meta.env.DEV;
                 class="inline-flex items-center rounded border border-secondary/20 px-1.5 py-0.5 font-mono c-secondary/70"
                 >↓</kbd
               >
-              <span>导航</span>
+              <span>{currentUI.search.navigation}</span>
             </div>
             <div class="flex items-center space-x-1">
               <kbd
                 class="inline-flex items-center rounded border border-secondary/20 px-1.5 py-0.5 font-mono c-secondary/70"
                 >Enter</kbd
               >
-              <span>选择</span>
+              <span>{currentUI.search.select}</span>
             </div>
           </div>
-          <div class="text-right">由 Pagefind 驱动</div>
+          <div class="text-right">{currentUI.search.poweredBy}</div>
         </div>
       </div>
     </div>
   </div>
 </div>
 
-<script is:inline type="module" define:vars={{ isDev }}>
+<script
+  is:inline
+  type="module"
+  define:vars={{ isDev, searchUI: currentUI.search }}
+>
   const pagefind = await import(
     isDev ? "../../../dist/pagefind/pagefind.js" : "/pagefind/pagefind.js"
   );
   async function initializeSearch() {
     try {
-      if (pagefind) {
-        pagefind.destroy();
-      }
+      pagefind.destroy();
       pagefind.init();
 
       // 获取DOM元素
@@ -202,7 +211,7 @@ const isDev = import.meta.env.DEV;
         <li>
           <a href="${result.url}" class="search-result-item block p-4 hover:bg-secondary/10 transition-colors duration-200" data-index="${index}">
             <div class="text-sm font-medium c-primary line-clamp-1 mb-1">
-              ${result.meta?.title || "无标题"}
+              ${result.meta?.title || searchUI.noTitle}
             </div>
             <div class="text-sm c-secondary/80 line-clamp-2 mb-2">
               ${result.excerpt || ""}
@@ -344,7 +353,7 @@ const isDev = import.meta.env.DEV;
       });
 
       // 搜索容器点击关闭
-      searchContainer.addEventListener("click", (e) => {
+      searchContainer.addEventListener("click", () => {
         closeSearch();
       });
 

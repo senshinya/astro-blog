@@ -6,6 +6,8 @@ import Search from '@/components/Widgets/Search.astro'
 import { moreLocales, themeConfig } from '@/config'
 import { getNextGlobalLangPath, getNextSupportedLangPath, getTagsListLangPath } from '@/i18n/path'
 import { isPostPage, isTagPage } from '@/utils/page'
+import { getLangFromPath } from "@/i18n/lang";
+import { ui } from "@/i18n/ui";
 
 interface Props {
   supportedLangs: string[]
@@ -20,6 +22,10 @@ const { supportedLangs } = Astro.props
 const currentPath = Astro.url.pathname
 const isPost = isPostPage(currentPath)
 const isTag = isTagPage(currentPath)
+
+// 获取当前语言和UI文案
+const currentLang = getLangFromPath(currentPath);
+const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh;
 
 // Check if there are other languages to switch
 const showLanguageSwitcher = moreLocales.length > 0
@@ -40,7 +46,7 @@ const nextUrl = isTag
   <!-- Search -->
   <button
     id="search-button"
-    aria-label="搜索文章"
+    aria-label={currentUI.search.ariaLabel}
     class="aspect-square w-4 c-secondary active:scale-90 hover:c-primary"
   >
     <SearchIcon

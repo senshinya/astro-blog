@@ -9,6 +9,18 @@ export const ui = {
     friends: '友人',
     about: '关于',
     toc: '目录',
+    // 搜索相关
+    search: {
+      placeholder: '搜索文章...',
+      emptyState: '输入关键词开始搜索',
+      loadingState: '搜索中...',
+      noResultsState: '未找到相关内容',
+      noTitle: '无标题',
+      navigation: '导航',
+      select: '选择',
+      poweredBy: '由 Pagefind 驱动',
+      ariaLabel: '搜索文章'
+    }
   },
   'en': {
     title: '信也のブログ',
@@ -20,6 +32,18 @@ export const ui = {
     friends: 'Friends',
     about: 'About',
     toc: 'Table of Contents',
+    // 搜索相关
+    search: {
+      placeholder: 'Search articles...',
+      emptyState: 'Enter keywords to start searching',
+      loadingState: 'Searching...',
+      noResultsState: 'No results found',
+      noTitle: 'Untitled',
+      navigation: 'Navigate',
+      select: 'Select',
+      poweredBy: 'Powered by Pagefind',
+      ariaLabel: 'Search articles'
+    }
   },
   'ja': {
     title: '信也のブログ',
@@ -31,5 +55,17 @@ export const ui = {
     friends: '友達',
     about: '概要',
     toc: '目次',
+    // 搜索相关
+    search: {
+      placeholder: '記事を検索...',
+      emptyState: 'キーワードを入力して検索を開始',
+      loadingState: '検索中...',
+      noResultsState: '関連する内容が見つかりません',
+      noTitle: 'タイトルなし',
+      navigation: 'ナビゲーション',
+      select: '選択',
+      poweredBy: 'Pagefind で駆動',
+      ariaLabel: '記事を検索'
+    }
   }
 }
