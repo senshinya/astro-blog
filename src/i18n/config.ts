@@ -2,6 +2,7 @@
 export const langMap: Record<string, string[]> = {
   'zh': ['zh-CN'],
   'en': ['en-US'],
+  'ja': ['ja-JP'],
 }
 
 // Waline Language Map
