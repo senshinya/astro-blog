@@ -404,9 +404,8 @@ const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh;
     }
   }
 
-  document.addEventListener("astro:page-load", () => {
-    initializeSearch();
-  });
+  initializeSearch();
+  document.addEventListener("astro:page-load", initializeSearch);
 </script>
 
 <style>
