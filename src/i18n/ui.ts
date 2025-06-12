@@ -11,7 +11,7 @@ export const ui = {
     toc: '目录',
   },
   'en': {
-    title: 'Shinya\'s Blog',
+    title: '信也のブログ',
     subtitle: 'Coder',
     description: 'A personal haven on the Internet',
     posts: 'Posts',

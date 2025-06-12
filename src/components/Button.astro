@@ -1,6 +1,7 @@
 ---
 import LanguageSwitcherIcon from '@/assets/icons/language-switcher.svg'
 import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
+import SearchIcon from '@/assets/icons/search.svg'
 import Search from '@/components/Widgets/Search.astro'
 import { moreLocales, themeConfig } from '@/config'
 import { getNextGlobalLangPath, getNextSupportedLangPath, getTagsListLangPath } from '@/i18n/path'
@@ -42,14 +43,10 @@ const nextUrl = isTag
     aria-label="搜索文章"
     class="aspect-square w-4 c-secondary active:scale-90 hover:c-primary"
   >
-    <svg
+    <SearchIcon
       aria-hidden="true"
       fill="currentColor"
-      viewBox="0 0 20 20"
-      class="w-4 h-4"
-    >
-      <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
-    </svg>
+    />
   </button>
 
   <!-- Language Switcher -->

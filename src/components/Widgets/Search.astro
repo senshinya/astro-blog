@@ -1,25 +1,22 @@
 ---
-import { getLangFromPath } from "@/i18n/lang";
 // 是否是开发模式
 const isDev = import.meta.env.DEV;
 ---
 
 <div
   id="search-container"
-  class="fixed inset-0 z-50 hidden bg-black/50 backdrop-blur-sm"
+  class="fixed inset-0 z-50 hidden bg-background/85 backdrop-blur-sm"
 >
   <div class="flex min-h-full items-start justify-center p-4 pt-16">
-    <div
-      class="w-full max-w-2xl rounded-lg bg-white shadow-xl dark:bg-gray-800"
-    >
+    <div class="search-modal w-full max-w-2xl uno-round-border bg-background">
       <!-- 搜索头部 -->
-      <div class="border-b border-gray-200 p-4 dark:border-gray-700">
+      <div class="border-b border-secondary/15 p-4">
         <div class="relative">
           <div
             class="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3"
           >
             <svg
-              class="h-5 w-5 text-gray-400"
+              class="h-5 w-5 c-secondary/60"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -33,13 +30,13 @@ const isDev = import.meta.env.DEV;
             id="search-input"
             type="text"
             placeholder="搜索文章..."
-            class="w-full rounded-md border border-gray-300 bg-white py-3 pl-10 pr-16 text-gray-900 placeholder-gray-500 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
+            class="w-full uno-round-border border-secondary/15 bg-background py-3 pl-10 pr-16 c-primary placeholder-secondary/60 focus:(border-primary/40 ring-2 ring-primary/10) outline-none transition-all duration-200"
             autocomplete="off"
             spellcheck="false"
           />
           <div class="absolute inset-y-0 right-0 flex items-center pr-3">
             <kbd
-              class="inline-flex items-center rounded border border-gray-200 px-2 py-1 text-xs font-mono text-gray-500 dark:border-gray-600 dark:text-gray-400"
+              class="inline-flex items-center rounded border border-secondary/20 px-2 py-1 text-xs font-mono c-secondary/70"
             >
               ESC
             </kbd>
@@ -50,12 +47,9 @@ const isDev = import.meta.env.DEV;
       <!-- 搜索结果 -->
       <div id="search-results" class="max-h-96 overflow-y-auto">
         <!-- 空状态 -->
-        <div
-          id="search-empty"
-          class="p-8 text-center text-gray-500 dark:text-gray-400"
-        >
+        <div id="search-empty" class="p-8 text-center c-secondary/70">
           <svg
-            class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600"
+            class="mx-auto h-12 w-12 c-secondary/40"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -72,19 +66,19 @@ const isDev = import.meta.env.DEV;
         <!-- 加载状态 -->
         <div id="search-loading" class="hidden p-8 text-center">
           <div
-            class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-blue-500 border-t-transparent"
+            class="mx-auto h-6 w-6 animate-spin rounded-full border-2 border-primary/60 border-t-transparent"
           >
           </div>
-          <p class="mt-4 text-sm text-gray-500 dark:text-gray-400">搜索中...</p>
+          <p class="mt-4 text-sm c-secondary/70">搜索中...</p>
         </div>
 
         <!-- 无结果状态 -->
         <div
           id="search-no-results"
-          class="hidden p-8 text-center text-gray-500 dark:text-gray-400"
+          class="hidden p-8 text-center c-secondary/70"
         >
           <svg
-            class="mx-auto h-12 w-12 text-gray-300 dark:text-gray-600"
+            class="mx-auto h-12 w-12 c-secondary/40"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -102,32 +96,30 @@ const isDev = import.meta.env.DEV;
         <!-- 结果列表 -->
         <ul
           id="search-results-list"
-          class="hidden divide-y divide-gray-200 dark:divide-gray-700"
+          class="hidden divide-y divide-secondary/10"
         >
           <!-- 结果项目将通过 JavaScript 动态插入 -->
         </ul>
       </div>
 
       <!-- 搜索底部 -->
-      <div
-        class="border-t border-gray-200 p-4 text-xs text-gray-500 dark:border-gray-700 dark:text-gray-400"
-      >
+      <div class="border-t border-secondary/15 p-4 text-xs c-secondary/60">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-4">
             <div class="flex items-center space-x-1">
               <kbd
-                class="inline-flex items-center rounded border border-gray-200 px-1.5 py-0.5 font-mono dark:border-gray-600"
+                class="inline-flex items-center rounded border border-secondary/20 px-1.5 py-0.5 font-mono c-secondary/70"
                 >↑</kbd
               >
               <kbd
-                class="inline-flex items-center rounded border border-gray-200 px-1.5 py-0.5 font-mono dark:border-gray-600"
+                class="inline-flex items-center rounded border border-secondary/20 px-1.5 py-0.5 font-mono c-secondary/70"
                 >↓</kbd
               >
               <span>导航</span>
             </div>
             <div class="flex items-center space-x-1">
               <kbd
-                class="inline-flex items-center rounded border border-gray-200 px-1.5 py-0.5 font-mono dark:border-gray-600"
+                class="inline-flex items-center rounded border border-secondary/20 px-1.5 py-0.5 font-mono c-secondary/70"
                 >Enter</kbd
               >
               <span>选择</span>
@@ -145,7 +137,6 @@ const isDev = import.meta.env.DEV;
     isDev ? "../../../dist/pagefind/pagefind.js" : "/pagefind/pagefind.js"
   );
   async function initializeSearch() {
-    console.log("initializeSearch");
     try {
       if (pagefind) {
         pagefind.destroy();
@@ -209,14 +200,14 @@ const isDev = import.meta.env.DEV;
           .map(
             (result, index) => `
         <li>
-          <a href="${result.url}" class="search-result-item block p-4 hover:bg-gray-50 dark:hover:bg-gray-700 ${index === 0 ? "bg-gray-50 dark:bg-gray-700" : ""}" data-index="${index}">
-            <div class="text-sm font-medium text-gray-900 dark:text-white line-clamp-1">
+          <a href="${result.url}" class="search-result-item block p-4 hover:bg-secondary/10 transition-colors duration-200" data-index="${index}">
+            <div class="text-sm font-medium c-primary line-clamp-1 mb-1">
               ${result.meta?.title || "无标题"}
             </div>
-            <div class="mt-1 text-sm text-gray-500 dark:text-gray-400 line-clamp-2">
+            <div class="text-sm c-secondary/80 line-clamp-2 mb-2">
               ${result.excerpt || ""}
             </div>
-            <div class="mt-2 text-xs text-gray-400 dark:text-gray-500">
+            <div class="text-xs c-secondary/60">
               ${result.url}
             </div>
           </a>
@@ -224,6 +215,10 @@ const isDev = import.meta.env.DEV;
       `,
           )
           .join("");
+
+        if (results.length > 0) {
+          updateSelection(0);
+        }
       }
 
       // 执行搜索
@@ -255,7 +250,7 @@ const isDev = import.meta.env.DEV;
 
           showResults(results);
         } catch (error) {
-          console.error("搜索出错:", error);
+          console.error(error);
           showResults([]);
         }
       }
@@ -275,13 +270,49 @@ const isDev = import.meta.env.DEV;
 
         // 移除之前的选中状态
         items.forEach((item) => {
-          item.classList.remove("bg-gray-50", "dark:bg-gray-700");
+          item.classList.remove("bg-secondary/10");
         });
 
         // 设置新的选中状态
-        selectedIndex = Math.max(-1, Math.min(newIndex, items.length - 1));
+        selectedIndex = Math.max(0, Math.min(newIndex, items.length - 1));
         if (selectedIndex >= 0) {
-          items[selectedIndex].classList.add("bg-gray-50", "dark:bg-gray-700");
+          const selectedItem = items[selectedIndex];
+          selectedItem.classList.add("bg-secondary/10");
+
+          // 滚动到选中项
+          scrollToSelectedItem(selectedItem);
+        }
+      }
+
+      // 滚动到选中的搜索结果项
+      function scrollToSelectedItem(item) {
+        const resultsContainer = document.getElementById("search-results");
+        if (!resultsContainer || !item) return;
+
+        const containerRect = resultsContainer.getBoundingClientRect();
+        const itemRect = item.getBoundingClientRect();
+
+        // 计算相对于容器的位置
+        const relativeTop =
+          itemRect.top - containerRect.top + resultsContainer.scrollTop;
+        const relativeBottom = relativeTop + itemRect.height;
+
+        // 检查是否需要滚动
+        const scrollTop = resultsContainer.scrollTop;
+        const containerHeight = resultsContainer.clientHeight;
+
+        if (relativeTop < scrollTop) {
+          // 项目在可视区域上方，向上滚动
+          resultsContainer.scrollTo({
+            top: relativeTop - 8, // 添加一些边距
+            behavior: "smooth",
+          });
+        } else if (relativeBottom > scrollTop + containerHeight) {
+          // 项目在可视区域下方，向下滚动
+          resultsContainer.scrollTo({
+            top: relativeBottom - containerHeight + 8, // 添加一些边距
+            behavior: "smooth",
+          });
         }
       }
 
@@ -314,10 +345,16 @@ const isDev = import.meta.env.DEV;
 
       // 搜索容器点击关闭
       searchContainer.addEventListener("click", (e) => {
-        if (e.target === searchContainer) {
-          closeSearch();
-        }
+        closeSearch();
       });
+
+      // 阻止模态框内部点击事件冒泡到容器
+      const searchModal = searchContainer.querySelector(".search-modal");
+      if (searchModal) {
+        searchModal.addEventListener("click", (e) => {
+          e.stopPropagation();
+        });
+      }
 
       // 搜索输入事件
       searchInput.addEventListener("input", (e) => {
@@ -331,10 +368,19 @@ const isDev = import.meta.env.DEV;
 
         if (e.key === "ArrowDown") {
           e.preventDefault();
-          updateSelection(selectedIndex + 1);
+          if (items.length > 0) {
+            // 如果没有选中任何项，选择第一项
+            const nextIndex = selectedIndex === -1 ? 0 : selectedIndex + 1;
+            updateSelection(nextIndex);
+          }
         } else if (e.key === "ArrowUp") {
           e.preventDefault();
-          updateSelection(selectedIndex - 1);
+          if (items.length > 0) {
+            // 如果没有选中任何项，选择最后一项
+            const nextIndex =
+              selectedIndex === -1 ? items.length - 1 : selectedIndex - 1;
+            updateSelection(nextIndex);
+          }
         } else if (
           e.key === "Enter" &&
           selectedIndex >= 0 &&
@@ -345,7 +391,7 @@ const isDev = import.meta.env.DEV;
         }
       });
     } catch (error) {
-      console.error("Pagefind 加载失败:", error);
+      console.error(error);
     }
   }
 
@@ -355,6 +401,13 @@ const isDev = import.meta.env.DEV;
 </script>
 
 <style>
+  .line-clamp-1 {
+    display: -webkit-box;
+    -webkit-line-clamp: 1;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -363,11 +416,74 @@ const isDev = import.meta.env.DEV;
   }
 
   mark {
+    --at-apply: "bg-highlight px-0.5 rounded-sm";
     padding: 0;
-    border-radius: 2px;
   }
 
   .search-result-item {
-    transition: background-color 0.15s ease-in-out;
+    --at-apply: "uno-round-border border-transparent transition-all duration-200 ease-out";
+  }
+
+  .search-result-item:hover {
+    --at-apply: "border-secondary/15";
+  }
+
+  /* 键盘导航选中状态增强 */
+  .search-result-item.bg-secondary/10 {
+    --at-apply: "bg-primary/8 border-primary/30 shadow-md";
+  }
+
+  /* 搜索结果容器平滑滚动 */
+  #search-results {
+    scroll-behavior: smooth;
+  }
+
+  /* 确保搜索结果项的焦点可见性 */
+  .search-result-item:focus {
+    --at-apply: "outline-none border-primary/30 shadow-md";
+  }
+
+  /* 搜索容器动画和样式增强 */
+  #search-container {
+    --at-apply: "transition-all duration-300 ease-out";
+  }
+
+  #search-container:not(.hidden) {
+    --at-apply: "animate-in fade-in duration-200";
+  }
+
+  /* 搜索模态框增强边界 */
+  #search-container .search-modal {
+    position: relative;
+  }
+
+  #search-container .search-modal::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    background: linear-gradient(
+      135deg,
+      oklch(var(--un-preset-theme-colors-secondary) / 0.1) 0%,
+      oklch(var(--un-preset-theme-colors-secondary) / 0.05) 50%,
+      oklch(var(--un-preset-theme-colors-secondary) / 0.1) 100%
+    );
+    border-radius: inherit;
+    z-index: -1;
+  }
+
+  /* 亮色模式增强 */
+  html:not(.dark) #search-container .search-modal {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.1),
+      0 10px 10px -5px rgba(0, 0, 0, 0.04),
+      0 0 0 1px rgba(0, 0, 0, 0.05);
+  }
+
+  /* 暗色模式增强 */
+  html.dark #search-container .search-modal {
+    box-shadow:
+      0 20px 25px -5px rgba(0, 0, 0, 0.4),
+      0 10px 10px -5px rgba(0, 0, 0, 0.2),
+      0 0 0 1px rgba(255, 255, 255, 0.1);
   }
 </style>
