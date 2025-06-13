@@ -7,6 +7,7 @@ import CodeCopyButton from '@/components/Widgets/CodeCopyButton.astro'
 import GithubCard from '@/components/Widgets/GithubCard.astro'
 import GsapAnimation from '@/components/Widgets/GsapAnimation.astro'
 import PhotoSwipe from '@/components/Widgets/PhotoSwipe.astro'
+import SoundEffect from '@/components/Widgets/SoundEffect.astro'
 import themeConfig from '@/config'
 import Head from '@/layouts/Head.astro'
 import { getPageInfo } from '@/utils/page'
@@ -57,6 +58,7 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
     </div>
     {animationEnabled && <GsapAnimation />}
     <Button supportedLangs={supportedLangs} />
+    <SoundEffect />
     <CodeCopyButton />
     <PhotoSwipe />
     <GithubCard />
