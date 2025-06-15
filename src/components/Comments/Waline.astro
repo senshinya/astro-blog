@@ -83,7 +83,7 @@ document.addEventListener('astro:page-load', lazySetupWaline)
 <!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <style is:global>
 #waline .wl-login-info {
-  --at-apply: 'mt-0 mr-3'
+  --at-apply: 'mr-3 mt-0'
 }
 #waline .wl-avatar {
   --at-apply: 'border-none'
@@ -92,16 +92,16 @@ document.addEventListener('astro:page-load', lazySetupWaline)
   --at-apply: 'z-99'
 }
 #waline .wl-login-nick:not(:has(img)) {
-  --at-apply: 'leading-3.6 mt-1.4';
+  --at-apply: 'mt-1.4 leading-3.6';
 }
 #waline .wl-panel {
-  --at-apply: 'm-0 rounded-lg border-secondary/25'
+  --at-apply: 'm-0 border-secondary/25 rounded-lg bg-transparent'
 }
 #waline .wl-header {
   --at-apply: 'p-0';
 }
 #waline .wl-header-item {
-  --at-apply: 'border-b border-solid border-primary/25';
+  --at-apply: 'border-b border-primary/25 border-solid';
 }
 #waline .wl-header label {
   --at-apply: 'text-3';
@@ -114,7 +114,7 @@ document.addEventListener('astro:page-load', lazySetupWaline)
   --at-apply: 'border-b-0';
 }
 #waline .wl-card .wl-quote {
-  --at-apply: 'border-is-none mt-4';
+  --at-apply: 'mt-4 border-is-none';
 }
 #waline .wl-editor {
   --at-apply: 'min-h-24';
@@ -132,7 +132,7 @@ document.addEventListener('astro:page-load', lazySetupWaline)
   --at-apply: 'hidden';
 }
 #waline .wl-emoji-popup {
-  --at-apply: 'start-0 border-secondary/25 max-w-532px';
+  --at-apply: 'start-0 max-w-532px border-secondary/25';
 }
 #waline .wl-emoji-popup .wl-tab-wrapper {
   scrollbar-width: thin;
@@ -141,16 +141,16 @@ document.addEventListener('astro:page-load', lazySetupWaline)
   --at-apply: 'border-secondary/25';
 }
 #waline .wl-gif-popup input {
-  --at-apply: 'bg-background border-secondary/25';
+  --at-apply: 'border-secondary/25 bg-background';
 }
 #waline .wl-gif-popup input::placeholder {
-  --at-apply: 'c-secondary/30 text-3.5';
+  --at-apply: 'text-3.5 c-secondary/30';
 }
 #waline .wl-gallery {
   --at-apply: 'scrollbar-hidden';
 }
 #waline .wl-meta-head {
-  --at-apply: 'pt-3 pb-2 px-0';
+  --at-apply: 'px-0 pb-2 pt-3';
 }
 #waline .wl-card-item {
   --at-apply: 'px-0';
@@ -159,7 +159,7 @@ document.addEventListener('astro:page-load', lazySetupWaline)
   --at-apply: 'mt-1';
 }
 #waline .wl-content p {
-  --at-apply: 'leading-6 text-3.5';
+  --at-apply: 'text-3.5 leading-6';
 }
 #waline .wl-time {
   --at-apply: 'c-primary/75';

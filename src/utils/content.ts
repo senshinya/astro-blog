@@ -17,7 +17,7 @@ export type Post = CollectionEntry<'posts'> & {
  */
 const metaCache = new Map<string, { minutes: number }>()
 async function addMetaToPost(post: CollectionEntry<'posts'>): Promise<Post> {
-  const cacheKey = `${post.id}-${post.data.lang ?? 'universal'}`
+  const cacheKey = `${post.id}-${post.data.lang || 'universal'}`
 
   if (!metaCache.has(cacheKey)) {
     const { remarkPluginFrontmatter } = await render(post)

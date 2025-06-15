@@ -5,7 +5,7 @@ import { isPostPage } from '@/utils/page'
 interface Props {
   date: Date
   updatedDate?: Date
-  minutes?: number
+  minutes: number
 }
 
 const { date, updatedDate, minutes } = Astro.props
@@ -72,8 +72,6 @@ function formatDate(date: Date, format: 'YYYY-MM-DD' | 'MM-DD-YYYY' | 'DD-MM-YYY
 )}
 
 <!-- reading time -->
-{minutes !== undefined && (
-  <span class={timeSpacingClass}>
-    {minutes} min
-  </span>
-)}
+<span class={timeSpacingClass}>
+  {minutes} min
+</span>

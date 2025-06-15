@@ -5,7 +5,7 @@ import { defaultLocale } from '@/config'
 type ExcerptScene = 'list' | 'meta' | 'og' | 'feed'
 
 const parser = new MarkdownIt()
-const isCJKLang = (lang: string) => ['zh', 'zh-tw', 'ja'].includes(lang)
+const isCJKLang = (lang: string) => ['zh', 'zh-tw', 'ja', 'ko'].includes(lang)
 
 // Excerpt length in different scenarios
 const EXCERPT_LENGTHS: Record<ExcerptScene, {
@@ -85,11 +85,15 @@ export function generateDescription(
   post: CollectionEntry<'posts'>,
   scene: ExcerptScene,
 ): string {
+  const lang = post.data.lang || defaultLocale
+
   // Prioritize existing description
   if (post.data.description) {
-    return post.data.description
+    // Only apply character limits in OG scene
+    return scene === 'og'
+      ? generateExcerpt(post.data.description, scene, lang)
+      : post.data.description
   }
 
-  const lang = post.data.lang ?? defaultLocale
   return generateExcerpt(post.body || '', scene, lang)
 }
