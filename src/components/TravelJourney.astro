@@ -286,140 +286,110 @@ const { travel } = Astro.props;
       // 判断是否是在行程页面之间切换（非首页相关的切换）
       const isTravelToTravel = index > 0 && currentSection > 0;
 
-      // 添加退出动画
-      leftCard.classList.add("card-exit");
-
-      // 只有在首页相关切换时才对右侧卡片应用退出动画
-      if (!isTravelToTravel) {
-        rightCard.classList.add("card-exit");
-
-        // 立即隐藏地图容器
-        if (currentSection > 0) {
-          mapContainer.style.opacity = "0";
+      // 使用 Promise 来管理动画序列
+      const animateTransition = async () => {
+        // 1. 开始退出动画
+        leftCard.classList.add("card-exit");
+        if (!isTravelToTravel) {
+          rightCard.classList.add("card-exit");
+          if (currentSection > 0) {
+            mapContainer.style.opacity = "0";
+          }
         }
-      }
+        contentArea.classList.add("fade-out");
 
-      contentArea.classList.add("fade-out");
+        // 2. 等待退出动画完成
+        await new Promise(resolve => setTimeout(resolve, 300));
 
-      // 使用 setTimeout 来等待动画完成后再切换内容
-      setTimeout(() => {
-        // 清空当前内容
+        // 3. 清空内容并准备新内容
         contentArea.innerHTML = "";
 
-        // 如果是行程页面之间切换，提前准备地图过渡
+        // 4. 处理地图相关操作
         if (isTravelToTravel) {
-          // 清除地图上的所有标记
           clearMarkers();
-
-          // 添加标记
           addDayMarkers(index - 1);
-
-          // 调整地图视图以显示所有标记
           if (markers.length > 0) {
             const group = L.featureGroup(markers);
             const bounds = group.getBounds().pad(0.1);
-
-            // 使用更平滑的过渡效果
             map.flyToBounds(bounds, {
-              duration: 1.5, // 增加动画时间
+              duration: 1.5,
               easeLinearity: 0.1,
               animate: true,
             });
           }
         } else {
-          // 非行程页面之间切换，清除地图上的所有标记
           clearMarkers();
         }
 
+        // 5. 加载新内容
         if (index === 0) {
-          // 加载封面并应用封面模式
           loadCover();
           container.classList.add("cover-mode");
-
-          // 设置右侧面板背景为封面图片
           const rightPanel = document.getElementById("rightCard");
           rightPanel.style.backgroundImage = `url(${travelData.coverImage})`;
           rightPanel.style.backgroundSize = "cover";
           rightPanel.style.backgroundPosition = "center";
           rightPanel.style.backgroundRepeat = "no-repeat";
           rightPanel.style.transition = "transform 10s ease";
-
-          // 明确隐藏地图容器
           mapContainer.style.display = "none";
         } else {
-          // 移除封面模式
           container.classList.remove("cover-mode");
           const rightPanel = document.getElementById("rightCard");
           rightPanel.style.backgroundImage = "";
           rightPanel.style.transform = "";
-
-          // 加载行程日
           loadDay(index - 1, index !== 1 || isTravelToTravel);
 
-          // 如果不是行程页面之间切换，则需要重新设置地图容器
           if (!isTravelToTravel) {
-            // 确保地图容器可见但透明
             mapContainer.style.display = "block";
             mapContainer.style.opacity = "0";
-
-            // 添加该天的所有标记（在行程页面之间切换时已经提前添加了）
             if (!isTravelToTravel) {
               addDayMarkers(index - 1);
               if (markers.length > 0) {
                 const group = L.featureGroup(markers);
-                // 使用 setTimeout 确保地图已完全加载
-                setTimeout(() => {
-                  map.invalidateSize();
-                  map.fitBounds(group.getBounds().pad(0.1), {
-                    animate: false // 禁用动画，避免初始加载时的跳动
-                  });
-                }, 100);
+                map.invalidateSize();
+                map.fitBounds(group.getBounds().pad(0.1), {
+                  animate: false
+                });
               }
             }
           }
         }
 
-        // 更新当前部分索引
+        // 6. 更新状态
         currentSection = index;
-
-        // 更新导航按钮状态
         updateNavButtons();
 
-        // 添加进入动画
+        // 7. 开始进入动画
         leftCard.classList.add("card-enter-left");
-
-        // 只有在首页相关切换时才对右侧卡片应用进入动画
         if (!isTravelToTravel) {
           rightCard.classList.add("card-enter-right");
         }
 
-        // 移除退出类，添加进入动画
-        setTimeout(() => {
-          leftCard.classList.remove("card-exit", "card-enter-left");
+        // 8. 等待进入动画完成
+        await new Promise(resolve => setTimeout(resolve, 50));
 
-          // 只有在首页相关切换时才移除右侧卡片的动画类
-          if (!isTravelToTravel) {
-            rightCard.classList.remove("card-exit", "card-enter-right");
-          }
+        // 9. 移除动画类
+        leftCard.classList.remove("card-exit", "card-enter-left");
+        if (!isTravelToTravel) {
+          rightCard.classList.remove("card-exit", "card-enter-right");
+        }
 
-          contentArea.classList.remove("fade-out");
-          contentArea.classList.add("fade-in");
+        contentArea.classList.remove("fade-out");
+        contentArea.classList.add("fade-in");
 
-          // 最后移除进入类
-          setTimeout(() => {
-            contentArea.classList.remove("fade-in");
-          }, 500);
+        // 10. 完成过渡
+        await new Promise(resolve => setTimeout(resolve, 500));
+        contentArea.classList.remove("fade-in");
 
-          // 刷新地图大小以防止显示问题，并显示地图
-          if (index > 0 && !isTravelToTravel) {
-            map.invalidateSize();
-            // 平滑显示地图
-            mapContainer.style.transition = "opacity 0.3s ease-in-out";
-            mapContainer.style.opacity = "1";
-          }
-        }, 50);
-      }, 300); // 等待退出动画完成
-      return;
+        if (index > 0 && !isTravelToTravel) {
+          map.invalidateSize();
+          mapContainer.style.transition = "opacity 0.3s ease-in-out";
+          mapContainer.style.opacity = "1";
+        }
+      };
+
+      // 执行动画序列
+      animateTransition();
     }
 
     // 加载封面
@@ -561,69 +531,49 @@ const { travel } = Astro.props;
 
     // 打开照片查看模式
     function openPhotoView(dayIndex, photoIndex) {
-      // 获取当前天的所有照片
       currentPhotoItems = travelData.days[dayIndex].photos;
       currentPhotoIndex = photoIndex;
 
-      // 先隐藏导航箭头和内容区域
       const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
       const contentArea = document.getElementById("contentArea");
-      
-      // 使用一个函数来处理DOM隐藏，避免布局抖动
-      const hideElements = () => {
-        // 隐藏导航箭头
+      const photoViewMode = document.getElementById("photoViewMode");
+
+      // 使用 Promise 管理动画序列
+      const animatePhotoView = async () => {
+        // 1. 隐藏导航和内容
         navArrows.style.opacity = "0";
         navArrows.style.visibility = "hidden";
-        navArrows.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-      
-        // 隐藏行程描述内容
         contentArea.style.opacity = "0";
         contentArea.style.visibility = "hidden";
-        contentArea.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-      };
-      
-      // 执行DOM隐藏
-      hideElements();
-      
-      // 等待DOM更新完成后再执行后续操作
-      setTimeout(() => {
-        // 准备照片查看模式，但还不显示
-        const photoViewMode = document.getElementById("photoViewMode");
+
+        // 2. 准备照片查看模式
         photoViewMode.classList.add("active");
         photoViewMode.classList.remove("invisible");
         photoViewMode.classList.add("visible");
         photoViewMode.style.opacity = "0";
-        
-        // 预加载当前照片
+
+        // 3. 预加载照片
         const currentPhoto = currentPhotoItems[currentPhotoIndex];
         const img = new Image();
-        img.onload = () => {
-          // 照片加载完成后，先更新照片查看视图的内容
-          updatePhotoViewContent();
-          
-          // 然后再显示照片查看模式
-          setTimeout(() => {
-            photoViewMode.style.opacity = "1";
-            
-            // 最后处理地图动画
-            setTimeout(() => {
-              updateMapView();
-            }, 100);
-          }, 50);
-        };
-        img.src = currentPhoto.src;
         
-        // 如果图片已经缓存，onload可能不会触发，添加备用方案
-        setTimeout(() => {
-          if (photoViewMode.style.opacity === "0") {
-            updatePhotoViewContent();
-            photoViewMode.style.opacity = "1";
-            setTimeout(() => {
-              updateMapView();
-            }, 100);
-          }
-        }, 200);
-      }, 50);
+        await new Promise((resolve) => {
+          img.onload = resolve;
+          img.src = currentPhoto.src;
+        });
+
+        // 4. 更新内容
+        updatePhotoViewContent();
+
+        // 5. 显示照片查看模式
+        await new Promise(resolve => setTimeout(resolve, 50));
+        photoViewMode.style.opacity = "1";
+
+        // 6. 更新地图视图
+        await new Promise(resolve => setTimeout(resolve, 100));
+        updateMapView();
+      };
+
+      animatePhotoView();
     }
 
     // 新增：更新照片查看视图内容（不包含地图操作）
@@ -695,42 +645,30 @@ const { travel } = Astro.props;
 
     // 关闭照片查看模式
     function closePhotoView() {
-      // 先隐藏照片查看模式
       const photoViewMode = document.getElementById("photoViewMode");
-      photoViewMode.style.opacity = "0";
-      photoViewMode.style.transition = "opacity 0.3s ease";
       
-      // 先完成照片查看模式的隐藏动画，再进行其他操作
-      setTimeout(() => {
-        // 重置照片查看模式的类
+      const animateClose = async () => {
+        // 1. 开始淡出
+        photoViewMode.style.opacity = "0";
+        
+        // 2. 等待淡出完成
+        await new Promise(resolve => setTimeout(resolve, 300));
+        
+        // 3. 重置状态
         resetPhotoViewClasses();
         
-        // 延迟执行DOM更新，避免同时进行大量操作
-        setTimeout(() => {
-          // 显示内容区域和导航箭头
-          showContentAndNavigation();
-          
-          // 关闭所有marker的弹出窗口
-          closeAllMarkerPopups();
-          
-          // 延迟执行地图动画，等待DOM更新完成
-          setTimeout(() => {
-            // 调整地图视图
-            updateMapBounds();
-          }, 200);
-        }, 50);
-      }, 300);
-      
-      // 添加备用方案，确保过渡效果完成
-      setTimeout(() => {
-        const contentArea = document.getElementById("contentArea");
-        if (contentArea.style.opacity !== "1") {
-          resetPhotoViewClasses();
-          showContentAndNavigation();
-          closeAllMarkerPopups();
-          updateMapBounds();
-        }
-      }, 800);
+        // 4. 显示内容和导航
+        showContentAndNavigation();
+        
+        // 5. 关闭弹出窗口
+        closeAllMarkerPopups();
+        
+        // 6. 更新地图视图
+        await new Promise(resolve => setTimeout(resolve, 200));
+        updateMapBounds();
+      };
+
+      animateClose();
     }
     
     // 新增：重置照片查看模式的类
@@ -855,41 +793,87 @@ const { travel } = Astro.props;
       font-weight: normal;
     }
 
+    /* 优化动画性能 */
     #leftCard, #rightCard {
-      will-change: opacity;
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+      perspective: 1000px;
     }
 
-    /* 卡片切换动画 */
+    /* 使用 transform 代替 opacity 实现更流畅的动画 */
     .card-enter-left {
+      transform: translateX(-20px);
       opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-enter-right {
+      transform: translateX(20px);
       opacity: 0;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-exit {
+      transform: translateX(0);
       opacity: 0;
       pointer-events: none;
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 内容区域的过渡效果 */
+    /* 优化内容区域的过渡效果 */
+    .content-area {
+      will-change: opacity;
+      transform: translateZ(0);
+    }
+
     .content-area.fade-out {
       opacity: 0;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .content-area.fade-in {
       opacity: 1;
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 优化照片查看模式的动画 */
+    #photoViewMode {
+      will-change: opacity;
+      transform: translateZ(0);
+      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    #photoViewMode.active {
+      opacity: 1;
+    }
+
+    /* 优化照片容器的动画 */
+    #photos-container img {
+      will-change: transform;
+      transform: translateZ(0);
+      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* 优化导航按钮的动画 */
+    #prevBtn, #nextBtn {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     /* 隐藏滚动条样式 */
     .scrollbar-hide {
-      -ms-overflow-style: none; /* IE and Edge */
-      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none;
+      scrollbar-width: none;
     }
 
     .scrollbar-hide::-webkit-scrollbar {
-      display: none; /* Chrome, Safari and Opera */
+      display: none;
     }
 
     /* 确保在动画过渡期间也不显示滚动条 */
