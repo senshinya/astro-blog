@@ -1,7 +1,9 @@
 ---
+import walineCSS from '@waline/client/style?url'
 import { ClientRouter } from 'astro:transitions'
 import katexCSS from 'katex/dist/katex.min.css?url'
 import photoSwipeCSS from 'photoswipe/style.css?url'
+import twikooCSS from 'twikoo/dist/twikoo.css?url'
 import { allLocales, defaultLocale, themeConfig } from '@/config'
 import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
@@ -19,7 +21,7 @@ const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 const { title, subtitle, description, author, url, favicon, i18nTitle } = themeConfig.site
 const { mode: defaultMode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
 const { katex: katexEnabled, reduceMotion } = themeConfig.global
-const { enabled: commentEnabled = false, waline: { serverURL: walineServerURL = '' } = {} } = themeConfig.comment ?? {}
+const { enabled: commentEnabled = false, waline: { serverURL: walineServerURL = '' } = {}, twikoo: { envId: twikooEnvId = '' } = {} } = themeConfig.comment ?? {}
 const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalyticsID = '', apiflashKey = '' } = themeConfig.seo ?? {}
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
 const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload ?? {}
@@ -57,12 +59,17 @@ const pageImage = postSlug
 <link rel="preload" href="/fonts/Snell-Bold-SF.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/STIX-VF.woff2" as="font" type="font/woff2" crossorigin />
 <link rel="preload" href="/fonts/STIX-Italic-VF.woff2" as="font" type="font/woff2" crossorigin />
+
 <link rel="preload" href={photoSwipeCSS} as="style" />
 {katexEnabled && <link rel="preload" href={katexCSS} as="style" />}
-{commentEnabled && walineServerURL && <link rel="preload" href="/vendors/waline/waline.css" as="style" />}
+{commentEnabled && walineServerURL && <link rel="preload" href={walineCSS} as="style" />}
+{commentEnabled && twikooEnvId && <link rel="preload" href={twikooCSS} as="style" />}
+
 <link rel="stylesheet" href={photoSwipeCSS} media="print" onload={`this.media='all'`} />
 {katexEnabled && <link rel="stylesheet" href={katexCSS} media="print" onload={`this.media='all'`} />}
-{commentEnabled && walineServerURL && <link rel="stylesheet" href="/vendors/waline/waline.css" media="print" onload={`this.media='all'`} />}
+{commentEnabled && walineServerURL && <link rel="stylesheet" href={walineCSS} media="print" onload={`this.media='all'`} />}
+{commentEnabled && twikooEnvId && <link rel="stylesheet" href={twikooCSS} media="print" onload={`this.media='all'`} />}
+
 <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="RSS Feed" />
 <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom Feed" />
 <link rel="sitemap" href="/sitemap-index.xml" />

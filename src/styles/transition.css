@@ -27,13 +27,12 @@ html[data-theme-changing] [data-disable-theme-transition] {
 }
 
 /* Fallback transition for browsers not supporting view-transitions or when reduceMotion enabled */
-@supports not (view-transition-name: none) {
-  html:not(.reduce-motion) {
-    --at-apply: 'transition-colors duration-300 ease-out';
-  }
-}
 html.reduce-motion {
-  transition: none;
+  --at-apply: 'transition-colors duration-300 ease-out';
+}
+html.reduce-motion .highlight-hover,
+html.reduce-motion .highlight-static {
+  --at-apply: 'transition-inherit';
 }
 
 /* GSAP Animation Elements Initial States >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
@@ -41,7 +40,6 @@ html.reduce-motion {
   /* Post Content + Tags + Comments */
   html.js:not(.reduce-motion) #gsap-post-content > *,
   html.js:not(.reduce-motion) #gsap-post-tags,
-  html.js:not(.reduce-motion) #giscus,
   html.js:not(.reduce-motion) #waline {
     opacity: 0;
     transform: translateY(3rem);

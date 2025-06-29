@@ -1,0 +1,177 @@
+---
+import twikooPath from 'twikoo/dist/twikoo.nocss.js?url'
+import { defaultLocale, themeConfig } from '@/config'
+import { twikooLocaleMap } from '@/i18n/config'
+
+const { envId = '' } = themeConfig.comment?.twikoo ?? {}
+---
+
+<!-- class="mt-16" not working -->
+<div id="twikoo"></div>
+
+<!-- Twikoo Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<!-- Using twikoo.min.js causes CSS loading failure after View Transitions -->
+<script
+  is:inline
+  src={twikooPath}
+></script>
+
+<script
+  is:inline
+  define:vars={{
+    envId,
+    twikooLocaleMap,
+    defaultLocale,
+  }}
+>
+function setupTwikoo() {
+  const currentPath = window.location.pathname
+  const pathLang = Object.keys(twikooLocaleMap).find(code =>
+    currentPath.startsWith(`/${code}/`),
+  )
+  const lang = pathLang ?? defaultLocale
+  const currentTwikooLang = twikooLocaleMap[lang]
+
+  twikoo.init({
+    envId,
+    el: '#twikoo',
+    // region: 'ap-shanghai', // Specify for Tencent Cloud, omit for Vercel
+    path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'), // Share comments on posts in different languages
+    lang: currentTwikooLang,
+  })
+}
+
+// Create an intersection observer to lazy load Twikoo comments when the container enters viewport
+function lazySetupTwikoo() {
+  const twikooContainer = document.getElementById('twikoo')
+  if (!twikooContainer) {
+    return
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        setupTwikoo()
+        observer.unobserve(entry.target)
+      }
+    })
+  }, { rootMargin: '200px' })
+
+  observer.observe(twikooContainer)
+}
+
+lazySetupTwikoo()
+document.addEventListener('astro:page-load', lazySetupTwikoo)
+</script>
+
+<!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
+<style is:global>
+/* Global styles */
+#twikoo {
+  --at-apply: 'mt-16'
+}
+#twikoo svg,
+#twikoo .tk-action-count {
+  --at-apply: 'c-secondary/80'
+}
+#twikoo .tk-comments-container {
+  --at-apply: 'text-sm leading-6'
+}
+#twikoo .tk-comments-container .tk-avatar {
+  --at-apply: 'mt-0.8'
+}
+#twikoo .tk-avatar,
+#twikoo .tk-avatar-img {
+  --at-apply: 'lg:(h-12 w-12)'
+}
+#twikoo .tk-main .tk-avatar,
+#twikoo .tk-main .tk-avatar-img {
+  --at-apply: 'h-7.7 w-7.7 lg:(h-9.2 w-9.2)'
+}
+#twikoo .el-input__count,
+#twikoo .tk-submit-action-icon.__markdown,
+#twikoo .tk-action-link:has(svg path[d*="256 32C114.6 32 0 125.1"]) .tk-action-count,
+#twikoo .tk-icon.__comments:has(svg path[d^="M440.65 12.57"]),
+#twikoo .tk-extras,
+#twikoo .tk-footer {
+  --at-apply: 'hidden'
+}
+
+/* Input fields */
+#twikoo .tk-meta-input {
+  --at-apply: 'border border-secondary/25 rounded'
+}
+#twikoo .tk-meta-input .el-input + .el-input {
+  --at-apply: 'ml-0 mt-0'
+}
+#twikoo .tk-meta-input > * {
+  --at-apply: 'border-none bg-transparent'
+}
+#twikoo .el-input-group__prepend {
+  --at-apply: 'border-none bg-transparent px-3 text-3 c-secondary'
+}
+#twikoo .el-input:has(input[name="mail"]) .el-input-group__prepend,
+#twikoo.el-input:has(input[name="link"]) .el-input-group__prepend {
+  --at-apply: 'lg:pl-0'
+}
+#twikoo .el-input__inner {
+  --at-apply: 'my-0.5 border-none p-0 text-3'
+}
+#twikoo .el-input__inner::placeholder {
+  --at-apply: 'c-secondary/25'
+}
+#twikoo .el-textarea__inner {
+  --at-apply: 'border-secondary/25 py-2 leading-6'
+}
+#twikoo .OwO-body {
+  --at-apply: 'border-secondary/25 rounded bg-background c-secondary'
+}
+#twikoo .OwO-item {
+  --at-apply: 'hover:shadow-none'
+}
+#twikoo .OwO-items-show {
+  --at-apply: 'overflow-x-hidden overflow-y-auto'
+}
+#twikoo .tk-cancel,
+#twikoo .tk-preview {
+  --at-apply: 'border-secondary/25 bg-transparent c-secondary font-normal active:(border-secondary/80 c-primary) hover:(border-secondary/80 c-primary)'
+}
+#twikoo .tk-send {
+  --at-apply: 'bg-primary font-normal'
+}
+#twikoo .tk-send span {
+  --at-apply: 'c-background'
+}
+#twikoo .el-button--primary {
+--at-apply: 'border-none'
+}
+
+/* Margins */
+#twikoo .tk-submit.tk-fade-in {
+  --at-apply: 'mt-6'
+}
+#twikoo .tk-row.actions {
+  --at-apply: 'mb-0 lg:ml-16'
+}
+#twikoo .tk-comments-container .tk-row.actions {
+  --at-apply: 'lg:ml-14'
+}
+#twikoo .tk-preview-container {
+  --at-apply: 'ml-14 mt-4 min-h-8 border-secondary/25 py-2 text-sm leading-6'
+}
+#twikoo .tk-comments-title {
+  --at-apply: 'mb-0 mt-7'
+}
+#twikoo .tk-comment {
+  --at-apply: 'mt-8'
+}
+#twikoo .tk-nick {
+  --at-apply: 'mr-1'
+}
+#twikoo .tk-tag {
+  --at-apply: 'mr-1 border-note rounded bg-transparent px-0.3em text-3 c-note leading-5'
+}
+#twikoo .tk-replies .tk-comment {
+  --at-apply: 'mt-6'
+}
+</style>

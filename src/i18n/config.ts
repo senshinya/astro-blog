@@ -3,21 +3,11 @@ export const langMap: Record<string, string[]> = {
   'zh': ['zh-CN'],
   'en': ['en-US'],
   'ja': ['ja-JP'],
-}
-
-// Waline Language Map
-// https://waline.js.org/en/guide/features/i18n.html
-export const walineLocaleMap: Record<string, string> = {
-  'de': 'en-US', // fallback to English
-  'en': 'en-US',
-  'es': 'es',
-  'fr': 'fr-FR',
-  'ja': 'jp-JP',
-  'ko': 'en-US', // fallback to English
-  'pl': 'en-US', // fallback to English
-  'pt': 'pt-BR',
-  'ru': 'ru-RU',
-  'zh': 'zh-CN',
+  'ko': ['ko-KR'],
+  'pl': ['pl-PL'],
+  'pt': ['pt-BR'],
+  'ru': ['ru-RU'],
+  'zh-tw': ['zh-TW'],
 }
 
 // Giscus Language Map
@@ -34,6 +24,37 @@ export const giscusLocaleMap: Record<string, string> = {
   'ru': 'ru',
   'zh': 'zh-CN',
   'zh-tw': 'zh-TW',
+}
+
+// Twikoo Language Map
+// https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
+export const twikooLocaleMap: Record<string, string> = {
+  'de': 'en', // fallback to English
+  'en': 'en',
+  'es': 'en', // fallback to English
+  'fr': 'en', // fallback to English
+  'ja': 'ja',
+  'ko': 'ko',
+  'pl': 'en', // fallback to English
+  'pt': 'en', // fallback to English
+  'ru': 'en', // fallback to English
+  'zh': 'zh-cn',
+  'zh-tw': 'zh-tw',
+}
+
+// Waline Language Map
+// https://waline.js.org/en/guide/features/i18n.html
+export const walineLocaleMap: Record<string, string> = {
+  'de': 'en-US', // fallback to English
+  'en': 'en-US',
+  'es': 'es',
+  'fr': 'fr-FR',
+  'ja': 'jp-JP',
+  'ko': 'en-US', // fallback to English
+  'pl': 'en-US', // fallback to English
+  'pt': 'pt-BR',
+  'ru': 'ru-RU',
+  'zh': 'zh-CN',
 }
 
 // Supported Languages

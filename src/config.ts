@@ -89,6 +89,13 @@ export const themeConfig: ThemeConfig = {
       emitMetadata: '0',
       inputPosition: 'top',
     },
+    // twikoo
+    // https://twikoo.js.org/
+    twikoo: {
+      envId: '',
+      // BUG: see https://github.com/radishzzz/astro-theme-retypeset/issues/57
+      // version: twikoo frontend version can be changed in package.json
+    },
     // waline
     // https://waline.js.org/en/
     waline: {
