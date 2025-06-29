@@ -62,7 +62,7 @@
   --at-apply: 'my-6';
 }
 .heti :where(figure) {
-  --at-apply: 'mx-auto my-6';
+  --at-apply: 'my-6 w-full';
 }
 .heti :where(figcaption) {
   --at-apply: 'mt-2.5 text-center text-sm c-secondary/80';
@@ -76,13 +76,7 @@
 
 /* Video */
 .heti iframe {
-  --at-apply: 'my-6 aspect-video w-full';
-}
-.heti :is(h1, h2, h3, h4, h5, h6, iframe) + iframe {
-  --at-apply: 'mt-4';
-}
-.heti iframe:has(+ iframe) {
-  --at-apply: 'mb-4';
+  --at-apply: 'aspect-video';
 }
 
 /* Code Blocks */

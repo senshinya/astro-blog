@@ -18,6 +18,7 @@ import '@/styles/lqip.css'
 import '@/styles/markdown.css'
 import '@/styles/transition.css'
 import '@/styles/code-collapse.css'
+import 'lite-youtube-embed/src/lite-yt-embed.css'
 
 interface Props {
   postTitle?: string
@@ -62,5 +63,8 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
     <CodeCopyButton />
     <PhotoSwipe />
     <GithubCard />
+    <script>
+      import 'lite-youtube-embed'
+    </script>
   </body>
 </html>
