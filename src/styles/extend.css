@@ -1,4 +1,4 @@
-/* GitHub Card */
+/* GitHub Card >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .gc-container {
   --at-apply: 'my-6 block overflow-x-auto uno-round-border bg-secondary/5 px-5 py-4';
   --at-apply: 'transition-colors ease-out hover:(bg-secondary/10 c-primary) lg:(px-6 py-5)';
@@ -121,6 +121,16 @@
 }
 
 /* >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* YouTube Embed */
+figure lite-youtube > .lty-playbtn {
+  --at-apply: 'filter-none';
+}
+
+/* Twitter Embed */
+figure .twitter-tweet {
+  --at-apply: 'mx-auto';
+}
+
 /* :where(details) {
   --at-apply: 'my-4 px-4 py-3 border border-solid border-secondary/25 rounded cursor-pointer';
 }

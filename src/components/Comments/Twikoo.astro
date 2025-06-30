@@ -24,6 +24,8 @@ const { envId = '' } = themeConfig.comment?.twikoo ?? {}
     defaultLocale,
   }}
 >
+let twikooObserver = null
+
 function setupTwikoo() {
   const currentPath = window.location.pathname
   const pathLang = Object.keys(twikooLocaleMap).find(code =>
@@ -43,21 +45,24 @@ function setupTwikoo() {
 
 // Create an intersection observer to lazy load Twikoo comments when the container enters viewport
 function lazySetupTwikoo() {
+  // Cleanup observer if exists
+  twikooObserver?.disconnect()
+
   const twikooContainer = document.getElementById('twikoo')
   if (!twikooContainer) {
     return
   }
 
-  const observer = new IntersectionObserver((entries) => {
+  twikooObserver = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         setupTwikoo()
-        observer.unobserve(entry.target)
+        twikooObserver?.unobserve(entry.target)
       }
     })
   }, { rootMargin: '200px' })
 
-  observer.observe(twikooContainer)
+  twikooObserver?.observe(twikooContainer)
 }
 
 lazySetupTwikoo()

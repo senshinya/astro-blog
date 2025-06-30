@@ -108,15 +108,8 @@ function updateTheme() {
 }
 
 // Bind click event to the button
-function setupThemeToggle() {
-  // Locate theme toggle button
-  const themeToggleButton = document.getElementById('theme-toggle-button')
-  if (!themeToggleButton) {
-    return
-  }
-
-  // Add click listener to the button
-  themeToggleButton.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  if (e.target instanceof Element && e.target.closest('#theme-toggle-button')) {
     // If reduceMotion is enabled or browser doesn't support View Transitions API, update theme directly
     if (document.documentElement.classList.contains('reduce-motion')) {
       updateTheme()
@@ -134,10 +127,6 @@ function setupThemeToggle() {
       document.documentElement.style.removeProperty('view-transition-name')
       document.documentElement.removeAttribute('data-theme-changing')
     })
-  })
-}
-
-// Initialize click event (on first load or page transition)
-setupThemeToggle()
-document.addEventListener('astro:after-swap', setupThemeToggle)
+  }
+})
 </script>

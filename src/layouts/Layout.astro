@@ -6,6 +6,7 @@ import Navbar from '@/components/Navbar.astro'
 import CodeCopyButton from '@/components/Widgets/CodeCopyButton.astro'
 import GithubCard from '@/components/Widgets/GithubCard.astro'
 import GsapAnimation from '@/components/Widgets/GsapAnimation.astro'
+import MediaEmbeds from '@/components/Widgets/MediaEmbeds.astro'
 import PhotoSwipe from '@/components/Widgets/PhotoSwipe.astro'
 import SoundEffect from '@/components/Widgets/SoundEffect.astro'
 import themeConfig from '@/config'
@@ -18,7 +19,6 @@ import '@/styles/lqip.css'
 import '@/styles/markdown.css'
 import '@/styles/transition.css'
 import '@/styles/code-collapse.css'
-import 'lite-youtube-embed/src/lite-yt-embed.css'
 
 interface Props {
   postTitle?: string
@@ -63,8 +63,6 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
     <CodeCopyButton />
     <PhotoSwipe />
     <GithubCard />
-    <script>
-      import 'lite-youtube-embed'
-    </script>
+    <MediaEmbeds />
   </body>
 </html>

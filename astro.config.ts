@@ -20,9 +20,8 @@ import { rehypeCodeCollapse } from './src/plugins/rehype-code-collapse.mjs';
 import { rehypeImgToFigure } from './src/plugins/rehype-img-to-figure.mjs'
 import { rehypeUnwrapImg } from './src/plugins/rehype-unwrap-img.mjs'
 import { remarkAdmonitions } from './src/plugins/remark-admonitions.mjs'
-import { remarkGithubCard } from './src/plugins/remark-github-card.mjs'
+import { remarkMediaEmbeds } from './src/plugins/remark-media-embeds.mjs'
 import { remarkReadingTime } from './src/plugins/remark-reading-time.mjs'
-import { remarkVideoEmbed } from './src/plugins/remark-video-embed.mjs'
 
 const url = themeConfig.site.url
 const locale = themeConfig.global.locale
@@ -74,8 +73,7 @@ export default defineConfig({
       remarkDirective,
       remarkMath,
       remarkAdmonitions,
-      remarkGithubCard,
-      remarkVideoEmbed,
+      remarkMediaEmbeds,
       remarkReadingTime,
     ],
     rehypePlugins: [

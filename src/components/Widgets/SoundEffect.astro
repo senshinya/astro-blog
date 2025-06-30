@@ -140,6 +140,11 @@ const soundManager = new SoundEffectManager()
 
 // Handle click events on interactive elements
 function handleGlobalClick(event) {
+  // Disable sounds on mobile devices
+  if (window.matchMedia('(max-width: 1023px)').matches) {
+    return
+  }
+
   const clickTarget = event.target.closest(CLICK_SELECTOR)
   if (clickTarget) {
     soundManager.playSound(SOUND_TYPES.CLICK)
@@ -148,6 +153,11 @@ function handleGlobalClick(event) {
 
 // Handle keyboard events for typing sounds
 function handleGlobalKeydown(event) {
+  // Disable sounds on mobile devices
+  if (window.matchMedia('(max-width: 1023px)').matches) {
+    return
+  }
+
   if (!event.target.closest(TYPING_SELECTOR)
     || event.ctrlKey || event.altKey || event.metaKey
     || IGNORED_KEYS.includes(event.key)) {
@@ -157,19 +167,6 @@ function handleGlobalKeydown(event) {
   soundManager.playSound(SOUND_TYPES.TYPING)
 }
 
-function setupSoundSystem() {
-  // Disable sounds on mobile devices
-  if (window.matchMedia('(max-width: 1023px)').matches) {
-    return
-  }
-
-  // Reset event listeners to avoid duplicates
-  document.removeEventListener('click', handleGlobalClick)
-  document.removeEventListener('keydown', handleGlobalKeydown)
-  document.addEventListener('click', handleGlobalClick)
-  document.addEventListener('keydown', handleGlobalKeydown)
-}
-
-setupSoundSystem()
-document.addEventListener('astro:page-load', setupSoundSystem)
+document.addEventListener('click', handleGlobalClick)
+document.addEventListener('keydown', handleGlobalKeydown)
 </script>

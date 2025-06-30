@@ -142,7 +142,14 @@ const filteredHeadings = headings.filter(heading =>
 
 <!-- TOC Highlight Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script>
+let headingObserver: IntersectionObserver | null = null
+let contentEndObserver: IntersectionObserver | null = null
+
 function setupTOCHighlight() {
+  // Cleanup observer if exists
+  headingObserver?.disconnect()
+  contentEndObserver?.disconnect()
+
   const is2xl = window.innerWidth >= 1536
   if (!is2xl) {
     return
@@ -228,7 +235,7 @@ function setupTOCHighlight() {
   }
 
   // Create the intersection observer
-  const headingObserver = new IntersectionObserver(intersectionCallback, {
+  headingObserver = new IntersectionObserver(intersectionCallback, {
     rootMargin: '0% 0% -66% 0%',
     threshold: [0.4],
   })
@@ -236,7 +243,7 @@ function setupTOCHighlight() {
   // Observe all heading elements
   Array.from(document.querySelectorAll('h2, h3, h4'))
     .filter(heading => heading.id && heading.id !== 'footnotes')
-    .forEach(heading => headingObserver.observe(heading))
+    .forEach(heading => headingObserver?.observe(heading))
 
   // Highlight the first TOC item by default
   if (tocLinks.length > 0) {
@@ -252,7 +259,7 @@ function setupTOCHighlight() {
   }
 
   // Create observer to monitor the last element
-  const contentEndObserver = new IntersectionObserver(
+  contentEndObserver = new IntersectionObserver(
     (entries) => {
       // Clear highlights when scrolled past content
       if (!entries[0].isIntersecting && entries[0].boundingClientRect.top < 0) {
@@ -267,7 +274,7 @@ function setupTOCHighlight() {
   )
 
   // Observe last content element
-  contentEndObserver.observe(lastContentElement)
+  contentEndObserver?.observe(lastContentElement)
 }
 
 setupTOCHighlight()

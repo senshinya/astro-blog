@@ -1,0 +1,2 @@
+patchedDependencies:
+  '@qwik.dev/partytown@0.11.1': patches/@qwik.dev__partytown@0.11.1.patch

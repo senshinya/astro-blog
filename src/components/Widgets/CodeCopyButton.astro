@@ -63,10 +63,13 @@ async function handleCopy(button: HTMLButtonElement) {
 
     // Set timeout to revert to copy icon after 1.5s
     const timeoutId = setTimeout(() => {
-      button.innerHTML = copyIcons.copy;
-      button.classList.remove('copy-success');
-      activeTimeouts.delete(button);
-    }, 1500);
+      // Skip if element removed from DOM
+      if (button.isConnected) {
+        button.innerHTML = copyIcons.copy
+        button.classList.remove('copy-success')
+        activeTimeouts.delete(button)
+      }
+    }, 1500)
 
     activeTimeouts.set(button, timeoutId);
   }
@@ -75,13 +78,12 @@ async function handleCopy(button: HTMLButtonElement) {
   }
 }
 
-// Initialize copy buttons with icons and mark them to prevent duplicate initialization
+// Initialize copy buttons with icons
 function setupCodeCopyButtons() {
   document
-    .querySelectorAll<HTMLButtonElement>('.code-copy-button:not([data-initialized])')
+    .querySelectorAll<HTMLButtonElement>('.code-copy-button')
     .forEach((button) => {
       button.innerHTML = copyIcons.copy
-      button.setAttribute('data-initialized', 'true')
     })
 }
 

@@ -5,13 +5,12 @@ let lightbox: PhotoSwipeLightbox
 const pswp = import('photoswipe')
 
 function setupPhotoSwipe() {
-  const bodyElement = document.body
-  if (bodyElement.hasAttribute('data-photoswipe-initialized')) {
+  const article = document.querySelector('article.heti')
+  if (!article) {
     return
   }
 
-  const article = document.querySelector('article.heti')
-  const images = article?.getElementsByTagName('img') ?? []
+  const images = article.getElementsByTagName('img')
   if (images.length === 0) {
     return
   }
@@ -55,7 +54,6 @@ function setupPhotoSwipe() {
   })
 
   lightbox.init()
-  bodyElement.setAttribute('data-photoswipe-initialized', 'true')
 }
 
 function lazySetupPhotoSwipe() {

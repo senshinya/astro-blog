@@ -16,8 +16,8 @@ import GoBackIcon from '@/assets/icons/go-back.svg';
 
 <!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script>
-function setupBackButton() {
-  document.getElementById('back-button')?.addEventListener('click', () => {
+document.addEventListener('click', (e) => {
+  if (e.target instanceof Element && e.target.closest('#back-button')) {
     // Navigate back if history exists
     if (window.history.length > 1) {
       window.history.back()
@@ -27,9 +27,6 @@ function setupBackButton() {
       const siteTitleLink = document.getElementById('site-title-link')
       siteTitleLink?.click()
     }
-  })
-}
-
-setupBackButton()
-document.addEventListener('astro:after-swap', setupBackButton)
+  }
+})
 </script>
