@@ -44,9 +44,9 @@ export interface ThemeConfig {
     enabled: boolean
     giscus?: {
       repo?: string
-      repoID?: string
+      repoId?: string
       category?: string
-      categoryID?: string
+      categoryId?: string
       mapping?: 'pathname' | 'url' | 'title' | 'og:title'
       strict?: '0' | '1'
       reactionsEnabled?: '0' | '1'

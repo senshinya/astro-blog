@@ -21,12 +21,12 @@ document.addEventListener('click', (e) => {
     // Navigate back if history exists
     if (window.history.length > 1) {
       window.history.back()
+      return
     }
-    else {
-      // Fallback to homepage
-      const siteTitleLink = document.getElementById('site-title-link')
-      siteTitleLink?.click()
-    }
+
+    // Fallback to homepage
+    const siteTitleLink = document.getElementById('site-title-link')
+    siteTitleLink?.click()
   }
 })
 </script>

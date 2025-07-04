@@ -4,14 +4,15 @@ const SOUND_TYPES = {
   TYPING: 'type',
 }
 
+const VOLUME_SETTINGS = {
+  [SOUND_TYPES.CLICK]: 0.8,
+  [SOUND_TYPES.TYPING]: 0.4,
+}
+
 const CLICK_TARGETS = [
   '#search-button',
   '#language-switcher',
   '#theme-toggle-button',
-  // '#back-button',
-  // '#toc-desktop-icon',
-  // '.heading-anchor-link',
-  // '.code-copy-button',
 ]
 
 const TYPING_TARGETS = [
@@ -25,7 +26,7 @@ const TYPING_TARGETS = [
   '#wl-edit',
 ]
 
-const IGNORED_KEYS = [
+const IGNORED_KEYS = new Set([
   'Shift',
   'Control',
   'Alt',
@@ -33,105 +34,82 @@ const IGNORED_KEYS = [
   'Tab',
   'Escape',
   'CapsLock',
-]
+])
 
 const CLICK_SELECTOR = CLICK_TARGETS.join(',')
 const TYPING_SELECTOR = TYPING_TARGETS.join(',')
 
+function isMobileDevice() {
+  return window.matchMedia('(max-width: 1023px)').matches
+}
+
 class SoundEffectManager {
   constructor() {
     this.audioContext = null
-    this.audioBuffers = new Map()
-    this.isReady = false
-    this.isInitializing = false
+    this.audioBuffers = {
+      [SOUND_TYPES.CLICK]: [],
+      [SOUND_TYPES.TYPING]: [],
+    }
+    this.initPromise = null
   }
 
-  // Initialize audio context and preload sound files
-  async initialize() {
-    if (this.isReady || this.isInitializing) {
-      return
-    }
-
-    this.isInitializing = true
-    try {
-      this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
-      await this.preloadAllSounds()
-      this.isReady = true
-    }
-    catch (error) {
-      console.warn('Audio initialization failed:', error)
-    }
-    finally {
-      this.isInitializing = false
-    }
+  // Fetch, decode and cache a single sound file
+  async fetchAndCacheSound(type, index) {
+    const soundId = `${type}_0${index + 1}`
+    const response = await fetch(`/sounds/${soundId}.wav`)
+    const arrayBuffer = await response.arrayBuffer()
+    const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer)
+    this.audioBuffers[type].push(audioBuffer)
   }
 
   // Preload all sound variants
   async preloadAllSounds() {
     const soundTypes = Object.values(SOUND_TYPES)
     const allPromises = soundTypes.flatMap(type =>
-      Array.from({ length: 5 }, (_, i) =>
-        this.loadSound(`${type}_0${i + 1}`, `/sounds/${type}_0${i + 1}.wav`)),
+      Array.from({ length: 5 }, (_, i) => this.fetchAndCacheSound(type, i)),
     )
 
     await Promise.allSettled(allPromises)
   }
 
-  // Load and cache a sound file
-  async loadSound(name, url) {
-    try {
-      const response = await fetch(url)
-      const arrayBuffer = await response.arrayBuffer()
-      const audioBuffer = await this.audioContext.decodeAudioData(arrayBuffer)
-      this.audioBuffers.set(name, audioBuffer)
-    }
-    catch (error) {
-      console.warn(`Failed to load ${name}:`, error)
-    }
+  // Initialize audio context and preload sound files (executes only once)
+  async initialize() {
+    return this.initPromise ??= (async () => {
+      this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      await this.preloadAllSounds()
+    })()
   }
 
   // Play a random sound of the specified type
   async playSound(soundType) {
-    if (!this.isReady && !this.isInitializing) {
-      await this.initialize()
-    }
-
-    if (!this.isReady || !this.audioContext || this.audioBuffers.size === 0) {
-      return
-    }
-
     try {
+      await this.initialize()
+
       // Resume audio context if suspended
       if (this.audioContext.state === 'suspended') {
         await this.audioContext.resume()
       }
 
-      // Find matching sound buffers
-      const matchingBuffers = Array.from(this.audioBuffers.entries())
-        .filter(([name]) => name.startsWith(soundType))
-        .map(([, buffer]) => buffer)
-
-      if (matchingBuffers.length === 0) {
+      // Get matching sound buffers for the requested type
+      const buffers = this.audioBuffers[soundType] || []
+      if (buffers.length === 0) {
         return
       }
 
-      // Select random sound
-      const randomIndex = Math.floor(Math.random() * matchingBuffers.length)
-      const audioBuffer = matchingBuffers[randomIndex]
+      // Select random sound from available buffers
+      const source = this.audioContext.createBufferSource()
+      source.buffer = buffers[Math.floor(Math.random() * buffers.length)]
 
       // Create and configure audio nodes
-      const source = this.audioContext.createBufferSource()
-      source.buffer = audioBuffer
       const gainNode = this.audioContext.createGain()
-      gainNode.gain.value = soundType === SOUND_TYPES.TYPING ? 0.4 : 0.8 // Volume control
+      gainNode.gain.value = VOLUME_SETTINGS[soundType]
 
-      // Connect and play
-      source.connect(gainNode)
-      gainNode.connect(this.audioContext.destination)
+      // Connect nodes and play sound
+      source.connect(gainNode).connect(this.audioContext.destination)
       source.start(0)
     }
     catch (error) {
-      console.warn('Playback failed:', error)
+      console.warn('Sound playback failed:', error)
     }
   }
 }
@@ -140,27 +118,32 @@ const soundManager = new SoundEffectManager()
 
 // Handle click events on interactive elements
 function handleGlobalClick(event) {
-  // Disable sounds on mobile devices
-  if (window.matchMedia('(max-width: 1023px)').matches) {
+  if (isMobileDevice()) {
     return
   }
 
-  const clickTarget = event.target.closest(CLICK_SELECTOR)
-  if (clickTarget) {
-    soundManager.playSound(SOUND_TYPES.CLICK)
+  if (!event.target.closest(CLICK_SELECTOR)) {
+    return
   }
+
+  soundManager.playSound(SOUND_TYPES.CLICK)
 }
 
 // Handle keyboard events for typing sounds
 function handleGlobalKeydown(event) {
-  // Disable sounds on mobile devices
-  if (window.matchMedia('(max-width: 1023px)').matches) {
+  if (isMobileDevice()) {
     return
   }
 
-  if (!event.target.closest(TYPING_SELECTOR)
-    || event.ctrlKey || event.altKey || event.metaKey
-    || IGNORED_KEYS.includes(event.key)) {
+  if (event.ctrlKey || event.altKey || event.metaKey) {
+    return
+  }
+
+  if (IGNORED_KEYS.has(event.key)) {
+    return
+  }
+
+  if (!event.target.closest(TYPING_SELECTOR)) {
     return
   }
 

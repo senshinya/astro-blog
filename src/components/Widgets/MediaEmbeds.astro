@@ -1,31 +1,42 @@
 ---
+import liteYouTubeCSS from 'lite-youtube-embed/src/lite-yt-embed.css?url'
 import liteYouTubeJS from 'lite-youtube-embed?url'
-import 'lite-youtube-embed/src/lite-yt-embed.css'
 ---
 
 <script
   is:inline
-  define:vars={{ liteYouTubeJS }}
+  define:vars={{
+    liteYouTubeCSS,
+    liteYouTubeJS,
+ }}
 >
-async function setupMediaEmbeds() {
-  const youtubeElements = document.querySelectorAll('lite-youtube')
-  const xElements = document.querySelectorAll('.twitter-tweet')
+function loadCSS(url) {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = url
+  document.head.appendChild(link)
+}
 
-  if (youtubeElements.length === 0 && xElements.length === 0) {
+async function setupMediaEmbeds() {
+  const embeds = {
+    youtube: document.querySelectorAll('lite-youtube'),
+    x: document.querySelectorAll('.twitter-tweet'),
+  }
+
+  if (!Object.values(embeds).some(elements => elements.length > 0)) {
     return
   }
 
-  // Process YouTube embeds
-  if (youtubeElements.length > 0) {
+  if (embeds.youtube.length > 0) {
+    loadCSS(liteYouTubeCSS)
     await import(liteYouTubeJS)
   }
 
-  // Process X tweet embeds
-  if (xElements.length > 0) {
+  if (embeds.x.length > 0) {
     // Set theme before loading X script
     const isDark = document.documentElement.classList.contains('dark')
-    xElements.forEach((tweet) => {
-      tweet.setAttribute('data-theme', isDark ? 'dark' : 'light')
+    embeds.x.forEach((element) => {
+      element.setAttribute('data-theme', isDark ? 'dark' : 'light')
     })
 
     const script = document.createElement('script')

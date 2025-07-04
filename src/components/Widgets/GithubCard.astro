@@ -49,7 +49,7 @@ async function loadCardData(card: HTMLElement) {
     }
   }
   catch (error) {
-    console.error(`Failed to fetch ${repo}:`, (error as Error)?.message ?? String(error))
+    console.error(`Failed to fetch ${repo}:`, error)
   }
 }
 

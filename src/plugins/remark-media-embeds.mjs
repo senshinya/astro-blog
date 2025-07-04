@@ -108,12 +108,14 @@ export function remarkMediaEmbeds() {
   return (tree) => {
     visit(tree, 'leafDirective', (node) => {
       const handler = embedHandlers[node.name]
-      if (!handler)
+      if (!handler) {
         return
+      }
 
       const htmlContent = handler(node)
-      if (!htmlContent)
+      if (!htmlContent) {
         return
+      }
 
       node.type = 'html'
       node.value = htmlContent

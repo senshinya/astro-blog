@@ -1,10 +1,32 @@
-<script>
-import PhotoSwipeLightbox from 'photoswipe/lightbox'
+---
+import photoSwipeLightboxJS from 'photoswipe/lightbox?url'
+import photoSwipeCSS from 'photoswipe/style.css?url'
+import photoSwipeJS from 'photoswipe?url'
+---
 
-let lightbox: PhotoSwipeLightbox
-const pswp = import('photoswipe')
+<script
+  is:inline
+  define:vars={{
+  photoSwipeCSS,
+  photoSwipeLightboxJS,
+  photoSwipeJS,
+ }}
+>
+let lightbox
 
-function setupPhotoSwipe() {
+function loadCSS(url) {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = url
+  document.head.appendChild(link)
+}
+
+async function setupPhotoSwipe() {
+  if (lightbox) {
+    lightbox.destroy()
+    lightbox = null
+  }
+
   const article = document.querySelector('article.heti')
   if (!article) {
     return
@@ -15,17 +37,21 @@ function setupPhotoSwipe() {
     return
   }
 
-  const { innerWidth, innerHeight } = window
+  loadCSS(photoSwipeCSS)
+  const [{ default: PhotoSwipeLightbox }, pswp] = await Promise.all([
+    import(photoSwipeLightboxJS),
+    import(photoSwipeJS),
+  ])
 
   lightbox = new PhotoSwipeLightbox({
     gallery: 'article.heti img',
-    pswpModule: () => pswp,
+    pswpModule: () => Promise.resolve(pswp),
     bgOpacity: 0.9,
     padding: {
-      top: innerHeight * 0.1,
-      bottom: innerHeight * 0.1,
-      left: innerWidth * 0.073,
-      right: innerWidth * 0.073,
+      top: window.innerHeight * 0.1,
+      bottom: window.innerHeight * 0.1,
+      left: window.innerWidth * 0.073,
+      right: window.innerWidth * 0.073,
     },
     zoom: false,
     close: false,
@@ -36,16 +62,12 @@ function setupPhotoSwipe() {
 
   // Set image dimensions
   lightbox.addFilter('domItemData', (itemData, element) => {
-    if (!(element instanceof HTMLImageElement)) {
-      return itemData
-    }
-
     // Set image source
     itemData.src = element.src
 
     // Set dimensions with fallback to window size
-    itemData.w = Number(element.naturalWidth ?? innerWidth)
-    itemData.h = Number(element.naturalHeight ?? innerHeight)
+    itemData.w = Number(element.naturalWidth ?? window.innerWidth)
+    itemData.h = Number(element.naturalHeight ?? window.innerHeight)
 
     // Set thumbnail source
     itemData.msrc = element.src
@@ -56,15 +78,6 @@ function setupPhotoSwipe() {
   lightbox.init()
 }
 
-function lazySetupPhotoSwipe() {
-  if (typeof window.requestIdleCallback === 'function') {
-    window.requestIdleCallback(setupPhotoSwipe, { timeout: 1000 })
-  }
-  else {
-    requestAnimationFrame(setupPhotoSwipe)
-  }
-}
-
-lazySetupPhotoSwipe()
-document.addEventListener('astro:page-load', lazySetupPhotoSwipe)
+setupPhotoSwipe()
+document.addEventListener('astro:page-load', setupPhotoSwipe)
 </script>

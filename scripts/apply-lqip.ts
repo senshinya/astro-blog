@@ -31,7 +31,7 @@ async function loadLqipMap(): Promise<LqipMap | null> {
       return null
     }
 
-    console.error('❌ Failed to parse LQIP mapping file:', (error as Error)?.message ?? String(error))
+    console.error('❌ Failed to parse LQIP mapping file:', error)
     exit(1)
   }
 }
@@ -142,6 +142,6 @@ async function applyLqipStyles(): Promise<void> {
 }
 
 applyLqipStyles().catch((error) => {
-  console.error('❌ Execution failed:', (error as Error)?.message ?? String(error))
+  console.error('❌ Execution failed:', error)
   exit(1)
 })

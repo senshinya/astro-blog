@@ -4,9 +4,9 @@ import { giscusLocaleMap } from '@/i18n/config'
 
 const {
   repo = '',
-  repoID = '',
+  repoId = '',
   category = '',
-  categoryID = '',
+  categoryId = '',
   mapping = 'pathname',
   strict = '0',
   reactionsEnabled = '1',
@@ -25,9 +25,9 @@ const {
   is:inline
   define:vars={{
     repo,
-    repoID,
+    repoId,
     category,
-    categoryID,
+    categoryId,
     mapping,
     strict,
     reactionsEnabled,
@@ -48,10 +48,6 @@ function getThemeUrl() {
 
 function setupGiscus() {
   const giscusContainer = document.getElementById('giscus')
-  if (!giscusContainer) {
-    return
-  }
-
   giscusContainer.innerHTML = ''
 
   const currentPath = window.location.pathname
@@ -61,17 +57,12 @@ function setupGiscus() {
   const lang = pathLang ?? defaultLocale
   const currentGiscusLang = giscusLocaleMap[lang]
 
-  const script = document.createElement('script')
-  script.src = 'https://giscus.app/client.js'
-  script.crossOrigin = 'anonymous'
-  script.async = true
-
   // Set up basic attributes
   const dataAttributes = {
     repo,
-    repoId: repoID,
-    category: undefined,
-    categoryId: categoryID,
+    repoId,
+    ...(category && { category }),
+    categoryId,
     mapping,
     strict,
     reactionsEnabled,
@@ -81,20 +72,13 @@ function setupGiscus() {
     lang: currentGiscusLang,
   }
 
-  // Add category conditionally
-  if (category) {
-    dataAttributes.category = category
-  }
-
-  // Apply all attributes
+  const script = document.createElement('script')
+  script.crossOrigin = 'anonymous'
+  script.async = true
   Object.assign(script.dataset, dataAttributes)
+  script.src = 'https://giscus.app/client.js'
 
-  try {
-    giscusContainer.appendChild(script)
-  }
-  catch (error) {
-    console.error('Failed to setup Giscus:', error)
-  }
+  giscusContainer.appendChild(script)
 }
 
 function updateGiscusTheme() {
@@ -103,15 +87,10 @@ function updateGiscusTheme() {
     return
   }
 
-  try {
-    iframe.contentWindow.postMessage(
-      { giscus: { setConfig: { theme: getThemeUrl() } } },
-      'https://giscus.app',
-    )
-  }
-  catch (error) {
-    console.error('Failed to update Giscus theme:', error)
-  }
+  iframe.contentWindow.postMessage(
+    { giscus: { setConfig: { theme: getThemeUrl() } } },
+    'https://giscus.app',
+  )
 }
 
 setupGiscus()

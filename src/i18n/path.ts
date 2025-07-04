@@ -87,7 +87,7 @@ export function getNextGlobalLangPath(currentPath: string): string {
  * @returns Path for next supported language
  */
 export function getNextSupportedLangPath(currentPath: string, supportedLangs: string[]): string {
-  if (!supportedLangs.length) {
+  if (supportedLangs.length === 0) {
     return getNextGlobalLangPath(currentPath)
   }
 

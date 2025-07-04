@@ -91,7 +91,7 @@ async function fixRelativeImagePaths(htmlContent: string, baseUrl: string): Prom
         img.setAttribute('src', publicImageUrl)
       }
       catch (error) {
-        console.warn(`Failed to process image in RSS feed: ${src}`, (error as Error)?.message ?? String(error))
+        console.warn(`Failed to process image in RSS feed: ${src}`, error)
       }
     })())
   }

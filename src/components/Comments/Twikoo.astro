@@ -1,4 +1,5 @@
 ---
+import twikooCSS from 'twikoo/dist/twikoo.css?url'
 import twikooPath from 'twikoo/dist/twikoo.nocss.js?url'
 import { defaultLocale, themeConfig } from '@/config'
 import { twikooLocaleMap } from '@/i18n/config'
@@ -22,9 +23,17 @@ const { envId = '' } = themeConfig.comment?.twikoo ?? {}
     envId,
     twikooLocaleMap,
     defaultLocale,
+    twikooCSS,
   }}
 >
 let twikooObserver = null
+
+function loadCSS(url) {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = url
+  document.head.appendChild(link)
+}
 
 function setupTwikoo() {
   const currentPath = window.location.pathname
@@ -53,16 +62,15 @@ function lazySetupTwikoo() {
     return
   }
 
+  loadCSS(twikooCSS)
   twikooObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        setupTwikoo()
-        twikooObserver?.unobserve(entry.target)
-      }
-    })
+    if (entries.some(entry => entry.isIntersecting)) {
+      setupTwikoo()
+      twikooObserver?.disconnect()
+    }
   }, { rootMargin: '200px' })
 
-  twikooObserver?.observe(twikooContainer)
+  twikooObserver.observe(twikooContainer)
 }
 
 lazySetupTwikoo()
@@ -152,6 +160,12 @@ document.addEventListener('astro:page-load', lazySetupTwikoo)
 }
 
 /* Margins */
+#twikoo .el-loading-spinner svg {
+  --at-apply: 'mx-auto'
+}
+#twikoo .el-loading-spinner .path {
+  --at-apply: 'stroke-note'
+}
 #twikoo .tk-submit.tk-fade-in {
   --at-apply: 'mt-6'
 }

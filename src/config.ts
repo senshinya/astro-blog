@@ -80,9 +80,9 @@ export const themeConfig: ThemeConfig = {
     // https://giscus.app/
     giscus: {
       repo: 'senshinya/blog',
-      repoID: 'R_kgDOLAV3QQ',
+      repoId: 'R_kgDOLAV3QQ',
       category: 'Announcements',
-      categoryID: 'DIC_kwDOLAV3Qc4CcKlC',
+      categoryId: 'DIC_kwDOLAV3Qc4CcKlC',
       mapping: 'pathname',
       strict: '0',
       reactionsEnabled: '1',
@@ -93,7 +93,6 @@ export const themeConfig: ThemeConfig = {
     // https://twikoo.js.org/
     twikoo: {
       envId: '',
-      // BUG: see https://github.com/radishzzz/astro-theme-retypeset/issues/57
       // version: twikoo frontend version can be changed in package.json
     },
     // waline

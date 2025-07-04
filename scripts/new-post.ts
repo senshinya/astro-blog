@@ -47,6 +47,6 @@ try {
   console.log(`✅ Post created: ${fullPath}`)
 }
 catch (error) {
-  console.error('❌ Failed to create post:', (error as Error)?.message ?? String(error))
+  console.error('❌ Failed to create post:', error)
   process.exit(1)
 }

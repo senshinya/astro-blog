@@ -91,7 +91,7 @@ async function formatMarkdownFiles(): Promise<void> {
       }
     }
     catch (error) {
-      console.error(`❌ ${file}: ${(error as Error)?.message ?? String(error)}`)
+      console.error(`❌ ${file}:`, error)
       errorCount++
     }
   }
@@ -100,6 +100,6 @@ async function formatMarkdownFiles(): Promise<void> {
 }
 
 formatMarkdownFiles().catch((error) => {
-  console.error('❌ Execution failed:', (error as Error)?.message ?? String(error))
+  console.error('❌ Execution failed:', error)
   process.exit(1)
 })

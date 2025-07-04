@@ -108,7 +108,7 @@ async function loadImg(img: Buffer | string) {
     return await getPixels(buffer, format)
   }
   catch (error) {
-    throw new Error(`Image processing failed: ${(error as Error)?.message ?? 'unknown error'}`)
+    throw new Error(`Image processing failed: ${error}`)
   }
 }
 
@@ -216,7 +216,7 @@ async function generateLqipValue(imagePath: string): Promise<number | null> {
     return lqip
   }
   catch (error) {
-    console.error(`Error processing image ${imagePath}:`, (error as Error)?.message ?? String(error))
+    console.error(`Error processing image ${imagePath}:`, error)
     return null
   }
 }
@@ -330,7 +330,7 @@ async function prepareEnvironment() {
     await fs.mkdir(assetsDir, { recursive: true })
   }
   catch (error) {
-    console.warn('⚠️ Could not create assets directory:', (error as Error)?.message ?? String(error))
+    console.warn('⚠️ Could not create assets directory:', error)
   }
 
   // Find all WebP files in build output
@@ -380,7 +380,7 @@ async function generateLqipForImages(webpFiles: string[], existingLqipMap: LqipM
       }
       catch (error) {
         stats.failed++
-        console.error(`Error processing ${filePath}:`, (error as Error)?.message ?? String(error))
+        console.error(`Error processing ${filePath}:`, error)
       }
       finally {
         // Track total processed
@@ -417,6 +417,6 @@ async function main() {
 }
 
 main().catch((error) => {
-  console.error('❌ LQIP mapping generation failed:', (error as Error)?.message ?? String(error))
+  console.error('❌ LQIP mapping generation failed:', error)
   process.exit(1)
 })

@@ -1,5 +1,6 @@
 ---
 import walineJS from '@waline/client/full?url'
+import walineCSS from '@waline/client/style?url'
 import { defaultLocale, themeConfig } from '@/config'
 import { walineLocaleMap } from '@/i18n/config'
 
@@ -27,10 +28,18 @@ const {
     walineLocaleMap,
     defaultLocale,
     walineJS,
+    walineCSS,
   }}
   type="module"
 >
 let walineObserver = null
+
+function loadCSS(url) {
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = url
+  document.head.appendChild(link)
+}
 
 async function setupWaline() {
   const { init } = await import(walineJS)
@@ -69,16 +78,15 @@ function lazySetupWaline() {
     return
   }
 
+  loadCSS(walineCSS)
   walineObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        setupWaline()
-        walineObserver?.unobserve(entry.target)
-      }
-    })
+    if (entries.some(entry => entry.isIntersecting)) {
+      setupWaline()
+      walineObserver?.disconnect()
+    }
   }, { rootMargin: '200px' })
 
-  walineObserver?.observe(walineContainer)
+  walineObserver.observe(walineContainer)
 }
 
 lazySetupWaline()
@@ -153,6 +161,9 @@ document.addEventListener('astro:page-load', lazySetupWaline)
 }
 #waline .wl-gallery {
   --at-apply: 'scrollbar-hidden';
+}
+#waline .wl-btn {
+  --at-apply: 'duration-150 hover:border-secondary/80';
 }
 #waline .wl-meta-head {
   --at-apply: 'px-0 py-3';
