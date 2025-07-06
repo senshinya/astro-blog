@@ -44,21 +44,21 @@
 }
 
 /* Paragraphs */
-.heti :where(p) {
+.heti :where(p:not(.no-heti):not(.no-heti *)) {
   --at-apply: 'mb-4 text-pretty cjk:text-justify';
 }
 
 /* Links */
-.heti :where(a:not(.gc-container)) {
+.heti :where(a:not(.no-heti):not(.no-heti *)) {
   --at-apply: 'font-semibold tracking-0 underline underline-0.075em decoration-secondary/80 underline-offset-0.1em cjk:break-all';
   --at-apply: 'transition-colors ease-out hover:(c-primary decoration-primary/80) lg:underline-0.1em';
 }
 
 /* Images */
-.heti :where(img) {
+.heti :where(img:not(.no-heti):not(.no-heti *)) {
   --at-apply: 'mx-auto cursor-zoom-in';
 }
-.heti :where(img:not(figure img)) {
+.heti :where(img:not(figure img):not(.no-heti):not(.no-heti *)) {
   --at-apply: 'my-6';
 }
 .heti :where(figure) {

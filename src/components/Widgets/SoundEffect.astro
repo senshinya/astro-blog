@@ -1,21 +1,23 @@
-<script is:inline>
-const SOUND_TYPES = {
-  CLICK: 'tap',
-  TYPING: 'type',
+<script>
+const soundTypes = {
+  click: 'tap',
+  typing: 'type',
+} as const
+
+type SoundType = typeof soundTypes[keyof typeof soundTypes]
+
+const volumeSettings: Record<SoundType, number> = {
+  [soundTypes.click]: 0.8,
+  [soundTypes.typing]: 0.4,
 }
 
-const VOLUME_SETTINGS = {
-  [SOUND_TYPES.CLICK]: 0.8,
-  [SOUND_TYPES.TYPING]: 0.4,
-}
-
-const CLICK_TARGETS = [
+const clickTargets = [
   '#search-button',
   '#language-switcher',
   '#theme-toggle-button',
-]
+] as const
 
-const TYPING_TARGETS = [
+const typingTargets = [
   // Twikoo
   '.el-input__inner',
   '.el-textarea__inner',
@@ -24,9 +26,9 @@ const TYPING_TARGETS = [
   '#wl-mail',
   '#wl-link',
   '#wl-edit',
-]
+] as const
 
-const IGNORED_KEYS = new Set([
+const ignoredKeys = new Set([
   'Shift',
   'Control',
   'Alt',
@@ -36,25 +38,28 @@ const IGNORED_KEYS = new Set([
   'CapsLock',
 ])
 
-const CLICK_SELECTOR = CLICK_TARGETS.join(',')
-const TYPING_SELECTOR = TYPING_TARGETS.join(',')
+const clickSelector = clickTargets.join(',')
+const typingSelector = typingTargets.join(',')
 
-function isMobileDevice() {
+function isMobileDevice(): boolean {
   return window.matchMedia('(max-width: 1023px)').matches
 }
 
 class SoundEffectManager {
-  constructor() {
-    this.audioContext = null
-    this.audioBuffers = {
-      [SOUND_TYPES.CLICK]: [],
-      [SOUND_TYPES.TYPING]: [],
-    }
-    this.initPromise = null
+  private audioContext: AudioContext | null = null
+  private audioBuffers: Record<SoundType, AudioBuffer[]> = {
+    [soundTypes.click]: [],
+    [soundTypes.typing]: [],
   }
 
+  private initPromise: Promise<void> | null = null
+
   // Fetch, decode and cache a single sound file
-  async fetchAndCacheSound(type, index) {
+  private async fetchAndCacheSound(type: SoundType, index: number): Promise<void> {
+    if (!this.audioContext) {
+      throw new Error('Audio context not initialized')
+    }
+
     const soundId = `${type}_0${index + 1}`
     const response = await fetch(`/sounds/${soundId}.wav`)
     const arrayBuffer = await response.arrayBuffer()
@@ -63,9 +68,9 @@ class SoundEffectManager {
   }
 
   // Preload all sound variants
-  async preloadAllSounds() {
-    const soundTypes = Object.values(SOUND_TYPES)
-    const allPromises = soundTypes.flatMap(type =>
+  private async preloadAllSounds(): Promise<void> {
+    const soundTypeValues = Object.values(soundTypes) as SoundType[]
+    const allPromises = soundTypeValues.flatMap(type =>
       Array.from({ length: 5 }, (_, i) => this.fetchAndCacheSound(type, i)),
     )
 
@@ -73,17 +78,22 @@ class SoundEffectManager {
   }
 
   // Initialize audio context and preload sound files (executes only once)
-  async initialize() {
+  private async initialize(): Promise<void> {
     return this.initPromise ??= (async () => {
-      this.audioContext = new (window.AudioContext || window.webkitAudioContext)()
+      const AudioContextClass = window.AudioContext || window.webkitAudioContext
+      this.audioContext = new AudioContextClass()
       await this.preloadAllSounds()
     })()
   }
 
   // Play a random sound of the specified type
-  async playSound(soundType) {
+  public async playSound(soundType: SoundType): Promise<void> {
     try {
       await this.initialize()
+
+      if (!this.audioContext) {
+        return
+      }
 
       // Resume audio context if suspended
       if (this.audioContext.state === 'suspended') {
@@ -91,7 +101,7 @@ class SoundEffectManager {
       }
 
       // Get matching sound buffers for the requested type
-      const buffers = this.audioBuffers[soundType] || []
+      const buffers = this.audioBuffers[soundType]
       if (buffers.length === 0) {
         return
       }
@@ -102,7 +112,7 @@ class SoundEffectManager {
 
       // Create and configure audio nodes
       const gainNode = this.audioContext.createGain()
-      gainNode.gain.value = VOLUME_SETTINGS[soundType]
+      gainNode.gain.value = volumeSettings[soundType]
 
       // Connect nodes and play sound
       source.connect(gainNode).connect(this.audioContext.destination)
@@ -117,20 +127,21 @@ class SoundEffectManager {
 const soundManager = new SoundEffectManager()
 
 // Handle click events on interactive elements
-function handleGlobalClick(event) {
+function handleGlobalClick(event: MouseEvent): void {
   if (isMobileDevice()) {
     return
   }
 
-  if (!event.target.closest(CLICK_SELECTOR)) {
+  const target = event.target as Element | null
+  if (!target?.closest(clickSelector)) {
     return
   }
 
-  soundManager.playSound(SOUND_TYPES.CLICK)
+  soundManager.playSound(soundTypes.click)
 }
 
 // Handle keyboard events for typing sounds
-function handleGlobalKeydown(event) {
+function handleGlobalKeydown(event: KeyboardEvent): void {
   if (isMobileDevice()) {
     return
   }
@@ -139,17 +150,18 @@ function handleGlobalKeydown(event) {
     return
   }
 
-  if (IGNORED_KEYS.has(event.key)) {
+  if (ignoredKeys.has(event.key)) {
     return
   }
 
-  if (!event.target.closest(TYPING_SELECTOR)) {
+  const target = event.target as Element | null
+  if (!target?.closest(typingSelector)) {
     return
   }
 
-  soundManager.playSound(SOUND_TYPES.TYPING)
+  soundManager.playSound(soundTypes.typing)
 }
 
-document.addEventListener('click', handleGlobalClick)
-document.addEventListener('keydown', handleGlobalKeydown)
+document.addEventListener('click', handleGlobalClick, { passive: true })
+document.addEventListener('keydown', handleGlobalKeydown, { passive: true })
 </script>

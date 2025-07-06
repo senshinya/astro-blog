@@ -11,10 +11,12 @@ interface Props {
   postSlug?: string
 }
 
+// Props and Language
 const { postTitle, postDescription, postSlug } = Astro.props
 const { currentLang } = getPageInfo(Astro.url.pathname)
 const currentUI = ui[currentLang as keyof typeof ui] ?? {}
 
+// Site Configuration
 const { title, subtitle, description, author, url, favicon, i18nTitle } = themeConfig.site
 const { mode: defaultMode, light: { background: lightMode }, dark: { background: darkMode } } = themeConfig.color
 const { katex: katexEnabled, reduceMotion } = themeConfig.global
@@ -22,11 +24,13 @@ const { verification = {}, twitterID = '', googleAnalyticsID = '', umamiAnalytic
 const { google = '', bing = '', yandex = '', baidu = '' } = verification
 const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfig.preload ?? {}
 
+// Site Metadata
 const initMetaTheme = defaultMode === 'dark' ? darkMode : lightMode
 const siteTitle = i18nTitle ? currentUI.title : title
 const siteSubtitle = i18nTitle ? currentUI.subtitle : subtitle
 const siteDescription = i18nTitle ? currentUI.description : description
 
+// Page Metadata
 const pageTitle = postTitle ? `${postTitle} | ${siteTitle}` : `${siteTitle} - ${siteSubtitle}`
 const pageDescription = postDescription || siteDescription
 const pageImage = postSlug
@@ -37,7 +41,7 @@ const pageImage = postSlug
 ---
 
 <head>
-<!-- Basic info -->
+<!-- Basic Info -->
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
 {favicon.toLowerCase().endsWith('.svg') && <link rel="icon" type="image/svg+xml" href={favicon} />}
@@ -57,12 +61,12 @@ const pageImage = postSlug
 <link rel="preload" href="/fonts/STIX-Italic-VF.woff2" as="font" type="font/woff2" crossorigin />
 {katexEnabled && <link rel="preload" href={katexCSS} as="style" />}
 {katexEnabled && <link rel="stylesheet" href={katexCSS} media="print" onload={`this.media='all'`} />}
+
+<!-- Site Links -->
+<link rel="canonical" href={Astro.url} />
+<link rel="sitemap" href="/sitemap-index.xml" />
 <link rel="alternate" href="/rss.xml" type="application/rss+xml" title="RSS Feed" />
 <link rel="alternate" href="/atom.xml" type="application/atom+xml" title="Atom Feed" />
-<link rel="sitemap" href="/sitemap-index.xml" />
-<link rel="canonical" href={Astro.url} />
-
-<!-- i18n hreflang generate -->
 {allLocales.map(lang => (
   <link
     rel="alternate"
@@ -99,58 +103,58 @@ const pageImage = postSlug
     reduceMotion,
  }}
 >
-// Check if current theme is dark mode
-// Priority: Local storage theme > Default theme > System preference
-function isCurrentDark() {
-  const currentTheme = localStorage.getItem('theme')
-  if (currentTheme) {
-    return currentTheme === 'dark'
+(function () {
+  // Check if current theme is dark
+  // Priority: localStorage theme > default theme > system preference
+  function isDarkMode() {
+    const currentTheme = localStorage.getItem('theme')
+    if (currentTheme) {
+      return currentTheme === 'dark'
+    }
+    if (defaultMode === 'light') {
+      return false
+    }
+    if (defaultMode === 'dark') {
+      return true
+    }
+
+    // If defaultMode is auto, follow system preference
+    return window.matchMedia('(prefers-color-scheme: dark)').matches
   }
-  if (defaultMode === 'light') {
-    return false
+
+  // Initialize theme
+  function initTheme(doc = document) {
+    const isDark = isDarkMode()
+    doc.documentElement.classList.toggle('dark', isDark)
+
+    // Update meta theme-color tag
+    const metaThemeColor = doc.head.querySelector('meta[name="theme-color"]')
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute('content', isDark ? darkMode : lightMode)
+    }
   }
-  if (defaultMode === 'dark') {
-    return true
+
+  // Check and init motion preference
+  // Reduce motion when: site config || user preference || no view transition support
+  function initMotionPref(doc = document) {
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const supportsViewTransitions = 'startViewTransition' in doc
+    const shouldReduceMotion = reduceMotion || prefersReducedMotion || !supportsViewTransitions
+
+    doc.documentElement.classList.toggle('reduce-motion', shouldReduceMotion)
+    doc.documentElement.classList.add('js') // Indicate JS support
   }
 
-  return window.matchMedia('(prefers-color-scheme: dark)').matches
-}
-
-// Initialize theme
-function initTheme(doc = document) {
-  const isDark = isCurrentDark()
-  doc.documentElement.classList.toggle('dark', isDark)
-  const metaTheme = doc.head.querySelector('meta[name="theme-color"]')
-  metaTheme?.setAttribute('content', isDark ? darkMode : lightMode)
-}
-
-// Check and init motion preference
-function initMotionPref(doc = document) {
-  // Priority: Site config > System motion preference > View Transition support
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-  const supportsViewTransitions = 'startViewTransition' in doc
-  const shouldReduceMotion = reduceMotion || prefersReducedMotion || !supportsViewTransitions
-  doc.documentElement.classList.toggle('reduce-motion', shouldReduceMotion)
-  doc.documentElement.classList.add('js')
-}
-
-// 1. Initialize theme on first load
-initTheme()
-initMotionPref()
-
-// 2. Update theme before page transition to prevent flashing
-document.addEventListener('astro:before-swap', ({ newDocument }) => {
-  initTheme(newDocument)
-  initMotionPref(newDocument)
-})
-
-// 3. Listen to system theme changes in real-time
-window.matchMedia('(prefers-color-scheme: dark)')
-  .addEventListener('change', ({ matches: isDark }) => {
-    localStorage.setItem('theme', isDark ? 'dark' : 'light')
-    initTheme()
-    document.dispatchEvent(new Event('theme-changed'))
+  // Update theme before page transition to prevent flashing
+  document.addEventListener('astro:before-swap', ({ newDocument }) => {
+    initTheme(newDocument)
+    initMotionPref(newDocument)
   })
+
+  // Initialize theme on first load
+  initTheme()
+  initMotionPref()
+})()
 </script>
 
 <!-- Google Analytics -->

@@ -1,6 +1,6 @@
 import { visit } from 'unist-util-visit'
 
-const ADMONITION_TYPES = {
+const admonitionTypes = {
   note: 'NOTE',
   tip: 'TIP',
   important: 'IMPORTANT',
@@ -8,8 +8,8 @@ const ADMONITION_TYPES = {
   caution: 'CAUTION',
 }
 
-const GITHUB_ADMONITION_REGEX = new RegExp(
-  `^\\s*\\[!(${Object.values(ADMONITION_TYPES).join('|')})\\]\\s*`,
+const githubAdmonitionRegex = new RegExp(
+  `^\\s*\\[!(${Object.values(admonitionTypes).join('|')})\\]\\s*`,
   'i',
 )
 
@@ -34,11 +34,11 @@ export function remarkAdmonitions() {
     // Handle :::type syntax
     visit(tree, 'containerDirective', (node) => {
       const type = node.name
-      if (!ADMONITION_TYPES[type]) {
+      if (!admonitionTypes[type]) {
         return
       }
 
-      let title = ADMONITION_TYPES[type]
+      let title = admonitionTypes[type]
       const firstChild = node.children?.[0]
 
       // Use [title] syntax for custom title
@@ -74,13 +74,13 @@ export function remarkAdmonitions() {
       }
 
       const textNode = paragraph.children[0]
-      const match = textNode.value.match(GITHUB_ADMONITION_REGEX)
+      const match = textNode.value.match(githubAdmonitionRegex)
       if (!match) {
         return
       }
 
       const type = match[1].toLowerCase()
-      const title = ADMONITION_TYPES[type]
+      const title = admonitionTypes[type]
 
       textNode.value = textNode.value.substring(match[0].length)
 

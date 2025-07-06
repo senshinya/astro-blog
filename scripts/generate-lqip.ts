@@ -141,22 +141,22 @@ export async function getPalette(img: Buffer | string, colorCount = 10, quality 
  * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lqip.mjs
  */
 
-const LQIP_BASE_VALUE = -(2 ** 19)
-const PIXEL_MAX_VALUE = 0b11
-const L_MAX_VALUE = 0b11
-const A_MAX_VALUE = 0b111
-const B_MAX_VALUE = 0b111
-const MAX_COLOR_SCALE = 0b1000
-const BIT_SHIFTS = {
-  PIXEL_A: 18,
-  PIXEL_B: 16,
-  PIXEL_C: 14,
-  PIXEL_D: 12,
-  PIXEL_E: 10,
-  PIXEL_F: 8,
-  L: 6,
-  A: 3,
-  B: 0,
+const lqipBaseValue = -(2 ** 19)
+const pixelMaxValue = 0b11
+const lMaxValue = 0b11
+const aMaxValue = 0b111
+const bMaxValue = 0b111
+const maxColorScale = 0b1000
+const bitShifts = {
+  pixelA: 18,
+  pixelB: 16,
+  pixelC: 14,
+  pixelD: 12,
+  pixelE: 10,
+  pixelF: 8,
+  l: 6,
+  a: 3,
+  b: 0,
 } as const
 
 // Generate LQIP value from image
@@ -199,19 +199,19 @@ async function generateLqipValue(imagePath: string): Promise<number | null> {
         b: previewBuffer[offset + 2],
       })
       const clampedValue = Math.min(1, Math.max(0, 0.5 + L - baseL))
-      return Math.round(clampedValue * PIXEL_MAX_VALUE)
+      return Math.round(clampedValue * pixelMaxValue)
     })
 
-    const lqip = LQIP_BASE_VALUE
-      + ((pixelValues[0] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_A)
-      + ((pixelValues[1] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_B)
-      + ((pixelValues[2] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_C)
-      + ((pixelValues[3] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_D)
-      + ((pixelValues[4] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_E)
-      + ((pixelValues[5] & PIXEL_MAX_VALUE) << BIT_SHIFTS.PIXEL_F)
-      + ((ll & L_MAX_VALUE) << BIT_SHIFTS.L)
-      + ((aaa & A_MAX_VALUE) << BIT_SHIFTS.A)
-      + (bbb & B_MAX_VALUE)
+    const lqip = lqipBaseValue
+      + ((pixelValues[0] & pixelMaxValue) << bitShifts.pixelA)
+      + ((pixelValues[1] & pixelMaxValue) << bitShifts.pixelB)
+      + ((pixelValues[2] & pixelMaxValue) << bitShifts.pixelC)
+      + ((pixelValues[3] & pixelMaxValue) << bitShifts.pixelD)
+      + ((pixelValues[4] & pixelMaxValue) << bitShifts.pixelE)
+      + ((pixelValues[5] & pixelMaxValue) << bitShifts.pixelF)
+      + ((ll & lMaxValue) << bitShifts.l)
+      + ((aaa & aMaxValue) << bitShifts.a)
+      + (bbb & bMaxValue)
 
     return lqip
   }
@@ -230,9 +230,9 @@ function findOklabBits(targetL: number, targetA: number, targetB: number) {
   let bestBits = [0, 0, 0]
   let bestDifference = Infinity
 
-  for (let lli = 0; lli <= L_MAX_VALUE; lli++) {
-    for (let aaai = 0; aaai <= A_MAX_VALUE; aaai++) {
-      for (let bbbi = 0; bbbi <= B_MAX_VALUE; bbbi++) {
+  for (let lli = 0; lli <= lMaxValue; lli++) {
+    for (let aaai = 0; aaai <= aMaxValue; aaai++) {
+      for (let bbbi = 0; bbbi <= bMaxValue; bbbi++) {
         const { L, a, b } = bitsToLab(lli, aaai, bbbi)
         const chroma = Math.hypot(a, b)
         const scaledA = a / (1e-6 + chroma ** 0.5)
@@ -257,9 +257,9 @@ function findOklabBits(targetL: number, targetA: number, targetB: number) {
 
 // Convert bit representation to OKLab color
 function bitsToLab(ll: number, aaa: number, bbb: number) {
-  const L = (ll / L_MAX_VALUE) * 0.6 + 0.2
-  const a = (aaa / MAX_COLOR_SCALE) * 0.7 - 0.35
-  const b = ((bbb + 1) / MAX_COLOR_SCALE) * 0.7 - 0.35
+  const L = (ll / lMaxValue) * 0.6 + 0.2
+  const a = (aaa / maxColorScale) * 0.7 - 0.35
+  const b = ((bbb + 1) / maxColorScale) * 0.7 - 0.35
   return { L, a, b }
 }
 

@@ -3,7 +3,6 @@ import type { supportedLangs } from '@/i18n/config'
 type Exclude<T, U> = T extends U ? never : T
 
 export interface ThemeConfig {
-
   site: {
     title: string
     subtitle: string
@@ -13,7 +12,6 @@ export interface ThemeConfig {
     url: string
     favicon: string
   }
-
   color: {
     mode: 'light' | 'dark' | 'auto'
     light: {
@@ -29,7 +27,6 @@ export interface ThemeConfig {
       highlight: string
     }
   }
-
   global: {
     locale: typeof supportedLangs[number]
     moreLocales: typeof supportedLangs[number][]
@@ -39,7 +36,6 @@ export interface ThemeConfig {
     katex: boolean
     reduceMotion: boolean
   }
-
   comment: {
     enabled: boolean
     giscus?: {
@@ -63,7 +59,6 @@ export interface ThemeConfig {
       imageUploader?: boolean
     }
   }
-
   seo?: {
     twitterID?: string
     verification?: {
@@ -80,7 +75,6 @@ export interface ThemeConfig {
     }
     apiflashKey?: string
   }
-
   footer: {
     links: {
       name: string
@@ -88,7 +82,6 @@ export interface ThemeConfig {
     }[]
     startYear: number
   }
-
   preload?: {
     imageHostURL?: string
     customGoogleAnalyticsJS?: string

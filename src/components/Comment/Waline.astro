@@ -12,10 +12,7 @@ const {
 } = themeConfig.comment?.waline ?? {}
 ---
 
-<div
-  id="waline"
-  class="mt-16"
-></div>
+<div id="waline" class="no-heti mt-16" />
 
 <!-- Waline Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script
@@ -33,13 +30,6 @@ const {
   type="module"
 >
 let walineObserver = null
-
-function loadCSS(url) {
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = url
-  document.head.appendChild(link)
-}
 
 async function setupWaline() {
   const { init } = await import(walineJS)
@@ -68,126 +58,40 @@ async function setupWaline() {
   })
 }
 
+function cleanupWalineObserver() {
+  walineObserver?.disconnect()
+  walineObserver = null
+}
+
 // Create an intersection observer to lazy load Waline comments when the container enters viewport
 function lazySetupWaline() {
-  // Cleanup observer if exists
-  walineObserver?.disconnect()
+  // Cleanup Waline observer if exists
+  cleanupWalineObserver()
 
   const walineContainer = document.getElementById('waline')
   if (!walineContainer) {
     return
   }
 
-  loadCSS(walineCSS)
+  const link = document.createElement('link')
+  link.rel = 'stylesheet'
+  link.href = walineCSS
+  document.head.appendChild(link)
+
   walineObserver = new IntersectionObserver((entries) => {
     if (entries.some(entry => entry.isIntersecting)) {
       setupWaline()
       walineObserver?.disconnect()
     }
-  }, { rootMargin: '200px' })
+  }, { rootMargin: '500px' })
 
   walineObserver.observe(walineContainer)
 }
 
-lazySetupWaline()
 document.addEventListener('astro:page-load', lazySetupWaline)
+document.addEventListener('astro:before-swap', cleanupWalineObserver)
+lazySetupWaline()
 </script>
-
-<!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-<style is:global>
-#waline .wl-login-info {
-  --at-apply: 'mr-3 mt-0'
-}
-#waline .wl-avatar {
-  --at-apply: 'border-none'
-}
-#waline .wl-logout-btn {
-  --at-apply: 'z-99'
-}
-#waline .wl-login-nick:not(:has(img)) {
-  --at-apply: 'mt-1.4 leading-3.6';
-}
-#waline .wl-panel {
-  --at-apply: 'm-0 border-secondary/25 rounded-lg bg-transparent'
-}
-#waline .wl-header {
-  --at-apply: 'p-0';
-}
-#waline .wl-header-item {
-  --at-apply: 'border-b border-primary/25 border-solid';
-}
-#waline .wl-header label {
-  --at-apply: 'text-3';
-}
-#waline .wl-header input {
-  --at-apply: 'text-2.8';
-}
-#waline .wl-card,
-#waline .wl-header.item3 {
-  --at-apply: 'border-b-0';
-}
-#waline .wl-card .wl-quote {
-  --at-apply: 'mt-4 border-is-none';
-}
-#waline .wl-editor {
-  --at-apply: 'min-h-20';
-}
-#waline .wl-editor::placeholder {
-  --at-apply: 'c-primary/25';
-}
-#waline .wl-footer {
-  --at-apply: 'm-2';
-}
-#waline .wl-text-number,
-#waline .wl-action[title="Markdown Guide"],
-#waline .wl-sort,
-#waline .wl-gallery::-webkit-scrollbar {
-  --at-apply: 'hidden';
-}
-#waline .wl-emoji-popup {
-  --at-apply: 'start-0 max-w-532px border-secondary/25';
-}
-#waline .wl-emoji-popup .wl-tab-wrapper {
-  scrollbar-width: thin;
-}
-#waline .wl-gif-popup {
-  --at-apply: 'border-secondary/25';
-}
-#waline .wl-gif-popup input {
-  --at-apply: 'border-secondary/25 bg-background';
-}
-#waline .wl-gif-popup input::placeholder {
-  --at-apply: 'text-3.5 c-secondary/30';
-}
-#waline .wl-gallery {
-  --at-apply: 'scrollbar-hidden';
-}
-#waline .wl-btn {
-  --at-apply: 'duration-150 hover:border-secondary/80';
-}
-#waline .wl-meta-head {
-  --at-apply: 'px-0 py-3';
-}
-#waline .wl-card-item {
-  --at-apply: 'px-0 py-1';
-}
-#waline .wl-user-avatar {
-  --at-apply: 'mt-1';
-}
-#waline .wl-content p {
-  --at-apply: 'text-3.5 leading-6';
-}
-#waline .wl-time {
-  --at-apply: 'c-primary/75';
-}
-#waline .wl-edit,
-#waline .wl-delete {
-  --at-apply: 'mr-0.4';
-}
-#waline .wl-like {
-  --at-apply: 'mr-1.2';
-}
-</style>
 
 <!-- Official CSS Variables >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <style>

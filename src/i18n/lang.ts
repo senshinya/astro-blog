@@ -1,12 +1,22 @@
 import { allLocales, defaultLocale, moreLocales } from '@/config'
 
-// Gets the language code from the current path
+/**
+ * Gets the language code from the current path
+ *
+ * @param path Current page path
+ * @returns Language code detected from path or default locale
+ */
 export function getLangFromPath(path: string) {
   return moreLocales.find(lang =>
     path.startsWith(`/${lang}/`)) || defaultLocale
 }
 
-// Get the next language code in the global language cycle
+/**
+ * Get the next language code in the global language cycle
+ *
+ * @param currentLang Current language code
+ * @returns Next language code in the global cycle
+ */
 export function getNextGlobalLang(currentLang: string): string {
   // Get index of current language
   const currentIndex = allLocales.indexOf(currentLang)

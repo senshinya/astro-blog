@@ -10,7 +10,7 @@ interface Props {
 const { tags, currentTag = '', lang } = Astro.props;
 ---
 
-<div class="flex flex-wrap gap-x-3 gap-y-3.2">
+<div class="no-heti flex flex-wrap gap-x-3 gap-y-3.2">
   {tags.map(tag => (
     <a
       href={getTagPath(tag, lang)}

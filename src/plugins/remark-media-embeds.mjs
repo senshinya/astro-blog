@@ -16,7 +16,7 @@ const embedHandlers = {
     }
 
     return `
-    <a href="https://github.com/${repo}" class="gc-container" target="_blank" rel="noopener noreferrer" data-repo="${repo}">
+    <a href="https://github.com/${repo}" class="no-heti gc-container" target="_blank" rel="noopener noreferrer" data-repo="${repo}">
       <div class="gc-title-bar">
         <div class="gc-owner-avatar" style="background-size: cover; background-position: center;" aria-hidden="true"></div>
         <span class="gc-repo-title">
@@ -84,15 +84,15 @@ const embedHandlers = {
     `
   },
 
-  // X Post Card
-  x: (node) => {
-    const xUrl = node.attributes?.url ?? ''
-    if (!xUrl) {
-      console.warn(`Missing X URL`)
+  // Tweet Card
+  tweet: (node) => {
+    const tweetUrl = node.attributes?.url ?? ''
+    if (!tweetUrl) {
+      console.warn(`Missing Tweet URL`)
       return false
     }
 
-    const twitterUrl = xUrl.replace(/(\w+:\/\/)?x\.com\//g, '$1twitter.com/')
+    const twitterUrl = tweetUrl.replace(/(\w+:\/\/)?x\.com\//g, '$1twitter.com/')
 
     return `
     <figure>

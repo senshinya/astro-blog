@@ -3,7 +3,7 @@ import type { CollectionEntry } from 'astro:content'
 import PinIcon from '@/assets/icons/pin-icon.svg'
 import PostDate from '@/components/PostDate.astro'
 import { defaultLocale } from '@/config'
-import { generateDescription } from '@/utils/description'
+import { getPostDescription } from '@/utils/description'
 import { isHomePage } from '@/utils/page'
 
 type Post = CollectionEntry<'posts'> & {
@@ -22,16 +22,13 @@ export interface Props {
 }
 
 function getPostPath(post: Post) {
-  // Prioritize abbrlink over slug
-  const postPath = post.data.abbrlink || post.id
+  const slug = post.data.abbrlink || post.id
 
-  // If default language, return root path
   if (lang === defaultLocale) {
-    return `/${postPath}/`
+    return `/${slug}/`
   }
 
-  // Add language prefix for non-default languages
-  return `/${lang}/${postPath}/`
+  return `/${lang}/${slug}/`
 }
 ---
 
@@ -41,7 +38,6 @@ function getPostPath(post: Post) {
       class="mb-5.5"
       lg={isHome ? 'mb-10' : ''}
     >
-
       {/* post title */}
       <h3 class="inline transition-colors hover:c-primary">
         <a
@@ -54,15 +50,14 @@ function getPostPath(post: Post) {
         >
           {post.data.title}
         </a>
-
-          {/* pinned icon */}
-          {pinned && (
-            <PinIcon
-              aria-hidden="true"
-              class="ml-0.25em inline-block aspect-square w-0.98em translate-y--0.1em lg:(w-1.05em translate-y--0.15em)"
-              fill="currentColor"
-            />
-          )}
+        {/* pinned icon */}
+        {pinned && (
+          <PinIcon
+            aria-hidden="true"
+            class="ml-0.25em inline-block aspect-square w-0.98em translate-y--0.1em lg:(w-1.05em translate-y--0.15em)"
+            fill="currentColor"
+          />
+        )}
       </h3>
 
       {/* mobile post time */}
@@ -91,10 +86,9 @@ function getPostPath(post: Post) {
           class="heti hidden"
           lg="mt-2.25 block"
         >
-          <p>{generateDescription(post, 'list')}</p>
+          <p>{getPostDescription(post, 'list')}</p>
         </div>
       )}
-
     </li>
   ))}
 </ul>

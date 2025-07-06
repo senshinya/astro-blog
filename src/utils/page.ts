@@ -2,23 +2,26 @@ import { moreLocales } from '@/config'
 import { getLangFromPath } from '@/i18n/lang'
 import { getLocalizedPath } from '@/i18n/path'
 
-// Checks if cleaned path matches a specific page type
+// Checks if normalized path matches a specific page type
 function isPageType(path: string, prefix: string = '') {
   // Removes leading and trailing slashes from a path
-  const clean = path.replace(/^\/|\/$/g, '')
+  const normalizedPath = path.replace(/^\/|\/$/g, '')
+
   return prefix === ''
-    ? clean === '' || moreLocales.includes(clean)
-    : clean.startsWith(prefix) || moreLocales.some(lang => clean.startsWith(`${lang}/${prefix}`))
+    ? normalizedPath === '' || moreLocales.includes(normalizedPath)
+    : normalizedPath.startsWith(prefix)
+      || moreLocales.some(lang => normalizedPath.startsWith(`${lang}/${prefix}`))
 }
 
-// Checks if the current path is the home/post/tag/about page
 export function isHomePage(path: string) {
   return isPageType(path)
 }
+
 export function isPostPage(path: string) {
   const categories = ['daily', 'fiddling', 'notes', 'projects']
   return categories.some(category => isPageType(path, category))
 }
+
 export function isTagPage(path: string) {
   return isPageType(path, 'tags')
 }
@@ -28,11 +31,12 @@ export function isMemosPage(path: string) {
 export function isFriendsPage(path: string) {
   return isPageType(path, 'friends')
 }
+
 export function isAboutPage(path: string) {
   return isPageType(path, 'about')
 }
 
-// Returns page context including language and page type information
+// Returns page context with language, page types and localization helper
 export function getPageInfo(path: string) {
   const currentLang = getLangFromPath(path)
   const isHome = isHomePage(path)
@@ -50,6 +54,7 @@ export function getPageInfo(path: string) {
     isMemos,
     isFriends,
     isAbout,
-    getLocalizedPath: (targetPath: string) => getLocalizedPath(targetPath, currentLang),
+    getLocalizedPath: (targetPath: string) =>
+      getLocalizedPath(targetPath, currentLang),
   }
 }

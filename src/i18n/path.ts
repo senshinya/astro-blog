@@ -3,6 +3,7 @@ import { getLangFromPath, getNextGlobalLang } from '@/i18n/lang'
 
 /**
  * Get path to tag page with language support
+ *
  * @param tagName Tag name
  * @param lang Current language code
  * @returns Path to tag page
@@ -15,6 +16,7 @@ export function getTagPath(tagName: string, lang: string): string {
 
 /**
  * Get next language path for [...tags_tag] page
+ *
  * @param currentPath Current page path
  * @returns Path to tags list page in next language
  */
@@ -30,26 +32,33 @@ export function getTagsListLangPath(currentPath: string): string {
   return `/${nextLang}/tags/`
 }
 
-// Generates a localized path based on current language
+/**
+ * Generate localized path based on current language
+ *
+ * @param path Path to localize
+ * @param currentLang Current language code
+ * @returns Localized path with language prefix
+ */
 export function getLocalizedPath(path: string, currentLang?: string) {
-  const clean = path.replace(/^\/|\/$/g, '')
+  const normalizedPath = path.replace(/^\/|\/$/g, '')
   const lang = currentLang || getLangFromPath(path)
 
-  if (clean === '') {
+  if (normalizedPath === '') {
     return lang === defaultLocale ? '/' : `/${lang}/`
   }
 
-  return lang === defaultLocale ? `/${clean}/` : `/${lang}/${clean}/`
+  return lang === defaultLocale ? `/${normalizedPath}/` : `/${lang}/${normalizedPath}/`
 }
 
 /**
  * Build path for next language
+ *
  * @param currentPath Current page path
  * @param currentLang Current language code
  * @param nextLang Next language code to switch to
  * @returns Path for next language
  */
-export function buildNextLangPath(currentPath: string, currentLang: string, nextLang: string): string {
+export function getNextLangPath(currentPath: string, currentLang: string, nextLang: string): string {
   if (currentPath === '/') {
     return nextLang === defaultLocale ? '/' : `/${nextLang}/`
   }
@@ -71,17 +80,19 @@ export function buildNextLangPath(currentPath: string, currentLang: string, next
 
 /**
  * Get next language path from global language list
+ *
  * @param currentPath Current page path
  * @returns Path for next supported language
  */
 export function getNextGlobalLangPath(currentPath: string): string {
   const currentLang = getLangFromPath(currentPath)
   const nextLang = getNextGlobalLang(currentLang)
-  return buildNextLangPath(currentPath, currentLang, nextLang)
+  return getNextLangPath(currentPath, currentLang, nextLang)
 }
 
 /**
  * Get next language path from supported language list
+ *
  * @param currentPath Current page path
  * @param supportedLangs List of supported language codes
  * @returns Path for next supported language
@@ -104,5 +115,5 @@ export function getNextSupportedLangPath(currentPath: string, supportedLangs: st
   const currentIndex = sortedLangs.indexOf(currentLang)
   const nextLang = sortedLangs[(currentIndex + 1) % sortedLangs.length]
 
-  return buildNextLangPath(currentPath, currentLang, nextLang)
+  return getNextLangPath(currentPath, currentLang, nextLang)
 }

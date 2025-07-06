@@ -7,6 +7,7 @@
   /* Custom Theme Colors */
   --secondary-color: oklch(77% 0.005 298);
   --secondary-color-25: oklch(77% 0.005 298 / 25%);
+  --secondary-color-5: oklch(77% 0.005 298 / 5%);
   --background-color: oklch(22% 0.005 298);
 
   --color-fg-default: var(--secondary-color);
@@ -116,13 +117,13 @@ body {
   border-color: var(--secondary-color-25)!important;
 }
 
-/* No Giscus Copyright and Avatar Line */
+/* Hide Giscus Copyright and Avatar Line */
 .gsc-tl-line,
 .gsc-left-header em {
   display: none;
 }
 
-/* No Underline and Small Size on Comments Count */
+/* Font Size and Color on Comments Count */
 h4.gsc-comments-count-separator,
 h4.gsc-replies-count {
   color: var(--secondary-color);
@@ -160,14 +161,14 @@ h4.gsc-replies-count {
   padding-bottom: 0.5rem;
 }
 
-/* No Underline on Reply Time */
+/* Hide Underline on Reply Time */
 .gsc-comment-author a:has(time),
 .gsc-reply-author a:has(time) {
   text-decoration: none;
   font-size: 0.75rem;
 }
 
-/* No Underline on Comments Count */
+/* Hide Underline on Comments Count */
 .gsc-comments-count a {
   text-decoration: none!important;
 }
@@ -192,4 +193,16 @@ h4.gsc-replies-count {
 /* Thinner Bottom Line on Comment Box Preview Border */
 .gsc-comment-box-preview {
   border-bottom-width: 1px;
+}
+
+/* Hide Underline on sign out button */
+.link-secondary {
+  text-decoration: none;
+}
+
+/* Scrollbar Style on Code Blocks */
+pre {
+  background-color: var(--secondary-color-5)!important;
+  scrollbar-width: thin!important;
+  scrollbar-color: var(--secondary-color-25) transparent!important;
 }

@@ -14,11 +14,6 @@ body::selection {
   --at-apply: 'bg-highlight';
 }
 
-/* PhotoSwipe Background Color */
-.pswp .pswp__bg {
-  --at-apply: 'bg-background!';
-}
-
 /* Fix KaTeX Overflow with Hidden Scrollbar */
 .katex-display {
   --at-apply: 'my-6 overflow-x-auto overflow-y-hidden scrollbar-hidden';

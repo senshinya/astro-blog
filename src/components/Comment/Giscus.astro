@@ -15,10 +15,7 @@ const {
 } = themeConfig.comment?.giscus ?? {}
 ---
 
-<div
-  id="giscus"
-  class="giscus mt-16"
-></div>
+<div id="giscus" class="giscus mt-16" />
 
 <!-- Giscus Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script
@@ -93,7 +90,10 @@ function updateGiscusTheme() {
   )
 }
 
-setupGiscus()
 document.addEventListener('astro:page-load', setupGiscus)
 document.addEventListener('theme-changed', updateGiscusTheme)
+document.addEventListener('astro:before-swap', () => {
+  document.removeEventListener('theme-changed', updateGiscusTheme)
+})
+setupGiscus()
 </script>

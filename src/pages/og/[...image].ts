@@ -1,18 +1,18 @@
 import type { CollectionEntry } from 'astro:content'
 import { OGImageRoute } from 'astro-og-canvas'
 import { getCollection } from 'astro:content'
-import { generateDescription } from '@/utils/description'
+import { getPostDescription } from '@/utils/description'
 
 // eslint-disable-next-line antfu/no-top-level-await
 const posts = await getCollection('posts')
 
-// Convert blog entries into a lookup object with slug as key and title/description as value
+// Create slug-to-metadata lookup object for blog posts
 const pages = Object.fromEntries(
   posts.map((post: CollectionEntry<'posts'>) => [
     post.id,
     {
       title: post.data.title,
-      description: post.data.description || generateDescription(post, 'og'),
+      description: getPostDescription(post, 'og'),
     },
   ]),
 )

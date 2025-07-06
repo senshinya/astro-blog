@@ -8,7 +8,6 @@ declare global {
   interface Window {
     webkitAudioContext: typeof AudioContext
   }
-
   interface Document {
     startViewTransition: (updateCallback: () => void) => ViewTransition
   }

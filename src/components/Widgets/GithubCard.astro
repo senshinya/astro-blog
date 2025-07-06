@@ -1,80 +1,81 @@
 <script>
-let githubCardsObserver: IntersectionObserver | null = null
-
-async function loadCardData(card: HTMLElement) {
+async function loadRepoData(card: HTMLElement) {
   const repo = card.dataset.repo
   if (!repo) {
     return
   }
 
-  const el = {
-    avatar: card.querySelector('.gc-owner-avatar') as HTMLElement,
-    desc: card.querySelector('.gc-repo-description') as HTMLElement,
-    stars: card.querySelector('.gc-stars-count') as HTMLElement,
-    forks: card.querySelector('.gc-forks-count') as HTMLElement,
-    license: card.querySelector('.gc-license-info') as HTMLElement,
-  } as const
+  const avatar = card.getElementsByClassName('gc-owner-avatar')[0] as HTMLElement
+  const desc = card.getElementsByClassName('gc-repo-description')[0] as HTMLElement
+  const stars = card.getElementsByClassName('gc-stars-count')[0] as HTMLElement
+  const forks = card.getElementsByClassName('gc-forks-count')[0] as HTMLElement
+  const license = card.getElementsByClassName('gc-license-info')[0] as HTMLElement
 
-  try {
-    const response = await fetch(`https://api.github.com/repos/${repo}`)
-
-    if (!response.ok) {
-      if (el.desc) {
-        el.desc.textContent = 'Loading failed.'
-      }
-      return
-    }
-
-    const data = await response.json()
+  function updateCardUI(data: any) {
     const numberFormat = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 })
 
-    if (el.avatar && data.owner?.avatar_url) {
-      el.avatar.style.backgroundImage = `url(${data.owner.avatar_url})`
+    if (avatar && data.owner?.avatar_url) {
+      avatar.style.backgroundImage = `url(${data.owner.avatar_url})`
     }
 
-    if (el.desc) {
-      el.desc.textContent = data.description ?? 'No description'
+    if (desc) {
+      desc.textContent = data.description ?? 'No description'
     }
 
-    if (el.stars) {
-      el.stars.textContent = numberFormat.format(data.stargazers_count ?? 0)
+    if (stars) {
+      stars.textContent = numberFormat.format(data.stargazers_count ?? 0)
     }
 
-    if (el.forks) {
-      el.forks.textContent = numberFormat.format(data.forks_count ?? 0)
+    if (forks) {
+      forks.textContent = numberFormat.format(data.forks_count ?? 0)
     }
 
-    if (el.license) {
-      el.license.textContent = data.license?.spdx_id ?? 'No License'
+    if (license) {
+      license.textContent = data.license?.spdx_id ?? 'No License'
     }
   }
-  catch (error) {
-    console.error(`Failed to fetch ${repo}:`, error)
+
+  const cacheKey = `github-repo-${repo}`
+  const cached = sessionStorage.getItem(cacheKey)
+
+  if (!cached) {
+    try {
+      const response = await fetch(`https://api.github.com/repos/${repo}`)
+
+      if (!response.ok) {
+        if (desc) {
+          const errorMessage = response.status === 404 ? 'Repository not found' : 'Failed to load repository data'
+          desc.textContent = errorMessage
+        }
+        return
+      }
+
+      const data = await response.json()
+
+      sessionStorage.setItem(cacheKey, JSON.stringify(data))
+      updateCardUI(data)
+    }
+    catch (error) {
+      console.error(`Failed to fetch ${repo}:`, error)
+    }
+  }
+  else {
+    const data = JSON.parse(cached)
+    updateCardUI(data)
   }
 }
 
-function lazySetupGithubCards() {
-  // Cleanup observer if exists
-  githubCardsObserver?.disconnect()
-
-  const githubCards = document.getElementsByClassName('gc-container')
-  if (githubCards.length === 0) {
+function setupGithubCards() {
+  const cards = document.getElementsByClassName('gc-container')
+  if (cards.length === 0) {
     return
   }
 
-  // Create an intersection observer to lazy load GitHub repo data when cards enter viewport
-  githubCardsObserver = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        loadCardData(entry.target as HTMLElement)
-        githubCardsObserver?.unobserve(entry.target)
-      }
-    })
-  }, { rootMargin: '200px' })
-
-  Array.from(githubCards).forEach(card => githubCardsObserver?.observe(card))
+  Array.from(cards).forEach((card) => {
+    loadRepoData(card as HTMLElement)
+  })
 }
 
-lazySetupGithubCards()
-document.addEventListener('astro:page-load', lazySetupGithubCards)
+document.addEventListener('astro:page-load', setupGithubCards)
+setupGithubCards()
 </script>

@@ -1,88 +1,5 @@
----
-import twikooCSS from 'twikoo/dist/twikoo.css?url'
-import twikooPath from 'twikoo/dist/twikoo.nocss.js?url'
-import { defaultLocale, themeConfig } from '@/config'
-import { twikooLocaleMap } from '@/i18n/config'
-
-const { envId = '' } = themeConfig.comment?.twikoo ?? {}
----
-
-<!-- class="mt-16" not working -->
-<div id="twikoo"></div>
-
-<!-- Twikoo Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-<!-- Using twikoo.min.js causes CSS loading failure after View Transitions -->
-<script
-  is:inline
-  src={twikooPath}
-></script>
-
-<script
-  is:inline
-  define:vars={{
-    envId,
-    twikooLocaleMap,
-    defaultLocale,
-    twikooCSS,
-  }}
->
-let twikooObserver = null
-
-function loadCSS(url) {
-  const link = document.createElement('link')
-  link.rel = 'stylesheet'
-  link.href = url
-  document.head.appendChild(link)
-}
-
-function setupTwikoo() {
-  const currentPath = window.location.pathname
-  const pathLang = Object.keys(twikooLocaleMap).find(code =>
-    currentPath.startsWith(`/${code}/`),
-  )
-  const lang = pathLang ?? defaultLocale
-  const currentTwikooLang = twikooLocaleMap[lang]
-
-  twikoo.init({
-    envId,
-    el: '#twikoo',
-    // region: 'ap-shanghai', // Specify for Tencent Cloud, omit for Vercel
-    path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'), // Share comments on posts in different languages
-    lang: currentTwikooLang,
-  })
-}
-
-// Create an intersection observer to lazy load Twikoo comments when the container enters viewport
-function lazySetupTwikoo() {
-  // Cleanup observer if exists
-  twikooObserver?.disconnect()
-
-  const twikooContainer = document.getElementById('twikoo')
-  if (!twikooContainer) {
-    return
-  }
-
-  loadCSS(twikooCSS)
-  twikooObserver = new IntersectionObserver((entries) => {
-    if (entries.some(entry => entry.isIntersecting)) {
-      setupTwikoo()
-      twikooObserver?.disconnect()
-    }
-  }, { rootMargin: '200px' })
-
-  twikooObserver.observe(twikooContainer)
-}
-
-lazySetupTwikoo()
-document.addEventListener('astro:page-load', lazySetupTwikoo)
-</script>
-
-<!-- Custom CSS Styles >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
-<style is:global>
+/* Twikoo >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 /* Global styles */
-#twikoo {
-  --at-apply: 'mt-16'
-}
 #twikoo svg,
 #twikoo .tk-action-count {
   --at-apply: 'c-secondary/80'
@@ -193,4 +110,97 @@ document.addEventListener('astro:page-load', lazySetupTwikoo)
 #twikoo .tk-replies .tk-comment {
   --at-apply: 'mt-6'
 }
-</style>
+
+/* Waline >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+#waline .wl-login-info {
+  --at-apply: 'mr-3 mt-0'
+}
+#waline .wl-avatar {
+  --at-apply: 'border-none'
+}
+#waline .wl-logout-btn {
+  --at-apply: 'z-99'
+}
+#waline .wl-login-nick:not(:has(img)) {
+  --at-apply: 'mt-1.4 leading-3.6';
+}
+#waline .wl-panel {
+  --at-apply: 'm-0 border-secondary/25 rounded-lg bg-transparent'
+}
+#waline .wl-header {
+  --at-apply: 'p-0';
+}
+#waline .wl-header-item {
+  --at-apply: 'border-b border-primary/25 border-solid';
+}
+#waline .wl-header label {
+  --at-apply: 'text-3';
+}
+#waline .wl-header input {
+  --at-apply: 'text-2.8';
+}
+#waline .wl-card,
+#waline .wl-header.item3 {
+  --at-apply: 'border-b-0';
+}
+#waline .wl-card .wl-quote {
+  --at-apply: 'mt-4 border-is-none';
+}
+#waline .wl-editor {
+  --at-apply: 'min-h-20';
+}
+#waline .wl-editor::placeholder {
+  --at-apply: 'c-primary/25';
+}
+#waline .wl-footer {
+  --at-apply: 'm-2';
+}
+#waline .wl-text-number,
+#waline .wl-action[title="Markdown Guide"],
+#waline .wl-sort,
+#waline .wl-gallery::-webkit-scrollbar {
+  --at-apply: 'hidden';
+}
+#waline .wl-emoji-popup {
+  --at-apply: 'start-0 max-w-532px border-secondary/25';
+}
+#waline .wl-emoji-popup .wl-tab-wrapper {
+  scrollbar-width: thin;
+}
+#waline .wl-gif-popup {
+  --at-apply: 'border-secondary/25';
+}
+#waline .wl-gif-popup input {
+  --at-apply: 'border-secondary/25 bg-background';
+}
+#waline .wl-gif-popup input::placeholder {
+  --at-apply: 'text-3.5 c-secondary/30';
+}
+#waline .wl-gallery {
+  --at-apply: 'scrollbar-hidden';
+}
+#waline .wl-btn {
+  --at-apply: 'duration-150 hover:border-secondary/80';
+}
+#waline .wl-meta-head {
+  --at-apply: 'px-0 py-3';
+}
+#waline .wl-card-item {
+  --at-apply: 'px-0 py-1';
+}
+#waline .wl-user-avatar {
+  --at-apply: 'mt-1';
+}
+#waline .wl-content p {
+  --at-apply: 'text-3.5 leading-6';
+}
+#waline .wl-time {
+  --at-apply: 'c-primary/75';
+}
+#waline .wl-edit,
+#waline .wl-delete {
+  --at-apply: 'mr-0.4';
+}
+#waline .wl-like {
+  --at-apply: 'mr-1.2';
+}

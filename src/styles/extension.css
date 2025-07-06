@@ -1,7 +1,6 @@
 /* GitHub Card >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .gc-container {
-  --at-apply: 'my-6 block overflow-x-auto uno-round-border bg-secondary/5 px-5 py-4';
-  --at-apply: 'transition-colors ease-out hover:(bg-secondary/10 c-primary) lg:(px-6 py-5)';
+  --at-apply: 'my-6 block overflow-x-auto uno-round-border bg-secondary/5 px-5 py-4 transition-colors ease-out hover:(bg-secondary/10 c-primary) lg:(px-6 py-5)';
   scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.15) transparent;
 }

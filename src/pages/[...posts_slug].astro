@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from 'astro:content'
 import { getCollection, render } from 'astro:content'
-import Comments from '@/components/Comments/Index.astro'
+import Comment from '@/components/Comment/Index.astro'
 import PostDate from '@/components/PostDate.astro'
 import TagsWrapper from '@/components/TagsWrapper.astro'
 import BackButton from '@/components/Widgets/BackButton.astro'
@@ -9,7 +9,7 @@ import TOC from '@/components/Widgets/TOC.astro'
 import { allLocales, defaultLocale, moreLocales } from '@/config'
 import Layout from '@/layouts/Layout.astro'
 import { checkPostSlugDuplication } from '@/utils/content'
-import { generateDescription } from '@/utils/description'
+import { getPostDescription } from '@/utils/description'
 
 export async function getStaticPaths() {
   const posts = await getCollection('posts')
@@ -45,8 +45,8 @@ export async function getStaticPaths() {
       [...langs].sort((a, b) => allLocales.indexOf(a) - allLocales.indexOf(b)),
     ]),
   )
-
   // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+
   type PathItem = {
     params: { posts_slug: string }
     props: { post: any, lang: string, supportedLangs: string[] }
@@ -95,7 +95,7 @@ export async function getStaticPaths() {
 }
 
 const { post, lang, supportedLangs } = Astro.props
-const description = generateDescription(post, 'meta')
+const description = getPostDescription(post, 'meta')
 const { Content, headings, remarkPluginFrontmatter } = await render(post)
 ---
 
@@ -105,7 +105,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
   postSlug={post.id}
   supportedLangs={supportedLangs}
 >
-  <article data-pagefind-body class="heti mb-12.6">
+  <article data-pagefind-body class="heti">
     <div class="relative">
       <!-- Go Back Button On Desktop -->
       <BackButton />
@@ -122,7 +122,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
 
     <!-- Date -->
     <div
-      id="gsap-post-date"
+      id="post-date"
       class="mb-17.2 block c-primary font-time"
       transition:name={`time-${post.data.abbrlink || post.id}${lang ? `-${lang}` : ''}`}
       data-disable-theme-transition
@@ -136,21 +136,20 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
     <!-- TOC -->
     {post.data.toc && <TOC headings={headings} />}
     <!-- Content -->
-     <div id="gsap-post-content">
+    <div id="post-content">
       <Content />
+      <!-- Copyright -->
+      <div id="post-copyright" />
+      <!-- Tags -->
+      {post.data.tags?.length > 0 && (
+        <div class="mt-12.6 uno-decorative-line" />
+        <TagsWrapper
+          tags={post.data.tags}
+          lang={lang}
+        />
+      )}
+      <!-- Comment -->
+      <Comment />
     </div>
   </article>
-
-  <!-- Tags -->
-  {post.data.tags?.length > 0 && (
-    <div id="gsap-post-tags">
-      <div class="uno-decorative-line"></div>
-      <TagsWrapper
-        tags={post.data.tags}
-        lang={lang}
-      />
-    </div>
-  )}
-  <!-- Comments -->
-  <Comments />
 </Layout>

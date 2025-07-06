@@ -3,19 +3,20 @@ import { getCollection, render } from 'astro:content'
 import { defaultLocale } from '@/config'
 import { memoize } from '@/utils/cache'
 
-// Type definitions
 export type Post = CollectionEntry<'posts'> & {
   remarkPluginFrontmatter: {
     minutes: number
   }
 }
 
+const metaCache = new Map<string, { minutes: number }>()
+
 /**
  * Add metadata including reading time to a post
+ *
  * @param post The post to enhance with metadata
  * @returns Enhanced post with reading time information
  */
-const metaCache = new Map<string, { minutes: number }>()
 async function addMetaToPost(post: CollectionEntry<'posts'>): Promise<Post> {
   const cacheKey = `${post.id}-${post.data.lang || 'universal'}`
 
@@ -32,6 +33,7 @@ async function addMetaToPost(post: CollectionEntry<'posts'>): Promise<Post> {
 
 /**
  * Find duplicate post slugs within the same language
+ *
  * @param posts Array of blog posts to check
  * @returns Array of descriptive error messages for duplicate slugs
  */
@@ -63,16 +65,17 @@ async function _checkPostSlugDuplication(posts: CollectionEntry<'posts'>[]): Pro
 
   return duplicates
 }
-// Export memoized version
+
 export const checkPostSlugDuplication = memoize(_checkPostSlugDuplication)
 
 /**
  * Get all posts (including pinned ones, excluding drafts in production)
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Posts filtered by language, enhanced with metadata, sorted by date
  */
 async function _getPosts(lang?: string) {
-  const currentLang = lang ?? defaultLocale
+  const currentLang = lang || defaultLocale
 
   const filteredPosts = await getCollection(
     'posts',
@@ -89,7 +92,7 @@ async function _getPosts(lang?: string) {
     b.data.published.valueOf() - a.data.published.valueOf(),
   )
 }
-// Export memoized version
+
 export const getPosts = memoize(_getPosts)
 
 /**
@@ -118,6 +121,7 @@ export const getTravels = memoize(_getTravels)
 
 /**
  * Get all non-pinned posts
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Regular posts (non-pinned), filtered by language
  */
@@ -125,11 +129,12 @@ async function _getRegularPosts(lang?: string) {
   const posts = await getPosts(lang)
   return posts.filter(post => !post.data.pin)
 }
-// Export memoized version
+
 export const getRegularPosts = memoize(_getRegularPosts)
 
 /**
  * Get pinned posts sorted by pin priority
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Pinned posts sorted by pin value in descending order
  */
@@ -139,11 +144,12 @@ async function _getPinnedPosts(lang?: string) {
     .filter(post => post.data.pin && post.data.pin > 0)
     .sort((a, b) => (b.data.pin ?? 0) - (a.data.pin ?? 0))
 }
-// Export memoized version
+
 export const getPinnedPosts = memoize(_getPinnedPosts)
 
 /**
  * Group posts by year and sort within each year
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Map of posts grouped by year (descending), sorted by date within each year
  */
@@ -176,6 +182,7 @@ async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
     } as unknown as Post)
   })
 
+  // Sort posts within each year by date
   yearMap.forEach((yearPosts) => {
     yearPosts.sort((a, b) => {
       const aDate = a.data.published
@@ -186,11 +193,12 @@ async function _getPostsByYear(lang?: string): Promise<Map<number, Post[]>> {
 
   return new Map([...yearMap.entries()].sort((a, b) => b[0] - a[0]))
 }
-// Export memoized version
+
 export const getPostsByYear = memoize(_getPostsByYear)
 
 /**
  * Group posts by their tags
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Map where keys are tag names and values are arrays of posts with that tag
  */
@@ -209,11 +217,12 @@ async function _getPostsGroupByTags(lang?: string) {
 
   return tagMap
 }
-// Export memoized version
+
 export const getPostsGroupByTags = memoize(_getPostsGroupByTags)
 
 /**
  * Get all tags sorted by post count
+ *
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Array of tags sorted by popularity (most posts first)
  */
@@ -224,11 +233,12 @@ async function _getAllTags(lang?: string) {
   tagsWithCount.sort((a, b) => b[1].length - a[1].length)
   return tagsWithCount.map(([tag]) => tag)
 }
-// Export memoized version
+
 export const getAllTags = memoize(_getAllTags)
 
 /**
  * Get all posts that contain a specific tag
+ *
  * @param tag The tag name to filter posts by
  * @param lang The language code to filter by, defaults to site's default language
  * @returns Array of posts that contain the specified tag
@@ -237,11 +247,12 @@ async function _getPostsByTag(tag: string, lang?: string) {
   const tagMap = await getPostsGroupByTags(lang)
   return tagMap.get(tag) ?? []
 }
-// Export memoized version
+
 export const getPostsByTag = memoize(_getPostsByTag)
 
 /**
  * Check which languages support a specific tag
+ *
  * @param tag The tag name to check language support for
  * @returns Array of language codes that support the specified tag
  */
@@ -259,5 +270,5 @@ async function _getTagSupportedLangs(tag: string) {
     ),
   )
 }
-// Export memoized version
+
 export const getTagSupportedLangs = memoize(_getTagSupportedLangs)
