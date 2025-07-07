@@ -47,12 +47,10 @@ function setupGiscus() {
   const giscusContainer = document.getElementById('giscus')
   giscusContainer.innerHTML = ''
 
-  const currentPath = window.location.pathname
-  const pathLang = Object.keys(giscusLocaleMap).find(code =>
-    currentPath.startsWith(`/${code}/`),
-  )
-  const lang = pathLang ?? defaultLocale
-  const currentGiscusLang = giscusLocaleMap[lang]
+  const lang = Object.keys(giscusLocaleMap).find(code =>
+    window.location.pathname.startsWith(`/${code}/`),
+  ) ?? defaultLocale
+  const giscusLang = giscusLocaleMap[lang]
 
   // Set up basic attributes
   const dataAttributes = {
@@ -66,7 +64,7 @@ function setupGiscus() {
     emitMetadata,
     inputPosition,
     theme: getThemeUrl(),
-    lang: currentGiscusLang,
+    lang: giscusLang,
   }
 
   const script = document.createElement('script')
@@ -92,8 +90,5 @@ function updateGiscusTheme() {
 
 document.addEventListener('astro:page-load', setupGiscus)
 document.addEventListener('theme-changed', updateGiscusTheme)
-document.addEventListener('astro:before-swap', () => {
-  document.removeEventListener('theme-changed', updateGiscusTheme)
-})
 setupGiscus()
 </script>

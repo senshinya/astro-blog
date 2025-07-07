@@ -33,7 +33,7 @@ const { lang } = Astro.props
 // Get about page content with different language
 const allAboutEntries = await getCollection('about')
 const aboutEntry = allAboutEntries.find(entry => entry.data.lang === lang)
-  || allAboutEntries.find(entry => entry.data.lang === '')
+  ?? allAboutEntries.find(entry => entry.data.lang === '')
 const { Content } = aboutEntry ? await render(aboutEntry) : { Content: null }
 ---
 

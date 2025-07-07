@@ -8,7 +8,7 @@ import { allLocales, defaultLocale, moreLocales } from '@/config'
  */
 export function getLangFromPath(path: string) {
   return moreLocales.find(lang =>
-    path.startsWith(`/${lang}/`)) || defaultLocale
+    path.startsWith(`/${lang}/`)) ?? defaultLocale
 }
 
 /**

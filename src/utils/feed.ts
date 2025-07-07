@@ -119,7 +119,7 @@ export async function generateFeed({ lang }: { lang?: string } = {}) {
     description: useI18nTitle ? currentUI.description : description,
     id: siteURL,
     link: siteURL,
-    language: lang || themeConfig.global.locale,
+    language: lang ?? themeConfig.global.locale,
     copyright: `Copyright © ${new Date().getFullYear()} ${author}`,
     updated: new Date(),
     generator: 'Astro-Theme-Retypeset with Feed for Node.js',

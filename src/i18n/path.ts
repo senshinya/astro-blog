@@ -41,7 +41,7 @@ export function getTagsListLangPath(currentPath: string): string {
  */
 export function getLocalizedPath(path: string, currentLang?: string) {
   const normalizedPath = path.replace(/^\/|\/$/g, '')
-  const lang = currentLang || getLangFromPath(path)
+  const lang = currentLang ?? getLangFromPath(path)
 
   if (normalizedPath === '') {
     return lang === defaultLocale ? '/' : `/${lang}/`

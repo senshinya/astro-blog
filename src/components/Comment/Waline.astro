@@ -34,18 +34,16 @@ let walineObserver = null
 async function setupWaline() {
   const { init } = await import(walineJS)
 
-  const currentPath = window.location.pathname
-  const pathLang = Object.keys(walineLocaleMap).find(code =>
-    currentPath.startsWith(`/${code}/`),
-  )
-  const lang = pathLang ?? defaultLocale
-  const currentWalineLang = walineLocaleMap[lang]
+  const lang = Object.keys(walineLocaleMap).find(code =>
+    window.location.pathname.startsWith(`/${code}/`),
+  ) ?? defaultLocale
+  const walineLang = walineLocaleMap[lang]
 
   init({
     el: '#waline',
     serverURL,
     path: window.location.pathname.replace(/^\/([a-z]{2}(-[a-z]{2})?)\//, '/'), // Share comments on posts in different languages
-    lang: currentWalineLang,
+    lang: walineLang,
     emoji,
     dark: 'html.dark',
     requiredMeta: ['nick', 'mail'],
