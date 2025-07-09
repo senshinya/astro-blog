@@ -21,12 +21,14 @@ function handleBackButtonClick(e: MouseEvent) {
     // Navigate back if history exists
     if (window.history.length > 1) {
       window.history.back()
-      return
     }
-
-    // Fallback to homepage
-    const siteTitleLink = document.getElementById('site-title-link')
-    siteTitleLink?.click()
+    else {
+      // Fallback to homepage
+      const siteTitleLink = document.getElementById('site-title-link')
+      if (siteTitleLink) {
+        siteTitleLink.click()
+      }
+    }
   }
 }
 
