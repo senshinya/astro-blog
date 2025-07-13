@@ -111,11 +111,9 @@ const pageImage = postSlug
     if (currentTheme) {
       return currentTheme === 'dark'
     }
-    if (defaultMode === 'light') {
-      return false
-    }
-    if (defaultMode === 'dark') {
-      return true
+
+    if (defaultMode !== 'auto') {
+      return defaultMode === 'dark'
     }
 
     // If defaultMode is auto, follow system preference

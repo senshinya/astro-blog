@@ -39,7 +39,7 @@ const nextUrl = isTag
 
 <div
   class:list={[
-  'absolute right-7.25vw top-14.6 flex gap-6 min-[823px]:max-[1024px]:right-[calc(50vw-22rem)]',
+  'absolute right-7.25vw top-14.6 flex gap-6 min-[823px]:max-lg:right-[calc(50vw-22rem)]',
   'lg:(fixed bottom-[min(10.27rem+1.92vw,12rem)] right-[max(5rem,calc(50vw-35rem))] top-auto w-14rem)',
 ]}
 >
@@ -116,29 +116,31 @@ function toggleTheme() {
 
 // Handle theme toggle click events
 function handleThemeToggleClick(e) {
-  if (
-    e.target instanceof Element
-    && e.target.closest('#theme-toggle-button')
-  ) {
-    // If reduceMotion is enabled, update theme directly
-    if (document.documentElement.classList.contains('reduce-motion')) {
-      toggleTheme()
-      return
-    }
+  const target = e.target instanceof Element ? e.target : null
+  const button = target?.closest('#theme-toggle-button')
 
-    // Add temporary markers before view transition
-    document.documentElement.style.setProperty('view-transition-name', 'animation-theme-toggle')
-    document.documentElement.setAttribute('data-theme-changing', '')
-
-    // Use View Transitions API for theme toggle
-    const transition = document.startViewTransition(toggleTheme)
-
-    // Remove temporary markers after view transition
-    transition.finished.then(() => {
-      document.documentElement.style.removeProperty('view-transition-name')
-      document.documentElement.removeAttribute('data-theme-changing')
-    })
+  if (!button) {
+    return
   }
+
+  // If reduceMotion is enabled, update theme directly
+  if (document.documentElement.classList.contains('reduce-motion')) {
+    toggleTheme()
+    return
+  }
+
+  // Add temporary markers before view transition
+  document.documentElement.style.setProperty('view-transition-name', 'animation-theme-toggle')
+  document.documentElement.setAttribute('data-theme-changing', '')
+
+  // Use View Transitions API for theme toggle
+  const transition = document.startViewTransition(toggleTheme)
+
+  // Remove temporary markers after view transition
+  transition.finished.then(() => {
+    document.documentElement.style.removeProperty('view-transition-name')
+    document.documentElement.removeAttribute('data-theme-changing')
+  })
 }
 
 // Bind click event to the button

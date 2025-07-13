@@ -74,11 +74,6 @@
   --at-apply: 'mb-4';
 }
 
-/* Video */
-.heti iframe {
-  --at-apply: 'aspect-video';
-}
-
 /* Code Blocks */
 .heti :where(pre) {
   --at-apply: 'overflow-x-auto overflow-y-hidden uno-round-border px-4 py-3 bg-secondary/5!';
@@ -107,7 +102,7 @@ html.dark .heti pre span {
 
 /* Inline Code */
 .heti :where(code) {
-  --at-apply: 'uno-round-border bg-secondary/5 px-0.4em py-0.2em text-0.85em tracking-0 cjk:break-all';
+  --at-apply: 'uno-round-border bg-secondary/5 px-0.4em py-0.15em text-0.85em tracking-0 cjk:break-all';
   counter-reset: line;
 }
 .heti code span.line {
@@ -256,8 +251,8 @@ html.dark .heti :where(u) {
   --at-apply: 'mb-10.5 mt-14.5 h-auto border-none text-center';
 }
 .heti :where(hr)::before {
-  content: "*   *   *";
   --at-apply: 'whitespace-pre text-6 c-secondary/25 font-serif';
+  content: "*   *   *";
 }
 
 /* Bold */

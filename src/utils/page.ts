@@ -7,10 +7,12 @@ function isPageType(path: string, prefix: string = '') {
   // Removes leading and trailing slashes from a path
   const normalizedPath = path.replace(/^\/|\/$/g, '')
 
-  return prefix === ''
-    ? normalizedPath === '' || moreLocales.includes(normalizedPath)
-    : normalizedPath.startsWith(prefix)
-      || moreLocales.some(lang => normalizedPath.startsWith(`${lang}/${prefix}`))
+  if (prefix === '') {
+    return normalizedPath === '' || moreLocales.includes(normalizedPath)
+  }
+
+  return normalizedPath.startsWith(prefix)
+    || moreLocales.some(lang => normalizedPath.startsWith(`${lang}/${prefix}`))
 }
 
 export function isHomePage(path: string) {

@@ -63,7 +63,7 @@ async function formatSingleFile(filePath: string): Promise<boolean> {
 }
 
 // Report formatting results
-function reportResults(changedCount: number, errorCount: number): void {
+function reportResults(changedCount: number, errorCount: number) {
   if (changedCount === 0) {
     console.log('✅ Check complete, no files needed formatting changes')
   }

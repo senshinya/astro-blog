@@ -21,7 +21,7 @@ const copyIcons = {
 const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>()
 
 // Initialize copy buttons with icons
-function setupCodeCopyButtons(): void {
+function setupCodeCopyButtons() {
   const buttons = document.querySelectorAll<HTMLButtonElement>('.code-copy-button')
 
   if (buttons.length === 0) {
@@ -58,12 +58,8 @@ async function handleCodeCopy(button: HTMLButtonElement) {
     codeElement = element as HTMLElement | null;
   }
 
-  if (!codeElement) {
-    return;
-  }
-
-  const codeText = codeElement.textContent ?? ''
-  if (!codeText) {
+  const codeText = codeElement?.textContent ?? ''
+  if (!codeElement || !codeText) {
     return
   }
 
@@ -98,9 +94,12 @@ async function handleCodeCopy(button: HTMLButtonElement) {
 
 function handleCodeCopyClick(e: MouseEvent) {
   const button = e.target instanceof Element && e.target.closest('.code-copy-button')
-  if (button) {
-    handleCodeCopy(button as HTMLButtonElement)
+
+  if (!button) {
+    return
   }
+
+  handleCodeCopy(button as HTMLButtonElement)
 }
 
 document.addEventListener('astro:page-load', setupCodeCopyButtons)

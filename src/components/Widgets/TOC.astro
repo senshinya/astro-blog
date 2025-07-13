@@ -179,7 +179,7 @@ function setupTOCHighlight() {
   let activeLink: HTMLAnchorElement | null = null
 
   // Find and highlight the nearest parent heading
-  function highlightParentLink(childLink: HTMLAnchorElement): void {
+  function highlightParentLink(childLink: HTMLAnchorElement) {
     const currentIndex = tocLinks.indexOf(childLink)
     for (let i = currentIndex - 1; i >= 0; i--) {
       const linkItem = tocLinks[i]

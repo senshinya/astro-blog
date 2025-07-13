@@ -127,7 +127,7 @@ class SoundEffectManager {
 const soundManager = new SoundEffectManager()
 
 // Handle click events on interactive elements
-function handleGlobalClick(event: MouseEvent): void {
+function handleGlobalClick(event: MouseEvent) {
   if (isMobileDevice()) {
     return
   }
@@ -141,7 +141,7 @@ function handleGlobalClick(event: MouseEvent): void {
 }
 
 // Handle keyboard events for typing sounds
-function handleGlobalKeydown(event: KeyboardEvent): void {
+function handleGlobalKeydown(event: KeyboardEvent) {
   if (isMobileDevice()) {
     return
   }

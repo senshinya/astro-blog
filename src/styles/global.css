@@ -29,8 +29,8 @@ body::selection {
 }
 .highlight-static::after,
 .highlight-hover::after {
-  content: '';
   --at-apply: 'absolute left-0 z--1 h-0.5em w-full bg-highlight';
+  content: '';
 }
 .highlight-static::after,
 .highlight-hover:hover::after {

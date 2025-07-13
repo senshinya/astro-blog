@@ -1,6 +1,6 @@
 ---
 import PostList from '@/components/PostList.astro'
-import TagsWrapper from '@/components/TagsWrapper.astro'
+import TagList from '@/components/TagList.astro'
 import { defaultLocale, moreLocales } from '@/config'
 import Layout from '@/layouts/Layout.astro'
 import { getAllTags, getPostsByTag, getTagSupportedLangs } from '@/utils/content'
@@ -45,8 +45,8 @@ const supportedLangs = await getTagSupportedLangs(tag)
 <Layout supportedLangs={supportedLangs}>
   <!-- Decorative Line -->
   <div class="uno-decorative-line" />
-  <!-- Tags List -->
-  <TagsWrapper
+  <!-- Tag List -->
+  <TagList
     tags={allTags}
     currentTag={tag}
     lang={lang}

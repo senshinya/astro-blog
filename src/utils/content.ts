@@ -20,10 +20,15 @@ const metaCache = new Map<string, { minutes: number }>()
 async function addMetaToPost(post: CollectionEntry<'posts'>): Promise<Post> {
   const cacheKey = `${post.id}-${post.data.lang || 'universal'}`
 
-  if (!metaCache.has(cacheKey)) {
-    const { remarkPluginFrontmatter } = await render(post)
-    metaCache.set(cacheKey, remarkPluginFrontmatter as { minutes: number })
+  if (metaCache.has(cacheKey)) {
+    return {
+      ...post,
+      remarkPluginFrontmatter: metaCache.get(cacheKey)!,
+    }
   }
+
+  const { remarkPluginFrontmatter } = await render(post)
+  metaCache.set(cacheKey, remarkPluginFrontmatter as { minutes: number })
 
   return {
     ...post,

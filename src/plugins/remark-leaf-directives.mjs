@@ -1,7 +1,7 @@
 import { visit } from 'unist-util-visit'
 
 const embedHandlers = {
-  // Github Repository Card
+  // GitHub Repository Card
   github: (node) => {
     const repo = node.attributes?.repo ?? ''
     if (!repo) {
@@ -72,8 +72,8 @@ const embedHandlers = {
     <figure>
       <iframe
         src="//player.bilibili.com/player.html?isOutside=true&bvid=${bvid}&p=1&autoplay=0&muted=0"
+        class="bilibili-player"
         title="Bilibili video player"
-        loading="lazy"
         scrolling="no"
         border="0"
         frameborder="no"
@@ -104,7 +104,7 @@ const embedHandlers = {
   },
 }
 
-export function remarkMediaEmbeds() {
+export function remarkLeafDirectives() {
   return (tree) => {
     visit(tree, 'leafDirective', (node) => {
       const handler = embedHandlers[node.name]

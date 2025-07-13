@@ -1,4 +1,4 @@
-/* GitHub Card >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+/* GitHub Card */
 .gc-container {
   --at-apply: 'my-6 block overflow-x-auto uno-round-border bg-secondary/5 px-5 py-4 transition-colors ease-out hover:(bg-secondary/10 c-primary) lg:(px-6 py-5)';
   scrollbar-width: thin;
@@ -55,8 +55,8 @@
   --at-apply: 'mb-4 flex items-center font-semibold';
 }
 .admonition-title::before {
-  content: '';
   --at-apply: 'mr-2 inline-block aspect-square w-4 align-text-bottom';
+  content: '';
 }
 
 /* Note */
@@ -120,31 +120,42 @@
 }
 
 /* Medium Embed >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
-/* YouTube */
-figure lite-youtube > .lty-playbtn {
+lite-youtube > .lty-playbtn {
   --at-apply: 'filter-none';
 }
-
-/* Tweet */
-figure .twitter-tweet {
+.bilibili-player {
+  --at-apply: 'aspect-video w-full';
+}
+.twitter-tweet {
   --at-apply: 'mx-auto';
 }
 
 /* Fold */
-details {
-  --at-apply: 'px-4 py-3 mb-4 uno-round-border bg-secondary/5';
-}
 summary {
-  --at-apply: 'cursor-pointer list-none font-semibold';
+  --at-apply: 'mb-4 w-fit cursor-pointer list-none';
 }
 summary::before {
-  content: '▶';
-  transform: rotate(0deg);
-  --at-apply: 'mr-2 inline-block font-serif transition-transform ease-out';
-}
-details[open] summary {
-  --at-apply: 'mb-4';
+  --at-apply: 'mr-2 inline-block transition-transform ease-out';
+  content: '';
+  border-left: 10px solid currentColor;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  transform: translate(2px, 0.5px);
 }
 details[open] summary::before {
-  transform: rotate(90deg) translate(-2px, 2px);
+  transform: rotate(90deg) translate(0.5px, -2px);
+}
+
+/* Gallery */
+.gallery-container {
+  --at-apply: 'my-6 flex gap-4 overflow-x-auto scrollbar-hidden';
+}
+.gallery-container .gallery-item {
+  --at-apply: 'my-0 max-w-80% flex-shrink-0 lg:max-w-70%';
+}
+:is(h1, h2, h3, h4, h5, h6, .gallery-container) + .gallery-container {
+  --at-apply: 'mt-4';
+}
+.gallery-container:has(+ .gallery-container) {
+  --at-apply: 'mb-4';
 }

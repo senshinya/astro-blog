@@ -17,18 +17,23 @@ import GoBackIcon from '@/assets/icons/go-back.svg';
 <!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script>
 function handleBackButtonClick(e: MouseEvent) {
-  if (e.target instanceof Element && e.target.closest('#back-button')) {
-    // Navigate back if history exists
-    if (window.history.length > 1) {
-      window.history.back()
-    }
-    else {
-      // Fallback to homepage
-      const siteTitleLink = document.getElementById('site-title-link')
-      if (siteTitleLink) {
-        siteTitleLink.click()
-      }
-    }
+  const target = e.target instanceof Element ? e.target : null
+  const button = target?.closest('#back-button')
+
+  if (!button) {
+    return
+  }
+
+  // Navigate back if history exists
+  if (window.history.length > 1) {
+    window.history.back()
+    return
+  }
+
+  // Fallback to homepage
+  const siteTitleLink = document.getElementById('site-title-link')
+  if (siteTitleLink) {
+    siteTitleLink.click()
   }
 }
 
