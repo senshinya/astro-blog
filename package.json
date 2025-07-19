@@ -6,7 +6,7 @@
   "repository": "https://github.com/radishzzz/astro-theme-retypeset",
   "scripts": {
     "dev": "bun run memos && astro check && astro dev",
-    "build": "bun run memos && astro check && astro build && bun run generate-lqip && bun run apply-lqip && bun run pagefind",
+    "build": "bun run memos && astro check && astro build && bun run apply-lqip && bun run pagefind",
     "preview": "astro preview",
     "astro": "astro",
     "lint": "eslint .",
@@ -15,7 +15,6 @@
     "apply-lqip": "esno scripts/apply-lqip.ts",
     "format-posts": "esno scripts/format-posts.ts",
     "generate-lqip": "esno scripts/generate-lqip.ts",
-    "apply-lqip": "esno scripts/apply-lqip.ts",
     "update-theme": "esno scripts/update-theme.ts",
     "update-vendors": "curl -L https://unpkg.com/@waline/client@latest/dist/waline.css -o public/vendors/waline/waline.css && curl -L https://unpkg.com/@waline/client@latest/dist/waline.js -o public/vendors/waline/waline.js",
     "pagefind": "pagefind --site dist",
