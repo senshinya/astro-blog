@@ -88,7 +88,7 @@
               <h3 class="mb-1">
                 <a target="_blank">
                   <xsl:attribute name="href">
-                    <xsl:value-of select="atom:link[@rel='alternate']/@href"/>
+                    <xsl:value-of select="atom:link/@href"/>
                   </xsl:attribute>
                   <xsl:value-of select="atom:title"/>
                 </a>

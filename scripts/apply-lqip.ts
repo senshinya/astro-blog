@@ -414,6 +414,10 @@ async function main() {
   }
   else {
     lqipMap = cleanedMap
+
+    if (Object.keys(existingMap).length > Object.keys(cleanedMap).length) {
+      await fs.writeFile(lqipMapPath, JSON.stringify(cleanedMap, null, 2))
+    }
   }
 
   const appliedCount = await applyLqipToHtml(lqipMap)

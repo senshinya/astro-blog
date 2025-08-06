@@ -1,13 +1,13 @@
 ---
 import LanguageSwitcherIcon from '@/assets/icons/language-switcher.svg'
+import SearchIcon from '@/assets/icons/search-icon.svg'
 import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
-import SearchIcon from '@/assets/icons/search.svg'
 import Search from '@/components/Widgets/Search.astro'
 import { moreLocales, themeConfig } from '@/config'
+import { getLangFromPath } from '@/i18n/lang'
 import { getNextGlobalLangPath, getNextSupportedLangPath, getTagsListLangPath } from '@/i18n/path'
+import { ui } from '@/i18n/ui'
 import { isPostPage, isTagPage } from '@/utils/page'
-import { getLangFromPath } from "@/i18n/lang";
-import { ui } from "@/i18n/ui";
 
 interface Props {
   supportedLangs: string[]
@@ -24,8 +24,8 @@ const isPost = isPostPage(currentPath)
 const isTag = isTagPage(currentPath)
 
 // 获取当前语言和UI文案
-const currentLang = getLangFromPath(currentPath);
-const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh;
+const currentLang = getLangFromPath(currentPath)
+const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh
 
 // Check if there are other languages to switch
 const showLanguageSwitcher = moreLocales.length > 0
