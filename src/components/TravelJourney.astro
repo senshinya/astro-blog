@@ -4,23 +4,25 @@ const { travel } = Astro.props;
 
 <div class="travel-journey">
   <!-- 移动端提示 -->
-  <div id="mobileNotice" class="hidden fixed inset-0 bg-background z-50 flex-col items-center justify-center p-6 text-center">
-    <svg xmlns="http://www.w3.org/2000/svg" class="h-24 w-24 text-primary mb-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+  <div id="mobileNotice" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-background p-6 text-center">
+    <svg xmlns="http://www.w3.org/2000/svg" class="mb-6 h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
     </svg>
-    <h2 class="text-2xl font-bold text-primary mb-3">请在电脑端访问</h2>
+    <h2 class="mb-3 text-2xl text-primary font-bold">请在电脑端访问</h2>
     <p class="text-light-text mt-2">此页面需要更大的屏幕才能获得最佳体验。</p>
   </div>
 
   <!-- Bento Grid 布局 -->
-  <div id="mainContent" class="w-screen h-screen p-5 gap-5 bg-background">
+  <div id="mainContent" class="h-screen w-screen gap-5 bg-background p-5">
     <!-- 原有内容保持不变 -->
     <!-- 左侧卡片 - 内容区域 -->
-    <div id="leftCard"
-      class="w-3/5 h-full bg-card-bg rounded-bento shadow-bento overflow-y-auto relative z-10 transition-all duration-500 ease-in-out scrollbar-hide">
+    <div
+      id="leftCard"
+      class="bg-card-bg rounded-bento shadow-bento scrollbar-hide relative z-10 h-full w-3/5 overflow-y-auto transition-all duration-500 ease-in-out"
+    >
       <div
         id="contentArea"
-        class="w-full h-full p-12 pt-24 transition-all duration-400 ease-in-out content-area"
+        class="content-area h-full w-full p-12 pt-24 transition-all duration-400 ease-in-out"
       >
         <!-- 内容将通过JavaScript动态加载 -->
       </div>
@@ -28,15 +30,15 @@ const { travel } = Astro.props;
       <!-- 照片查看模式 -->
       <div
         id="photoViewMode"
-        class="absolute top-0 left-0 w-full h-full bg-secondary/20 flex flex-col z-50 opacity-0 invisible transition-all duration-300 ease-in-out rounded-bento"
+        class="rounded-bento invisible absolute left-0 top-0 z-50 h-full w-full flex flex-col bg-secondary/20 opacity-0 transition-all duration-300 ease-in-out"
       >
         <!-- 将导航按钮固定在左侧面板中间 -->
         <div
           id="prevPhotoBtn"
-          class="absolute left-0 top-3/7 -translate-y-1/2 w-[50px] h-[50px] flex items-center justify-center cursor-pointer transition-bento pointer-events-auto bg-transparent border-none z-20"
+          class="transition-bento pointer-events-auto absolute left-0 top-3/7 z-20 h-[50px] w-[50px] flex cursor-pointer items-center justify-center border-none bg-transparent -translate-y-1/2"
         >
           <svg
-            class="w-9 h-9 fill-text-color transition-bento hover:scale-110 hover:fill-primary"
+            class="fill-text-color transition-bento h-9 w-9 hover:scale-110 hover:fill-primary"
             viewBox="0 0 24 24"
           >
             <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
@@ -44,30 +46,30 @@ const { travel } = Astro.props;
         </div>
         <div
           id="nextPhotoBtn"
-          class="absolute right-0 top-3/7 -translate-y-1/2 w-[50px] h-[50px] flex items-center justify-center cursor-pointer transition-bento pointer-events-auto bg-transparent border-none z-20"
+          class="transition-bento pointer-events-auto absolute right-0 top-3/7 z-20 h-[50px] w-[50px] flex cursor-pointer items-center justify-center border-none bg-transparent -translate-y-1/2"
         >
           <svg
-            class="w-9 h-9 fill-text-color transition-bento hover:scale-110 hover:fill-primary"
+            class="fill-text-color transition-bento h-9 w-9 hover:scale-110 hover:fill-primary"
             viewBox="0 0 24 24"
           >
             <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
           </svg>
         </div>
         <div
-          class="flex-1 flex items-center justify-center relative overflow-hidden"
+          class="relative flex flex-1 items-center justify-center overflow-hidden"
         >
           <img
             src=""
             alt=""
             id="photoViewImg"
-            class="max-w-[90%] max-h-[90%] object-contain rounded-lg shadow-bento"
+            class="shadow-bento max-h-[90%] max-w-[90%] rounded-lg object-contain"
           />
           <div
             id="closePhotoBtn"
-            class="absolute top-5 right-5 w-10 h-10 rounded-full bg-white/80 flex items-center justify-center cursor-pointer shadow-md transition-bento z-10 pointer-events-auto border-2 border-accent hover:scale-110"
+            class="transition-bento border-accent pointer-events-auto absolute right-5 top-5 z-10 h-10 w-10 flex cursor-pointer items-center justify-center border-2 rounded-full bg-white/80 shadow-md hover:scale-110"
           >
             <svg
-              class="w-6 h-6 fill-accent transition-bento group-hover:fill-white"
+              class="fill-accent transition-bento h-6 w-6 group-hover:fill-white"
               viewBox="0 0 24 24"
             >
               <path
@@ -79,7 +81,7 @@ const { travel } = Astro.props;
         </div>
         <div
           id="photoViewCaption"
-          class="p-6 bg-card-bg text-text-color text-base leading-relaxed max-h-[30%] overflow-y-auto border-t border-black/5"
+          class="bg-card-bg text-text-color max-h-[30%] overflow-y-auto border-t border-black/5 p-6 text-base leading-relaxed"
         >
         </div>
       </div>
@@ -88,27 +90,27 @@ const { travel } = Astro.props;
     <!-- 右侧卡片 - 地图/封面图区域 -->
     <div
       id="rightCard"
-      class="w-2/5 h-full bg-card-bg rounded-bento shadow-bento relative overflow-hidden transition-all duration-500 ease-in-out"
+      class="bg-card-bg rounded-bento shadow-bento relative h-full w-2/5 overflow-hidden transition-all duration-500 ease-in-out"
     >
       <div
-        class="map-container w-full h-full relative overflow-hidden rounded-bento"
+        class="map-container rounded-bento relative h-full w-full overflow-hidden"
         style="display: none;"
       >
-        <div id="map" class="w-full h-full z-[1] rounded-bento"></div>
+        <div id="map" class="rounded-bento z-[1] h-full w-full"></div>
       </div>
     </div>
   </div>
 
   <!-- 导航箭头 -->
   <div
-    class="fixed top-[7%] w-full left-0 z-50 justify-between px-10 pointer-events-none transform -translate-y-1/2 transition-all duration-300 ease-in-out"
+    class="pointer-events-none fixed left-0 top-[7%] z-50 w-full transform justify-between px-10 transition-all duration-300 ease-in-out -translate-y-1/2"
   >
     <div
       id="prevBtn"
-      class="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow-lg transition-bento pointer-events-auto hover:scale-110 hover:opacity-100"
+      class="transition-bento pointer-events-auto h-[60px] w-[60px] flex cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg hover:scale-110 hover:opacity-100"
     >
       <svg
-        class="w-6 h-6 fill-primary transition-bento group-hover:fill-white"
+        class="transition-bento h-6 w-6 fill-primary group-hover:fill-white"
         viewBox="0 0 24 24"
       >
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
@@ -116,10 +118,10 @@ const { travel } = Astro.props;
     </div>
     <div
       id="nextBtn"
-      class="w-[60px] h-[60px] rounded-full bg-white/90 flex items-center justify-center cursor-pointer shadow-lg transition-bento pointer-events-auto hover:scale-110 hover:opacity-100"
+      class="transition-bento pointer-events-auto h-[60px] w-[60px] flex cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg hover:scale-110 hover:opacity-100"
     >
       <svg
-        class="w-6 h-6 fill-primary transition-bento group-hover:fill-white"
+        class="transition-bento h-6 w-6 fill-primary group-hover:fill-white"
         viewBox="0 0 24 24"
       >
         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
@@ -128,657 +130,669 @@ const { travel } = Astro.props;
   </div>
 
   <script is:inline define:vars={{ travelData: travel.data }}>
-    // 检测是否为移动设备
-    function isMobileDevice() {
-      // 检查屏幕宽度
-      const isSmallScreen = window.innerWidth < 768;
-      
-      // 检查是否为移动设备的用户代理
-      const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
-      
-      // 如果是小屏幕或移动设备的用户代理，则认为是移动设备
-      return isSmallScreen || isMobileUserAgent;
+// 检测是否为移动设备
+function isMobileDevice() {
+  // 检查屏幕宽度
+  const isSmallScreen = window.innerWidth < 768
+
+  // 检查是否为移动设备的用户代理
+  const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+
+  // 如果是小屏幕或移动设备的用户代理，则认为是移动设备
+  return isSmallScreen || isMobileUserAgent
+}
+
+// 处理移动设备访问
+function handleMobileAccess() {
+  if (isMobileDevice()) {
+    // 显示移动设备提示
+    document.getElementById('mobileNotice').classList.remove('hidden')
+    document.getElementById('mobileNotice').classList.add('flex')
+    document.getElementById('mainContent').classList.add('hidden')
+
+    // 隐藏导航箭头
+    const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
+    if (navArrows) {
+      navArrows.classList.add('hidden')
     }
 
-    // 处理移动设备访问
-    function handleMobileAccess() {
-      if (isMobileDevice()) {
-        // 显示移动设备提示
-        document.getElementById('mobileNotice').classList.remove('hidden');
-        document.getElementById('mobileNotice').classList.add('flex');
-        document.getElementById('mainContent').classList.add('hidden');
-        
-        // 隐藏导航箭头
-        const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
-        if (navArrows) {
-          navArrows.classList.add('hidden');
-        }
-        
-        // 阻止进一步初始化
-        return true;
-      }
-      document.getElementById('mainContent').classList.add('flex');
-      const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]');
-      if (navArrows) {
-        navArrows.classList.add('flex');
-      }
-      return false;
+    // 阻止进一步初始化
+    return true
+  }
+  document.getElementById('mainContent').classList.add('flex')
+  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
+  if (navArrows) {
+    navArrows.classList.add('flex')
+  }
+  return false
+}
+
+// 全局变量
+let currentSection = 0
+const totalSections = travelData.days.length + 1 // 封面 + 天数
+let map
+let markers = []
+let currentPhotoItems = []
+let currentPhotoIndex = 0
+
+// 初始化函数
+function init() {
+  // 检查是否为移动设备
+  if (handleMobileAccess()) {
+    return // 如果是移动设备，不继续初始化
+  }
+
+  // 初始化地图
+  initMap()
+
+  // 加载初始内容（封面）
+  loadSection(0)
+
+  // 设置导航箭头点击事件
+  document.getElementById('prevBtn').addEventListener('click', navigatePrev)
+  document.getElementById('nextBtn').addEventListener('click', navigateNext)
+
+  // 设置键盘导航
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
+      navigateNext()
     }
-
-    // 全局变量
-    let currentSection = 0;
-    const totalSections = travelData.days.length + 1; // 封面 + 天数
-    let map;
-    let markers = [];
-    let currentPhotoItems = [];
-    let currentPhotoIndex = 0;
-
-    // 初始化函数
-    function init() {
-      // 检查是否为移动设备
-      if (handleMobileAccess()) {
-        return; // 如果是移动设备，不继续初始化
-      }
-      
-      // 初始化地图
-      initMap();
-
-      // 加载初始内容（封面）
-      loadSection(0);
-
-      // 设置导航箭头点击事件
-      document.getElementById('prevBtn').addEventListener('click', navigatePrev);
-      document.getElementById('nextBtn').addEventListener('click', navigateNext);
-
-      // 设置键盘导航
-      document.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
-          navigateNext();
-        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
-          navigatePrev();
-        } else if (e.key === "Escape") {
-          // 如果照片查看模式是活跃的，关闭它
-          if (
-            document
-              .getElementById("photoViewMode")
-              .classList.contains("active")
-          ) {
-            closePhotoView();
-          }
-        }
-      });
-
-      // 设置照片查看模式的导航按钮
-      document
-        .getElementById("prevPhotoBtn")
-        .addEventListener("click", navigatePhotoPrev);
-      document
-        .getElementById("nextPhotoBtn")
-        .addEventListener("click", navigatePhotoNext);
-
-      // 设置照片查看模式的关闭按钮
-      document
-        .getElementById("closePhotoBtn")
-        .addEventListener("click", closePhotoView);
-
-      // 设置触摸导航
-      let touchStartY = 0;
-      document.addEventListener("touchstart", function (e) {
-        touchStartY = e.touches[0].clientY;
-      });
-
-      document.addEventListener("touchend", function (e) {
-        const touchEndY = e.changedTouches[0].clientY;
-        const diff = touchStartY - touchEndY;
-
-        if (Math.abs(diff) > 50) {
-          // 最小滑动距离
-          if (diff > 0) {
-            navigateNext();
-          } else {
-            navigatePrev();
-          }
-        }
-      });
-
-      // 更新导航按钮状态
-      updateNavButtons();
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+      navigatePrev()
     }
+    else if (e.key === 'Escape') {
+      // 如果照片查看模式是活跃的，关闭它
+      if (
+        document
+          .getElementById('photoViewMode')
+          .classList
+          .contains('active')
+      ) {
+        closePhotoView()
+      }
+    }
+  })
 
-    // 初始化地图
-    function initMap() {
-      // 创建地图实例，但不设置初始视图
-      map = L.map("map", {
-        zoomControl: false,
-        preferCanvas: true,
-        renderer: L.canvas(),
-        // 不要设置初始中心点和缩放级别
-      });
+  // 设置照片查看模式的导航按钮
+  document
+    .getElementById('prevPhotoBtn')
+    .addEventListener('click', navigatePhotoPrev)
+  document
+    .getElementById('nextPhotoBtn')
+    .addEventListener('click', navigatePhotoNext)
 
-      // 添加地图图层
-      L.tileLayer("https://cors.shinya.click/https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution:
+  // 设置照片查看模式的关闭按钮
+  document
+    .getElementById('closePhotoBtn')
+    .addEventListener('click', closePhotoView)
+
+  // 设置触摸导航
+  let touchStartY = 0
+  document.addEventListener('touchstart', (e) => {
+    touchStartY = e.touches[0].clientY
+  })
+
+  document.addEventListener('touchend', (e) => {
+    const touchEndY = e.changedTouches[0].clientY
+    const diff = touchStartY - touchEndY
+
+    if (Math.abs(diff) > 50) {
+      // 最小滑动距离
+      if (diff > 0) {
+        navigateNext()
+      }
+      else {
+        navigatePrev()
+      }
+    }
+  })
+
+  // 更新导航按钮状态
+  updateNavButtons()
+}
+
+// 初始化地图
+function initMap() {
+  // 创建地图实例，但不设置初始视图
+  map = L.map('map', {
+    zoomControl: false,
+    preferCanvas: true,
+    renderer: L.canvas(),
+    // 不要设置初始中心点和缩放级别
+  })
+
+  // 添加地图图层
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution:
           '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-      }).addTo(map);
+  }).addTo(map)
 
-      // 添加缩放控制
-      L.control
-        .zoom({
-          position: "bottomright",
+  // 添加缩放控制
+  L.control
+    .zoom({
+      position: 'bottomright',
+    })
+    .addTo(map)
+
+  // 设置默认视图为京都区域，但不立即应用
+  // 这会在首次切换到行程页面时被覆盖
+  map.setView([35.0116, 135.7681], 12, {
+    animate: false,
+  })
+}
+
+// 加载指定部分的内容
+function loadSection(index) {
+  const contentArea = document.getElementById('contentArea')
+  const container = document.querySelector('.flex.w-screen.h-screen')
+  const mapContainer = document.querySelector('.map-container')
+  const leftCard = document.getElementById('leftCard')
+  const rightCard = document.getElementById('rightCard')
+
+  // 判断是否是在行程页面之间切换（非首页相关的切换）
+  const isTravelToTravel = index > 0 && currentSection > 0
+
+  // 使用 Promise 来管理动画序列
+  const animateTransition = async () => {
+    // 1. 开始退出动画
+    leftCard.classList.add('card-exit')
+    if (!isTravelToTravel) {
+      rightCard.classList.add('card-exit')
+      if (currentSection > 0) {
+        mapContainer.style.opacity = '0'
+      }
+    }
+    contentArea.classList.add('fade-out')
+
+    // 2. 等待退出动画完成
+    await new Promise(resolve => setTimeout(resolve, 300))
+
+    // 3. 清空内容并准备新内容
+    contentArea.innerHTML = ''
+
+    // 4. 处理地图相关操作
+    if (isTravelToTravel) {
+      clearMarkers()
+      addDayMarkers(index - 1)
+      if (markers.length > 0) {
+        const group = L.featureGroup(markers)
+        const bounds = group.getBounds().pad(0.1)
+        map.flyToBounds(bounds, {
+          duration: 1.5,
+          easeLinearity: 0.1,
+          animate: true,
         })
-        .addTo(map);
-
-      // 设置默认视图为京都区域，但不立即应用
-      // 这会在首次切换到行程页面时被覆盖
-      map.setView([35.0116, 135.7681], 12, {
-        animate: false,
-      });
+      }
+    }
+    else {
+      clearMarkers()
     }
 
-    // 加载指定部分的内容
-    function loadSection(index) {
-      const contentArea = document.getElementById("contentArea");
-      const container = document.querySelector(".flex.w-screen.h-screen");
-      const mapContainer = document.querySelector(".map-container");
-      const leftCard = document.getElementById("leftCard");
-      const rightCard = document.getElementById("rightCard");
+    // 5. 加载新内容
+    if (index === 0) {
+      loadCover()
+      container.classList.add('cover-mode')
+      const rightPanel = document.getElementById('rightCard')
+      rightPanel.style.backgroundImage = `url(${travelData.coverImage})`
+      rightPanel.style.backgroundSize = 'cover'
+      rightPanel.style.backgroundPosition = 'center'
+      rightPanel.style.backgroundRepeat = 'no-repeat'
+      rightPanel.style.transition = 'transform 10s ease'
+      mapContainer.style.display = 'none'
+    }
+    else {
+      container.classList.remove('cover-mode')
+      const rightPanel = document.getElementById('rightCard')
+      rightPanel.style.backgroundImage = ''
+      rightPanel.style.transform = ''
+      loadDay(index - 1, index !== 1 || isTravelToTravel)
 
-      // 判断是否是在行程页面之间切换（非首页相关的切换）
-      const isTravelToTravel = index > 0 && currentSection > 0;
-
-      // 使用 Promise 来管理动画序列
-      const animateTransition = async () => {
-        // 1. 开始退出动画
-        leftCard.classList.add("card-exit");
+      if (!isTravelToTravel) {
+        mapContainer.style.display = 'block'
+        mapContainer.style.opacity = '0'
         if (!isTravelToTravel) {
-          rightCard.classList.add("card-exit");
-          if (currentSection > 0) {
-            mapContainer.style.opacity = "0";
-          }
-        }
-        contentArea.classList.add("fade-out");
-
-        // 2. 等待退出动画完成
-        await new Promise(resolve => setTimeout(resolve, 300));
-
-        // 3. 清空内容并准备新内容
-        contentArea.innerHTML = "";
-
-        // 4. 处理地图相关操作
-        if (isTravelToTravel) {
-          clearMarkers();
-          addDayMarkers(index - 1);
+          addDayMarkers(index - 1)
           if (markers.length > 0) {
-            const group = L.featureGroup(markers);
-            const bounds = group.getBounds().pad(0.1);
-            map.flyToBounds(bounds, {
-              duration: 1.5,
-              easeLinearity: 0.1,
-              animate: true,
-            });
-          }
-        } else {
-          clearMarkers();
-        }
-
-        // 5. 加载新内容
-        if (index === 0) {
-          loadCover();
-          container.classList.add("cover-mode");
-          const rightPanel = document.getElementById("rightCard");
-          rightPanel.style.backgroundImage = `url(${travelData.coverImage})`;
-          rightPanel.style.backgroundSize = "cover";
-          rightPanel.style.backgroundPosition = "center";
-          rightPanel.style.backgroundRepeat = "no-repeat";
-          rightPanel.style.transition = "transform 10s ease";
-          mapContainer.style.display = "none";
-        } else {
-          container.classList.remove("cover-mode");
-          const rightPanel = document.getElementById("rightCard");
-          rightPanel.style.backgroundImage = "";
-          rightPanel.style.transform = "";
-          loadDay(index - 1, index !== 1 || isTravelToTravel);
-
-          if (!isTravelToTravel) {
-            mapContainer.style.display = "block";
-            mapContainer.style.opacity = "0";
-            if (!isTravelToTravel) {
-              addDayMarkers(index - 1);
-              if (markers.length > 0) {
-                const group = L.featureGroup(markers);
-                map.invalidateSize();
-                map.fitBounds(group.getBounds().pad(0.1), {
-                  animate: false
-                });
-              }
-            }
+            const group = L.featureGroup(markers)
+            map.invalidateSize()
+            map.fitBounds(group.getBounds().pad(0.1), {
+              animate: false,
+            })
           }
         }
-
-        // 6. 更新状态
-        currentSection = index;
-        updateNavButtons();
-
-        // 7. 开始进入动画
-        leftCard.classList.add("card-enter-left");
-        if (!isTravelToTravel) {
-          rightCard.classList.add("card-enter-right");
-        }
-
-        // 8. 等待进入动画完成
-        await new Promise(resolve => setTimeout(resolve, 50));
-
-        // 9. 移除动画类
-        leftCard.classList.remove("card-exit", "card-enter-left");
-        if (!isTravelToTravel) {
-          rightCard.classList.remove("card-exit", "card-enter-right");
-        }
-
-        contentArea.classList.remove("fade-out");
-        contentArea.classList.add("fade-in");
-
-        // 10. 完成过渡
-        await new Promise(resolve => setTimeout(resolve, 500));
-        contentArea.classList.remove("fade-in");
-
-        if (index > 0 && !isTravelToTravel) {
-          map.invalidateSize();
-          mapContainer.style.transition = "opacity 0.3s ease-in-out";
-          mapContainer.style.opacity = "1";
-        }
-      };
-
-      // 执行动画序列
-      animateTransition();
+      }
     }
 
-    // 加载封面
-    function loadCover() {
-      const contentArea = document.getElementById("contentArea");
+    // 6. 更新状态
+    currentSection = index
+    updateNavButtons()
 
-      const coverHTML = `
+    // 7. 开始进入动画
+    leftCard.classList.add('card-enter-left')
+    if (!isTravelToTravel) {
+      rightCard.classList.add('card-enter-right')
+    }
+
+    // 8. 等待进入动画完成
+    await new Promise(resolve => setTimeout(resolve, 50))
+
+    // 9. 移除动画类
+    leftCard.classList.remove('card-exit', 'card-enter-left')
+    if (!isTravelToTravel) {
+      rightCard.classList.remove('card-exit', 'card-enter-right')
+    }
+
+    contentArea.classList.remove('fade-out')
+    contentArea.classList.add('fade-in')
+
+    // 10. 完成过渡
+    await new Promise(resolve => setTimeout(resolve, 500))
+    contentArea.classList.remove('fade-in')
+
+    if (index > 0 && !isTravelToTravel) {
+      map.invalidateSize()
+      mapContainer.style.transition = 'opacity 0.3s ease-in-out'
+      mapContainer.style.opacity = '1'
+    }
+  }
+
+  // 执行动画序列
+  animateTransition()
+}
+
+// 加载封面
+function loadCover() {
+  const contentArea = document.getElementById('contentArea')
+
+  const coverHTML = `
                 <div class="flex flex-col justify-center h-full">
                     <h1 class="font-snell text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-primary leading-tight -tracking-wider">${travelData.title}</h1>
                     <h2 class="font-snell text-2xl md:text-3xl lg:text-4xl font-semibold mb-8 text-text-color -tracking-wide">${travelData.subtitle}</h2>
                     <p class="text-lg text-light-text leading-relaxed max-w-xl">${travelData.description}</p>
-                </div>
-            `;
+            </div>
+        `
 
-      contentArea.innerHTML = coverHTML;
-    }
+  contentArea.innerHTML = coverHTML
+}
 
-    // 加载行程日
-    function loadDay(dayIndex,later=false) {
-      const day = travelData.days[dayIndex];
-      const contentArea = document.getElementById("contentArea");
+// 加载行程日
+function loadDay(dayIndex, later = false) {
+  const day = travelData.days[dayIndex]
+  const contentArea = document.getElementById('contentArea')
 
-      let descriptionsHTML = "";
-      day.descriptions.forEach((desc) => {
-        descriptionsHTML += `<p class="mb-5 text-light-text text-lg leading-relaxed">${desc}</p>`;
-      });
-    
-      // 先创建不包含照片的内容
-      const dayHTML = `
+  let descriptionsHTML = ''
+  day.descriptions.forEach((desc) => {
+    descriptionsHTML += `<p class="mb-5 text-light-text text-lg leading-relaxed">${desc}</p>`
+  })
+
+  // 先创建不包含照片的内容
+  const dayHTML = `
         <div class="h-full overflow-y-auto scrollbar-hide">
           <h3 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 mt-8 pt-4 text-primary relative inline-block -tracking-wide after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:w-[100px] after:h-[3px] after:bg-accent after:rounded-md">${day.title}</h3>
           ${descriptionsHTML}
           <div id="photos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 mb-8">
             ${createPlaceholders(day.photos.length)}
-          </div>
-        </div>
-      `;
-    
-      contentArea.innerHTML = dayHTML;
-      
-      // 延迟加载照片，等待地图动画完成
-      setTimeout(() => {
-        // 分批加载照片
-        const loadPhotoBatch = (startIdx, batchSize) => {
-          const endIdx = Math.min(startIdx + batchSize, day.photos.length);
-          
-          // 获取所有占位div
-          const placeholders = document.querySelectorAll("#photos-container > div");
-          for (let i = startIdx; i < endIdx; i++) {
-            if (i >= placeholders.length) break; // 安全检查
-            
-            const photo = day.photos[i];
-            const placeholder = placeholders[i];
-            
-            // 创建新的照片元素
-            const photoElement = document.createElement("div");
-            photoElement.className = "relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group";
-            photoElement.dataset.index = i.toString();
-            
-            photoElement.innerHTML = `
+      </div>
+    </div>
+  `
+
+  contentArea.innerHTML = dayHTML
+
+  // 延迟加载照片，等待地图动画完成
+  setTimeout(() => {
+    // 分批加载照片
+    const loadPhotoBatch = (startIdx, batchSize) => {
+      const endIdx = Math.min(startIdx + batchSize, day.photos.length)
+
+      // 获取所有占位div
+      const placeholders = document.querySelectorAll('#photos-container > div')
+      for (let i = startIdx; i < endIdx; i++) {
+        if (i >= placeholders.length)
+          break // 安全检查
+
+        const photo = day.photos[i]
+        const placeholder = placeholders[i]
+
+        // 创建新的照片元素
+        const photoElement = document.createElement('div')
+        photoElement.className = 'relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group'
+        photoElement.dataset.index = i.toString()
+
+        photoElement.innerHTML = `
               <img src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
-              <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
-            `;
-            
-            // 添加点击事件
-            photoElement.addEventListener("click", function() {
-              openPhotoView(dayIndex, i);
-            });
-            
-            // 替换占位div
-            placeholder.parentNode.replaceChild(photoElement, placeholder);
-          }
-          
-          // 如果还有更多照片要加载，继续加载下一批
-          if (endIdx < day.photos.length) {
-            setTimeout(() => loadPhotoBatch(endIdx, batchSize), 100);
-          }
-        };
-        
-        // 开始加载第一批照片，每批1张
-        loadPhotoBatch(0, 1);
-      }, later ? 1550 : 300); // 如果是later模式，等待更长时间让地图动画完成
-    }
-    
-    // 新增：创建占位div的函数
-    function createPlaceholders(count) {
-      let placeholdersHTML = "";
-      for (let i = 0; i < count; i++) {
-        placeholdersHTML += `
-          <div class="relative h-[180px] rounded-bento overflow-hidden shadow-md bg-gray-200 animate-pulse">
-            <div class="absolute inset-0 flex items-center justify-center">
-              <svg class="w-12 h-12 text-gray-300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
-                <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"/>
-              </svg>
-            </div>
-          </div>
-        `;
+          <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
+        `
+
+        // 添加点击事件
+        photoElement.addEventListener('click', () => {
+          openPhotoView(dayIndex, i)
+        })
+
+        // 替换占位div
+        placeholder.parentNode.replaceChild(photoElement, placeholder)
       }
-      return placeholdersHTML;
+
+      // 如果还有更多照片要加载，继续加载下一批
+      if (endIdx < day.photos.length) {
+        setTimeout(() => loadPhotoBatch(endIdx, batchSize), 100)
+      }
     }
 
-    // 清除地图上的所有标记
-    function clearMarkers() {
-      markers.forEach((marker) => {
-        map.removeLayer(marker);
-      });
-      markers = [];
-    }
+    // 开始加载第一批照片，每批1张
+    loadPhotoBatch(0, 1)
+  }, later ? 1550 : 300) // 如果是later模式，等待更长时间让地图动画完成
+}
 
-    // 添加指定天的所有标记
-    function addDayMarkers(dayIndex) {
-      const day = travelData.days[dayIndex];
+// 新增：创建占位div的函数
+function createPlaceholders(count) {
+  let placeholdersHTML = ''
+  for (let i = 0; i < count; i++) {
+    placeholdersHTML += `
+      <div class="relative h-[180px] rounded-bento overflow-hidden shadow-md bg-gray-200 animate-pulse">
+        <div class="absolute inset-0 flex items-center justify-center">
+          <svg class="w-12 h-12 text-gray-300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
+            <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"/>
+          </svg>
+        </div>
+      </div>
+    `
+  }
+  return placeholdersHTML
+}
 
-      day.photos.forEach((photo, photoIndex) => {
-        if (photo.lat && photo.lng) {
-          const marker = L.marker([photo.lat, photo.lng], {
-            title: photo.alt,
-          }).addTo(map);
+// 清除地图上的所有标记
+function clearMarkers() {
+  markers.forEach((marker) => {
+    map.removeLayer(marker)
+  })
+  markers = []
+}
 
-          // 创建自定义弹出窗口内容
-          const popupContent = `
+// 添加指定天的所有标记
+function addDayMarkers(dayIndex) {
+  const day = travelData.days[dayIndex]
+
+  day.photos.forEach((photo, photoIndex) => {
+    if (photo.lat && photo.lng) {
+      const marker = L.marker([photo.lat, photo.lng], {
+        title: photo.alt,
+      }).addTo(map)
+
+      // 创建自定义弹出窗口内容
+      const popupContent = `
                         <div class="w-[200px] text-center">
                             <img src="${photo.src}" alt="${photo.alt}" class="w-full rounded-lg mb-2">
                             <div class="font-bold">${photo.alt}</div>
-                        </div>
-                    `;
+                    </div>
+                `
 
-          marker.bindPopup(popupContent);
+      marker.bindPopup(popupContent)
 
-          // 添加标记点击事件
-          marker.on("click", function () {
-            openPhotoView(dayIndex, photoIndex);
-          });
+      // 添加标记点击事件
+      marker.on('click', () => {
+        openPhotoView(dayIndex, photoIndex)
+      })
 
-          markers.push(marker);
-        }
-      });
+      markers.push(marker)
     }
+  })
+}
 
-    // 打开照片查看模式
-    function openPhotoView(dayIndex, photoIndex) {
-      currentPhotoItems = travelData.days[dayIndex].photos;
-      currentPhotoIndex = photoIndex;
+// 打开照片查看模式
+function openPhotoView(dayIndex, photoIndex) {
+  currentPhotoItems = travelData.days[dayIndex].photos
+  currentPhotoIndex = photoIndex
 
-      const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
-      const contentArea = document.getElementById("contentArea");
-      const photoViewMode = document.getElementById("photoViewMode");
+  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
+  const contentArea = document.getElementById('contentArea')
+  const photoViewMode = document.getElementById('photoViewMode')
 
-      // 使用 Promise 管理动画序列
-      const animatePhotoView = async () => {
-        // 1. 隐藏导航和内容
-        navArrows.style.opacity = "0";
-        navArrows.style.visibility = "hidden";
-        contentArea.style.opacity = "0";
-        contentArea.style.visibility = "hidden";
+  // 使用 Promise 管理动画序列
+  const animatePhotoView = async () => {
+    // 1. 隐藏导航和内容
+    navArrows.style.opacity = '0'
+    navArrows.style.visibility = 'hidden'
+    contentArea.style.opacity = '0'
+    contentArea.style.visibility = 'hidden'
 
-        // 2. 准备照片查看模式
-        photoViewMode.classList.add("active");
-        photoViewMode.classList.remove("invisible");
-        photoViewMode.classList.add("visible");
-        photoViewMode.style.opacity = "0";
+    // 2. 准备照片查看模式
+    photoViewMode.classList.add('active')
+    photoViewMode.classList.remove('invisible')
+    photoViewMode.classList.add('visible')
+    photoViewMode.style.opacity = '0'
 
-        // 3. 预加载照片
-        const currentPhoto = currentPhotoItems[currentPhotoIndex];
-        const img = new Image();
-        
-        await new Promise((resolve) => {
-          img.onload = resolve;
-          img.src = currentPhoto.src;
-        });
+    // 3. 预加载照片
+    const currentPhoto = currentPhotoItems[currentPhotoIndex]
+    const img = new Image()
 
-        // 4. 更新内容
-        updatePhotoViewContent();
+    await new Promise((resolve) => {
+      img.onload = resolve
+      img.src = currentPhoto.src
+    })
 
-        // 5. 显示照片查看模式
-        await new Promise(resolve => setTimeout(resolve, 50));
-        photoViewMode.style.opacity = "1";
+    // 4. 更新内容
+    updatePhotoViewContent()
 
-        // 6. 更新地图视图
-        await new Promise(resolve => setTimeout(resolve, 100));
-        updateMapView();
-      };
+    // 5. 显示照片查看模式
+    await new Promise(resolve => setTimeout(resolve, 50))
+    photoViewMode.style.opacity = '1'
 
-      animatePhotoView();
-    }
+    // 6. 更新地图视图
+    await new Promise(resolve => setTimeout(resolve, 100))
+    updateMapView()
+  }
 
-    // 新增：更新照片查看视图内容（不包含地图操作）
-    function updatePhotoViewContent() {
-      const photoViewImg = document.getElementById("photoViewImg");
-      const photoViewCaption = document.getElementById("photoViewCaption");
-      const prevPhotoBtn = document.getElementById("prevPhotoBtn");
-      const nextPhotoBtn = document.getElementById("nextPhotoBtn");
+  animatePhotoView()
+}
 
-      const currentPhoto = currentPhotoItems[currentPhotoIndex];
+// 新增：更新照片查看视图内容（不包含地图操作）
+function updatePhotoViewContent() {
+  const photoViewImg = document.getElementById('photoViewImg')
+  const photoViewCaption = document.getElementById('photoViewCaption')
+  const prevPhotoBtn = document.getElementById('prevPhotoBtn')
+  const nextPhotoBtn = document.getElementById('nextPhotoBtn')
 
-      photoViewImg.src = currentPhoto.src;
-      photoViewImg.alt = currentPhoto.alt;
-      if (currentPhoto.caption) {
-        photoViewCaption.classList.remove("hidden");
-        photoViewCaption.textContent = currentPhoto.caption;
-      } else {
-        photoViewCaption.classList.add("hidden");
+  const currentPhoto = currentPhotoItems[currentPhotoIndex]
+
+  photoViewImg.src = currentPhoto.src
+  photoViewImg.alt = currentPhoto.alt
+  if (currentPhoto.caption) {
+    photoViewCaption.classList.remove('hidden')
+    photoViewCaption.textContent = currentPhoto.caption
+  }
+  else {
+    photoViewCaption.classList.add('hidden')
+  }
+
+  // 更新照片导航按钮状态
+  if (currentPhotoIndex === 0) {
+    prevPhotoBtn.classList.add('opacity-0', 'pointer-events-none')
+  }
+  else {
+    prevPhotoBtn.classList.remove('opacity-0', 'pointer-events-none')
+  }
+
+  if (currentPhotoIndex === currentPhotoItems.length - 1) {
+    nextPhotoBtn.classList.add('opacity-0', 'pointer-events-none')
+  }
+  else {
+    nextPhotoBtn.classList.remove('opacity-0', 'pointer-events-none')
+  }
+}
+
+// 新增：更新地图视图（从updatePhotoView中分离出来的地图操作部分）
+function updateMapView() {
+  const currentPhoto = currentPhotoItems[currentPhotoIndex]
+
+  // 更新地图视图
+  if (currentPhoto.lat && currentPhoto.lng) {
+    // 使用flyTo代替setView实现平滑移动
+    map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, {
+      duration: 1.5, // 动画持续时间（秒）
+      easeLinearity: 0.1, // 动画曲线的线性程度
+      animate: true, // 是否启用动画
+    })
+
+    markers.forEach((marker) => {
+      if (
+        marker.getLatLng().lat === currentPhoto.lat
+        && marker.getLatLng().lng === currentPhoto.lng
+      ) {
+        marker.openPopup()
       }
+    })
+  }
+}
 
-      // 更新照片导航按钮状态
-      if (currentPhotoIndex === 0) {
-        prevPhotoBtn.classList.add("opacity-0", "pointer-events-none");
-      } else {
-        prevPhotoBtn.classList.remove("opacity-0", "pointer-events-none");
-      }
+// 修改原有的updatePhotoView函数，使用新的分离函数
+function updatePhotoView() {
+  // 先更新内容
+  updatePhotoViewContent()
 
-      if (currentPhotoIndex === currentPhotoItems.length - 1) {
-        nextPhotoBtn.classList.add("opacity-0", "pointer-events-none");
-      } else {
-        nextPhotoBtn.classList.remove("opacity-0", "pointer-events-none");
-      }
-    }
+  // 延迟更新地图，避免同时进行大量操作
+  setTimeout(() => {
+    updateMapView()
+  }, 100)
+}
 
-    // 新增：更新地图视图（从updatePhotoView中分离出来的地图操作部分）
-    function updateMapView() {
-      const currentPhoto = currentPhotoItems[currentPhotoIndex];
-      
-      // 更新地图视图
-      if (currentPhoto.lat && currentPhoto.lng) {
-        // 使用flyTo代替setView实现平滑移动
-        map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, {
-          duration: 1.5, // 动画持续时间（秒）
-          easeLinearity: 0.1, // 动画曲线的线性程度
-          animate: true, // 是否启用动画
-        });
-    
-        markers.forEach((marker) => {
-          if (
-            marker.getLatLng().lat === currentPhoto.lat &&
-            marker.getLatLng().lng === currentPhoto.lng
-          ) {
-            marker.openPopup();
-          }
-        });
-      }
-    }
+// 关闭照片查看模式
+function closePhotoView() {
+  const photoViewMode = document.getElementById('photoViewMode')
 
-    // 修改原有的updatePhotoView函数，使用新的分离函数
-    function updatePhotoView() {
-      // 先更新内容
-      updatePhotoViewContent();
-      
-      // 延迟更新地图，避免同时进行大量操作
-      setTimeout(() => {
-        updateMapView();
-      }, 100);
-    }
+  const animateClose = async () => {
+    // 1. 开始淡出
+    photoViewMode.style.opacity = '0'
 
-    // 关闭照片查看模式
-    function closePhotoView() {
-      const photoViewMode = document.getElementById("photoViewMode");
-      
-      const animateClose = async () => {
-        // 1. 开始淡出
-        photoViewMode.style.opacity = "0";
-        
-        // 2. 等待淡出完成
-        await new Promise(resolve => setTimeout(resolve, 300));
-        
-        // 3. 重置状态
-        resetPhotoViewClasses();
-        
-        // 4. 显示内容和导航
-        showContentAndNavigation();
-        
-        // 5. 关闭弹出窗口
-        closeAllMarkerPopups();
-        
-        // 6. 更新地图视图
-        await new Promise(resolve => setTimeout(resolve, 200));
-        updateMapBounds();
-      };
+    // 2. 等待淡出完成
+    await new Promise(resolve => setTimeout(resolve, 300))
 
-      animateClose();
-    }
-    
-    // 新增：重置照片查看模式的类
-    function resetPhotoViewClasses() {
-      const photoViewMode = document.getElementById("photoViewMode");
-      photoViewMode.classList.remove("active");
-      photoViewMode.classList.add("invisible");
-      photoViewMode.classList.remove("visible");
-    }
-    
-    // 新增：显示内容区域和导航箭头
-    function showContentAndNavigation() {
-      // 完全重置contentArea的样式
-      const contentArea = document.getElementById("contentArea");
-      contentArea.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-      contentArea.style.visibility = "visible";
-      contentArea.style.opacity = "1";
-    
-      // 显示导航箭头
-      const navArrows = document.querySelector(".fixed.top-\\[7\\%\\]");
-      navArrows.style.opacity = "1";
-      navArrows.style.visibility = "visible";
-      navArrows.style.transition = "opacity 0.3s ease, visibility 0.3s ease";
-    }
-    
-    // 新增：关闭所有marker的弹出窗口
-    function closeAllMarkerPopups() {
-      markers.forEach((marker) => {
-        marker.closePopup();
-      });
-    }
-    
-    // 新增：更新地图边界
-    function updateMapBounds() {
-      // 调整地图视图以显示所有标记
-      if (markers.length > 0) {
-        const group = L.featureGroup(markers);
-        const bounds = group.getBounds().pad(0.1);
-    
-        // 使用更平滑的过渡效果
-        map.flyToBounds(bounds, {
-          duration: 1.5, // 动画时间
-          easeLinearity: 0.1,
-          animate: true,
-        });
-      }
-    }
+    // 3. 重置状态
+    resetPhotoViewClasses()
 
-    // 导航到上一张照片
-    function navigatePhotoPrev() {
-      if (currentPhotoIndex > 0) {
-        currentPhotoIndex--;
-        updatePhotoView();
-      }
-    }
+    // 4. 显示内容和导航
+    showContentAndNavigation()
 
-    // 导航到下一张照片
-    function navigatePhotoNext() {
-      if (currentPhotoIndex < currentPhotoItems.length - 1) {
-        currentPhotoIndex++;
-        updatePhotoView();
-      }
-    }
+    // 5. 关闭弹出窗口
+    closeAllMarkerPopups()
 
-    // 导航到上一部分
-    function navigatePrev() {
-      if (currentSection > 0) {
-        loadSection(currentSection - 1);
-      }
-    }
+    // 6. 更新地图视图
+    await new Promise(resolve => setTimeout(resolve, 200))
+    updateMapBounds()
+  }
 
-    // 导航到下一部分
-    function navigateNext() {
-      if (currentSection < totalSections - 1) {
-        loadSection(currentSection + 1);
-      }
-    }
+  animateClose()
+}
 
-    // 更新导航按钮状态
-    function updateNavButtons() {
-      const prevBtn = document.getElementById("prevBtn");
-      const nextBtn = document.getElementById("nextBtn");
+// 新增：重置照片查看模式的类
+function resetPhotoViewClasses() {
+  const photoViewMode = document.getElementById('photoViewMode')
+  photoViewMode.classList.remove('active')
+  photoViewMode.classList.add('invisible')
+  photoViewMode.classList.remove('visible')
+}
 
-      // 在第一个部分隐藏上一个按钮
-      if (currentSection === 0) {
-        prevBtn.classList.add("opacity-0", "pointer-events-none");
-        prevBtn.classList.remove("opacity-70");
-      } else {
-        prevBtn.classList.remove("opacity-0", "pointer-events-none");
-        prevBtn.classList.add("opacity-70");
-      }
+// 新增：显示内容区域和导航箭头
+function showContentAndNavigation() {
+  // 完全重置contentArea的样式
+  const contentArea = document.getElementById('contentArea')
+  contentArea.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
+  contentArea.style.visibility = 'visible'
+  contentArea.style.opacity = '1'
 
-      // 在最后一个部分隐藏下一个按钮
-      if (currentSection === totalSections - 1) {
-        nextBtn.classList.add("opacity-0", "pointer-events-none");
-        nextBtn.classList.remove("opacity-70");
-      } else {
-        nextBtn.classList.remove("opacity-0", "pointer-events-none");
-        nextBtn.classList.add("opacity-70");
-      }
-    }
+  // 显示导航箭头
+  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
+  navArrows.style.opacity = '1'
+  navArrows.style.visibility = 'visible'
+  navArrows.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
+}
 
-    // 当页面加载完成后初始化
-    window.addEventListener('load', init);
-    
-    // 监听窗口大小变化，处理响应式
-    window.addEventListener('resize', function() {
-      handleMobileAccess();
-    });
-  </script>
+// 新增：关闭所有marker的弹出窗口
+function closeAllMarkerPopups() {
+  markers.forEach((marker) => {
+    marker.closePopup()
+  })
+}
+
+// 新增：更新地图边界
+function updateMapBounds() {
+  // 调整地图视图以显示所有标记
+  if (markers.length > 0) {
+    const group = L.featureGroup(markers)
+    const bounds = group.getBounds().pad(0.1)
+
+    // 使用更平滑的过渡效果
+    map.flyToBounds(bounds, {
+      duration: 1.5, // 动画时间
+      easeLinearity: 0.1,
+      animate: true,
+    })
+  }
+}
+
+// 导航到上一张照片
+function navigatePhotoPrev() {
+  if (currentPhotoIndex > 0) {
+    currentPhotoIndex--
+    updatePhotoView()
+  }
+}
+
+// 导航到下一张照片
+function navigatePhotoNext() {
+  if (currentPhotoIndex < currentPhotoItems.length - 1) {
+    currentPhotoIndex++
+    updatePhotoView()
+  }
+}
+
+// 导航到上一部分
+function navigatePrev() {
+  if (currentSection > 0) {
+    loadSection(currentSection - 1)
+  }
+}
+
+// 导航到下一部分
+function navigateNext() {
+  if (currentSection < totalSections - 1) {
+    loadSection(currentSection + 1)
+  }
+}
+
+// 更新导航按钮状态
+function updateNavButtons() {
+  const prevBtn = document.getElementById('prevBtn')
+  const nextBtn = document.getElementById('nextBtn')
+
+  // 在第一个部分隐藏上一个按钮
+  if (currentSection === 0) {
+    prevBtn.classList.add('opacity-0', 'pointer-events-none')
+    prevBtn.classList.remove('opacity-70')
+  }
+  else {
+    prevBtn.classList.remove('opacity-0', 'pointer-events-none')
+    prevBtn.classList.add('opacity-70')
+  }
+
+  // 在最后一个部分隐藏下一个按钮
+  if (currentSection === totalSections - 1) {
+    nextBtn.classList.add('opacity-0', 'pointer-events-none')
+    nextBtn.classList.remove('opacity-70')
+  }
+  else {
+    nextBtn.classList.remove('opacity-0', 'pointer-events-none')
+    nextBtn.classList.add('opacity-70')
+  }
+}
+
+// 当页面加载完成后初始化
+window.addEventListener('load', init)
+
+// 监听窗口大小变化，处理响应式
+window.addEventListener('resize', () => {
+  handleMobileAccess()
+})
+</script>
 
   <style is:global>
     @font-face {

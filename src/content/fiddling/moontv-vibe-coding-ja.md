@@ -13,10 +13,10 @@ description: "MoonTV は NextJS と React を基盤に構築された新しい�
 
 フロントエンド経験が全くない私が、Vibe Coding を始めました。ほとんどのコードは Cursor と対話しながら直接完成させました。こうして、MoonTV が誕生しました：
 
-::github{repo="senshinya/MoonTV"}
+::github{repo="LunaTechLab/MoonTV"}
 
 わずか１ヶ月で、4.6K の Star と 5.4K の Fork を獲得しました（Star を付けないただ乗りユーザーもいますが）。Star の推移は以下の通りで、国内での違法動画需要の大きさがうかがえます（すべては愛優騰の不親切な対応と高い壁のおかげです）。
-[![Star History Chart](https://api.star-history.com/svg?repos=senshinya/MoonTV&type=Date)](https://www.star-history.com/#senshinya/MoonTV&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=LunaTechLab/MoonTV&type=Date)](https://www.star-history.com/#LunaTechLab/MoonTV&Date)
 
 プロジェクトは NextJS と React を基盤にし、Vercel、Cloudflare Pages、Docker でのデプロイをサポートしています。localstorage、Redis、Cloudflare D1 の３つのストレージ方式に対応し、Redis と Cloudflare D1 では複数アカウントの情報分離やブラウザ間の情報同期が可能で、管理パネルも使いやすく設計されています。今後は Upstash との連携も予定しています。
 

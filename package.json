@@ -54,7 +54,7 @@
     "xml2js": "^0.6.2"
   },
   "devDependencies": {
-    "@antfu/eslint-config": "^5.1.0",
+    "@antfu/eslint-config": "^5.2.0",
     "@astrojs/check": "^0.9.4",
     "@lokesh.dhakar/quantize": "^1.4.0",
     "@types/markdown-it": "^14.1.2",
