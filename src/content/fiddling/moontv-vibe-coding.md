@@ -12,10 +12,10 @@ description: "MoonTV 是一款全新的影视聚合平台，基于 NextJS 和 Re
 
 完全没有任何前端经验的我，开始了 Vibe Coding，大部分代码都是和 Cursor 对话后直接完成。最终，MoonTV 应运而生：
 
-::github{repo="LunaTechLab/MoonTV"}
+::github{repo="MoonTechLab/LunaTV"}
 
 目前只过去了一个月，就已经有了 4.6K Star 和 5.4K Fork（出现不 star 的白嫖党），Star 趋势如下，足以见得国内对于 D 版视频的需求还是很大（全拜爱优腾的各种不做人的操作和那一堵高高的墙所赐）。
-[![Star History Chart](https://api.star-history.com/svg?repos=LunaTechLab/MoonTV&type=Date)](https://www.star-history.com/#LunaTechLab/MoonTV&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=MoonTechLab/LunaTV&type=Date)](https://www.star-history.com/#MoonTechLab/LunaTV&Date)
 
 项目基于 NextJS 和 React，支持 Vercel、Cloudflare Pages 和 Docker 部署，支持 localstorage、Redis 和 Cloudflare D1 三种存储方式，Redis 和 Cloudflare D1 存储时支持多账户信息隔离和跨浏览器信息同步，以及方便快捷的管理面板，后续还计划支持对接 Upstash。
 

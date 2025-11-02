@@ -13,10 +13,10 @@ A few months later, a colleague told me that Cursor now supports Alipay payments
 
 With zero front-end experience, I dove into Vibe Coding, with most of the code being generated directly through conversations with Cursor. The result: MoonTV was born.
 
-::github{repo="LunaTechLab/MoonTV"}
+::github{repo="MoonTechLab/LunaTV"}
 
 In just one month, it has already garnered 4.6K stars and 5.4K forks (with some users forking without starring). The star growth trend below clearly shows the strong domestic demand for pirated video content—thanks largely to the various unreasonable moves by platforms like iQiyi, Youku, and Tencent Video, and the Great Firewall standing tall.  
-[![Star History Chart](https://api.star-history.com/svg?repos=LunaTechLab/MoonTV&type=Date)](https://www.star-history.com/#LunaTechLab/MoonTV&Date)
+[![Star History Chart](https://api.star-history.com/svg?repos=MoonTechLab/LunaTV&type=Date)](https://www.star-history.com/#MoonTechLab/LunaTV&Date)
 
 The project is built on NextJS and React, supporting deployment on Vercel, Cloudflare Pages, and Docker. It supports three storage methods: localStorage, Redis, and Cloudflare D1. When using Redis or Cloudflare D1, it supports multi-account data isolation and cross-browser data synchronization, along with a convenient management panel. Future plans include integration with Upstash.
 

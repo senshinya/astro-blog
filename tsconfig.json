@@ -8,6 +8,11 @@
     },
     "allowJs": true
   },
-  "include": [".astro/types.d.ts", "**/*"],
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.astro",
+    "uno.config.ts",
+    "astro.config.ts"
+  ],
   "exclude": ["dist"]
 }
