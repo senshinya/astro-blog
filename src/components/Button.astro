@@ -5,9 +5,8 @@ import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
 import Search from '@/components/Widgets/Search.astro'
 import { moreLocales, themeConfig } from '@/config'
 import { getLangFromPath } from '@/i18n/lang'
-import { getNextGlobalLangPath, getNextSupportedLangPath, getTagsListLangPath } from '@/i18n/path'
+import { getNextGlobalLangPath, getNextSupportedLangPath } from '@/i18n/path'
 import { ui } from '@/i18n/ui'
-import { isPostPage, isTagPage } from '@/utils/page'
 
 interface Props {
   supportedLangs: string[]
@@ -20,8 +19,6 @@ const {
 
 const { supportedLangs } = Astro.props
 const currentPath = Astro.url.pathname
-const isPost = isPostPage(currentPath)
-const isTag = isTagPage(currentPath)
 
 // 获取当前语言和UI文案
 const currentLang = getLangFromPath(currentPath)
@@ -29,12 +26,10 @@ const currentUI = ui[currentLang as keyof typeof ui] ?? ui.zh
 
 // Check if there are other languages to switch
 const showLanguageSwitcher = moreLocales.length > 0
-// Choose a language switch list according to the page type
-const nextUrl = isTag
-  ? getTagsListLangPath(currentPath) // Switch between all languages in tag pages
-  : isPost
-    ? getNextSupportedLangPath(currentPath, supportedLangs) // Switch between supported languages in post pages
-    : getNextGlobalLangPath(currentPath) // Switch between all languages in other pages
+// Choose a language switch list according to supported languages
+const nextUrl = supportedLangs.length > 0
+  ? getNextSupportedLangPath(currentPath, supportedLangs) // Use supported languages when available
+  : getNextGlobalLangPath(currentPath) // Fallback to all languages when no supported languages data
 ---
 
 <div

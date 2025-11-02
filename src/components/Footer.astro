@@ -13,7 +13,7 @@ const year = Number(startYear) === currentYear ? startYear : `${startYear}-${cur
 const currentLang = getLangFromPath(Astro.url.pathname)
 const links = socialLinks.map(({ name, url, ...rest }) => {
   if (name === 'RSS') {
-    return { name, url: `https://rss.beauty/rss?url=` + (currentLang === defaultLocale ? `${siteUrl}${url}` : `${siteUrl}/${currentLang}${url}`), ...rest }
+    return { name, url: `https://rss.beauty/rss?url=${currentLang === defaultLocale ? `${siteUrl}${url}` : `${siteUrl}/${currentLang}${url}`}`, ...rest }
   }
 
   if (name === 'Email') {
@@ -27,7 +27,7 @@ const footerLinkClass = 'highlight-hover py-0.8 transition-colors after:bottom-0
 ---
 
 <footer
-  class="text-3 leading-1.25em font-navbar text-center lg:(text-3.5 text-center)"
+  class="text-center text-3 leading-1.25em font-navbar lg:(text-center text-3.5)"
   lg="uno-desktop-column bottom-20"
 >
   <p>

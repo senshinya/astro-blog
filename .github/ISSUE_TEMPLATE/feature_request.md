@@ -7,14 +7,11 @@ assignees: ''
 
 ---
 
-### Problem Description｜问题描述
-A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
+### Feature Description｜功能描述
+A clear and concise description of what the feature is.
 
-### Solution｜解决方案
-A clear and concise description of what you want to happen.
-
-### Alternative｜备选方案
-A clear and concise description of any alternative solutions or features you've considered.
+### Proposed Solution｜实现方案
+If applicable, describe how you think this feature could be implemented.
 
 ### Additional context｜补充信息
 Add any other context or screenshots about the feature request here.
