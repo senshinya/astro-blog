@@ -2,6 +2,7 @@
 title: "Kansai Region"
 subtitle: "April 2025"
 posttitle: "Travelogue: Kansai Region(2025.4)"
+totaldays: 3
 lang: en
 published: 2025-05-19T20:52:00+08:00
 coverImage: "/imgs/1115835db120b09526a1e0802b804866.webp"
@@ -9,6 +10,7 @@ abbrlink: travels/kansai-202504
 description: "One weekend in April,<br />a colleague said, 'Let's go to Japan,'<br />so, off we went to Japan."
 days:
   - title: "A Sleepless Night at Pudong Airport"
+    day: 0
     descriptions:
       - "On Friday evening, right after work, I took the high-speed train to Shanghai Pudong Airport. The flight was booked for 6 a.m. Saturday. It was my first time catching such an early flight, and with no experience, I booked a hotel far from the airport. After some thought, I decided it was better to just tough it out and spend the night at the airport."
       - "Had I known in advance how tough it would be to spend the night at Pudong Airport, I would have preferred a few hours of rest at a hotel rather than sitting on a hard bench until dawn."
@@ -45,6 +47,7 @@ days:
         lng: 121.808594
         caption: "Finally checked in and boarded, ready to depart. Outside the window, a rather ugly Russian plane is landing."
   - title: "Above the Clouds"
+    day: 1
     descriptions:
       - "🛫 ——> 🛬"
       - "Second attempt to sleep: failed."
@@ -91,6 +94,7 @@ days:
         lng: 135.3321027
         caption: "Riding the familiar Hello Kitty Haruka train—this time heading to Kyoto."
   - title: "I Guess I Was Awake After All"
+    day: 1
     descriptions:
       - "Due to Japan’s outdated rule that hotels only allow check-in after 3 p.m., the three of us began wandering around Kyoto."
       - "Our minds were gone, but our bodies kept roaming."
@@ -141,6 +145,7 @@ days:
         lng: 135.7615305
         caption: "After a long nap until dark, we went out for food. We found an izakaya. Japanese meals are always small portions—two people eating three or four yakitori skewers, washing down with beer. The three of us ordered dozens of skewers and three cocktails. K, who can’t hold his liquor, quickly turned red and warm."
   - title: "🦌 Nara — Kasuga Taisha and Todai-ji"
+    day: 2
     descriptions:
       - "A must-visit for Kansai entertainment is Nara, for an intimate encounter with nature."
       - "The whole city is filled with a unique natural scent—deer droppings."
@@ -202,6 +207,7 @@ days:
         lng: 135.8396138
         caption: "The fierce-eyed Komokuten statue inside Todai-ji. Isn’t Komokuten supposed to play a lute? Or am I mixing it up with a game? Mr. S drew another bad fortune here and donated all his spare change."
   - title: "Mount Wakakusa Is Full of Droppings"
+    day: 2
     descriptions:
       - "Leaving Todai-ji, heading southeast uphill leads to Mount Wakakusa."
       - "In my view, the official Mount Wakakusa area is quite small, just a little slope facing west. The entire slope is almost entirely covered with deer droppings. On the hill, all I heard was Chinese—just like back home."
@@ -247,7 +253,8 @@ days:
         lat: 34.684598
         lng: 135.828862
         caption: "Before coming to Japan, the price of rice had already skyrocketed and made the news. In convenience stores, 1.5 kg of rice costs 1,920 yen—about 30 RMB per jin—a jaw-dropping price."
-  - title: "Angelica"
+  - title: "Time to Go Home"
+    day: 3
     descriptions:
       - "No special plans for the last day, so we designated it as a shopping spree day."
       - "Happy times always fly by; as if unwilling to let us leave, our flight was delayed by four hours."

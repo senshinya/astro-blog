@@ -4,4 +4,8 @@ export default antfu({
   typescript: true,
   astro: true,
   unocss: true,
+  ignores: [
+    'src/layouts/Travel.astro',
+    'src/components/TravelJourney.astro',
+  ],
 })

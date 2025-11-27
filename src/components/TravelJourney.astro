@@ -4,331 +4,190 @@ const { travel } = Astro.props;
 
 <div class="travel-journey">
   <!-- 移动端提示 -->
-  <div id="mobileNotice" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-background p-6 text-center">
-    <svg xmlns="http://www.w3.org/2000/svg" class="mb-6 h-24 w-24 text-primary" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-    </svg>
-    <h2 class="mb-3 text-2xl text-primary font-bold">请在电脑端访问</h2>
-    <p class="text-light-text mt-2">此页面需要更大的屏幕才能获得最佳体验。</p>
+  <div id="mobileNotice" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-8 text-center">
+    <div class="glass-effect rounded-3xl p-10 shadow-bento max-w-sm">
+      <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-soft/10">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+        </svg>
+      </div>
+      <h2 class="mb-3 text-2xl font-semibold text-primary tracking-tight">请在电脑端访问</h2>
+      <p class="text-light-text text-sm leading-relaxed">此页面需要更大的屏幕才能获得最佳体验</p>
+    </div>
   </div>
 
   <!-- Bento Grid 布局 -->
-  <div id="mainContent" class="h-screen w-screen gap-5 bg-background p-5">
-    <!-- 原有内容保持不变 -->
-    <!-- 左侧卡片 - 内容区域 -->
-    <div
-      id="leftCard"
-      class="bg-card-bg rounded-bento shadow-bento scrollbar-hide relative z-10 h-full w-3/5 overflow-y-auto transition-all duration-500 ease-in-out"
-    >
-      <div
-        id="contentArea"
-        class="content-area h-full w-full p-12 pt-24 transition-all duration-400 ease-in-out"
-      >
-        <!-- 内容将通过JavaScript动态加载 -->
-      </div>
+  <div id="mainContent" class="h-screen w-screen gap-6 bg-transparent p-6">
+    <!-- 左侧卡片 -->
+    <div id="leftCard" class="glass-effect rounded-bento shadow-bento scrollbar-hide relative z-10 h-full w-3/5 overflow-y-auto transition-all duration-500 ease-out">
+      <div id="contentArea" class="content-area h-full w-full p-14 pt-20 transition-all duration-400 ease-out"></div>
 
       <!-- 照片查看模式 -->
-      <div
-        id="photoViewMode"
-        class="rounded-bento invisible absolute left-0 top-0 z-50 h-full w-full flex flex-col bg-secondary/20 opacity-0 transition-all duration-300 ease-in-out"
-      >
-        <!-- 将导航按钮固定在左侧面板中间 -->
-        <div
-          id="prevPhotoBtn"
-          class="transition-bento pointer-events-auto absolute left-0 top-3/7 z-20 h-[50px] w-[50px] flex cursor-pointer items-center justify-center border-none bg-transparent -translate-y-1/2"
-        >
-          <svg
-            class="fill-text-color transition-bento h-9 w-9 hover:scale-110 hover:fill-primary"
-            viewBox="0 0 24 24"
-          >
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
-          </svg>
-        </div>
-        <div
-          id="nextPhotoBtn"
-          class="transition-bento pointer-events-auto absolute right-0 top-3/7 z-20 h-[50px] w-[50px] flex cursor-pointer items-center justify-center border-none bg-transparent -translate-y-1/2"
-        >
-          <svg
-            class="fill-text-color transition-bento h-9 w-9 hover:scale-110 hover:fill-primary"
-            viewBox="0 0 24 24"
-          >
-            <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
-          </svg>
-        </div>
-        <div
-          class="relative flex flex-1 items-center justify-center overflow-hidden"
-        >
-          <img
-            src=""
-            alt=""
-            id="photoViewImg"
-            class="shadow-bento max-h-[90%] max-w-[90%] rounded-lg object-contain"
-          />
-          <div
-            id="closePhotoBtn"
-            class="transition-bento border-accent pointer-events-auto absolute right-5 top-5 z-10 h-10 w-10 flex cursor-pointer items-center justify-center border-2 rounded-full bg-white/80 shadow-md hover:scale-110"
-          >
-            <svg
-              class="fill-accent transition-bento h-6 w-6 group-hover:fill-white"
-              viewBox="0 0 24 24"
-            >
-              <path
-                d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"
-              >
-              </path>
+      <div id="photoViewMode" class="rounded-bento invisible absolute left-0 top-0 z-50 h-full w-full flex flex-col bg-white/98 backdrop-blur-2xl opacity-0 transition-all duration-300 ease-out">
+        <div class="relative flex flex-1 items-center justify-center overflow-hidden p-6">
+          <img src="" alt="" id="photoViewImg" class="shadow-bento-hover max-h-full max-w-full rounded-bento-sm object-contain transition-all duration-500" />
+          <!-- 关闭按钮 - 右上角 -->
+          <div id="closePhotoBtn" class="pointer-events-auto absolute right-4 top-4 z-10 h-9 w-9 flex cursor-pointer items-center justify-center rounded-full bg-slate-100/80 backdrop-blur-sm transition-all duration-300 hover:bg-accent hover:scale-105 group">
+            <svg class="h-4 w-4 text-slate-500 transition-colors group-hover:text-white" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path>
             </svg>
           </div>
         </div>
-        <div
-          id="photoViewCaption"
-          class="bg-card-bg text-text-color max-h-[30%] overflow-y-auto border-t border-black/5 p-6 text-base leading-relaxed"
-        >
+        <!-- 底部信息栏 -->
+        <div class="bg-white/90 backdrop-blur-sm border-t border-slate-100 px-6 py-4">
+          <div class="flex flex-col items-center gap-3">
+            <!-- 照片描述 -->
+            <div id="photoViewCaption" class="text-sm text-slate-600 leading-relaxed font-light text-center max-w-lg"></div>
+            <!-- 照片导航 -->
+            <div class="flex items-center gap-1 p-1 rounded-full bg-slate-50">
+              <div id="prevPhotoBtn" class="pointer-events-auto h-8 w-8 flex cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-white hover:shadow-soft group">
+                <svg class="h-4 w-4 text-slate-400 transition-all duration-300 group-hover:text-primary group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
+                </svg>
+              </div>
+              <div id="photoCounter" class="px-3 text-xs text-slate-400 tabular-nums">
+                <span id="currentPhotoNum">1</span> / <span id="totalPhotoNum">1</span>
+              </div>
+              <div id="nextPhotoBtn" class="pointer-events-auto h-8 w-8 flex cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-white hover:shadow-soft group">
+                <svg class="h-4 w-4 text-slate-400 transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
+                </svg>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- 右侧卡片 - 地图/封面图区域 -->
-    <div
-      id="rightCard"
-      class="bg-card-bg rounded-bento shadow-bento relative h-full w-2/5 overflow-hidden transition-all duration-500 ease-in-out"
-    >
-      <div
-        class="map-container rounded-bento relative h-full w-full overflow-hidden"
-        style="display: none;"
-      >
+    <!-- 右侧卡片 -->
+    <div id="rightCard" class="rounded-bento shadow-bento relative h-full w-2/5 overflow-hidden transition-all duration-500 ease-out">
+      <div class="map-container rounded-bento relative h-full w-full overflow-hidden" style="display: none;">
         <div id="map" class="rounded-bento z-[1] h-full w-full"></div>
       </div>
     </div>
   </div>
 
-  <!-- 导航箭头 -->
-  <div
-    class="pointer-events-none fixed left-0 top-[7%] z-50 w-full transform justify-between px-10 transition-all duration-300 ease-in-out -translate-y-1/2"
-  >
-    <div
-      id="prevBtn"
-      class="transition-bento pointer-events-auto h-[60px] w-[60px] flex cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg hover:scale-110 hover:opacity-100"
-    >
-      <svg
-        class="transition-bento h-6 w-6 fill-primary group-hover:fill-white"
-        viewBox="0 0 24 24"
-      >
+
+  <!-- 底部导航栏 -->
+  <div id="bottomNav" class="fixed bottom-6 left-1/2 -translate-x-1/2 z-40 flex items-center gap-1 p-1.5 rounded-full bg-white/80 backdrop-blur-xl shadow-bento border border-white/50 transition-all duration-300">
+    <div id="prevBtn" class="h-10 w-10 flex cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-slate-100 group">
+      <svg class="h-4 w-4 text-primary/60 transition-all duration-300 group-hover:text-primary group-hover:-translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
         <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"></path>
       </svg>
     </div>
-    <div
-      id="nextBtn"
-      class="transition-bento pointer-events-auto h-[60px] w-[60px] flex cursor-pointer items-center justify-center rounded-full bg-white/90 shadow-lg hover:scale-110 hover:opacity-100"
-    >
-      <svg
-        class="transition-bento h-6 w-6 fill-primary group-hover:fill-white"
-        viewBox="0 0 24 24"
-      >
+    <div id="pageIndicator" class="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-slate-50/80">
+      <span id="currentPage" class="text-sm font-semibold text-primary tabular-nums">1</span>
+      <span class="text-slate-300 text-xs">/</span>
+      <span id="totalPages" class="text-sm text-slate-400 tabular-nums">1</span>
+    </div>
+    <div id="nextBtn" class="h-10 w-10 flex cursor-pointer items-center justify-center rounded-full transition-all duration-300 hover:bg-slate-100 group">
+      <svg class="h-4 w-4 text-primary/60 transition-all duration-300 group-hover:text-primary group-hover:translate-x-0.5" viewBox="0 0 24 24" fill="currentColor">
         <path d="M10 6L8.59 7.41 13.17 12l-4.58 4.59L10 18l6-6z"></path>
       </svg>
     </div>
   </div>
 
   <script is:inline define:vars={{ travelData: travel.data }}>
-// 检测是否为移动设备
+// 检测移动设备
 function isMobileDevice() {
-  // 检查屏幕宽度
-  const isSmallScreen = window.innerWidth < 768
-
-  // 检查是否为移动设备的用户代理
-  const isMobileUserAgent = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
-
-  // 如果是小屏幕或移动设备的用户代理，则认为是移动设备
-  return isSmallScreen || isMobileUserAgent
+  return window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
 }
 
 // 处理移动设备访问
 function handleMobileAccess() {
   if (isMobileDevice()) {
-    // 显示移动设备提示
     document.getElementById('mobileNotice').classList.remove('hidden')
     document.getElementById('mobileNotice').classList.add('flex')
     document.getElementById('mainContent').classList.add('hidden')
-
-    // 隐藏导航箭头
-    const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
-    if (navArrows) {
-      navArrows.classList.add('hidden')
-    }
-
-    // 阻止进一步初始化
+    const bottomNav = document.getElementById('bottomNav')
+    if (bottomNav) bottomNav.classList.add('hidden')
     return true
   }
   document.getElementById('mainContent').classList.add('flex')
-  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
-  if (navArrows) {
-    navArrows.classList.add('flex')
-  }
   return false
 }
 
+
 // 全局变量
 let currentSection = 0
-const totalSections = travelData.days.length + 1 // 封面 + 天数
-let map
-let markers = []
-let currentPhotoItems = []
-let currentPhotoIndex = 0
+const totalSections = travelData.days.length + 1
+let map, markers = [], currentPhotoItems = [], currentPhotoIndex = 0
 
-// 初始化函数
+// 初始化
 function init() {
-  // 检查是否为移动设备
-  if (handleMobileAccess()) {
-    return // 如果是移动设备，不继续初始化
-  }
-
-  // 初始化地图
+  if (handleMobileAccess()) return
+  
+  // 更新页面指示器
+  document.getElementById('totalPages').textContent = totalSections
+  
   initMap()
-
-  // 加载初始内容（封面）
   loadSection(0)
-
-  // 设置导航箭头点击事件
+  
   document.getElementById('prevBtn').addEventListener('click', navigatePrev)
   document.getElementById('nextBtn').addEventListener('click', navigateNext)
-
-  // 设置键盘导航
+  
   document.addEventListener('keydown', (e) => {
-    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-      navigateNext()
-    }
-    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-      navigatePrev()
-    }
-    else if (e.key === 'Escape') {
-      // 如果照片查看模式是活跃的，关闭它
-      if (
-        document
-          .getElementById('photoViewMode')
-          .classList
-          .contains('active')
-      ) {
-        closePhotoView()
-      }
-    }
+    if (e.key === 'ArrowRight' || e.key === 'ArrowDown') navigateNext()
+    else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') navigatePrev()
+    else if (e.key === 'Escape' && document.getElementById('photoViewMode').classList.contains('active')) closePhotoView()
   })
-
-  // 设置照片查看模式的导航按钮
-  document
-    .getElementById('prevPhotoBtn')
-    .addEventListener('click', navigatePhotoPrev)
-  document
-    .getElementById('nextPhotoBtn')
-    .addEventListener('click', navigatePhotoNext)
-
-  // 设置照片查看模式的关闭按钮
-  document
-    .getElementById('closePhotoBtn')
-    .addEventListener('click', closePhotoView)
-
-  // 设置触摸导航
+  
+  document.getElementById('prevPhotoBtn').addEventListener('click', navigatePhotoPrev)
+  document.getElementById('nextPhotoBtn').addEventListener('click', navigatePhotoNext)
+  document.getElementById('closePhotoBtn').addEventListener('click', closePhotoView)
+  
+  // 触摸导航
   let touchStartY = 0
-  document.addEventListener('touchstart', (e) => {
-    touchStartY = e.touches[0].clientY
-  })
-
+  document.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY })
   document.addEventListener('touchend', (e) => {
-    const touchEndY = e.changedTouches[0].clientY
-    const diff = touchStartY - touchEndY
-
-    if (Math.abs(diff) > 50) {
-      // 最小滑动距离
-      if (diff > 0) {
-        navigateNext()
-      }
-      else {
-        navigatePrev()
-      }
-    }
+    const diff = touchStartY - e.changedTouches[0].clientY
+    if (Math.abs(diff) > 50) diff > 0 ? navigateNext() : navigatePrev()
   })
-
-  // 更新导航按钮状态
+  
   updateNavButtons()
 }
 
 // 初始化地图
 function initMap() {
-  // 创建地图实例，但不设置初始视图
-  map = L.map('map', {
-    zoomControl: false,
-    preferCanvas: true,
-    renderer: L.canvas(),
-    // 不要设置初始中心点和缩放级别
-  })
-
-  // 添加地图图层
+  map = L.map('map', { zoomControl: false, preferCanvas: true, renderer: L.canvas() })
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution:
-          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map)
-
-  // 添加缩放控制
-  L.control
-    .zoom({
-      position: 'bottomright',
-    })
-    .addTo(map)
-
-  // 设置默认视图为京都区域，但不立即应用
-  // 这会在首次切换到行程页面时被覆盖
-  map.setView([35.0116, 135.7681], 12, {
-    animate: false,
-  })
+  L.control.zoom({ position: 'bottomright' }).addTo(map)
+  map.setView([35.0116, 135.7681], 12, { animate: false })
 }
 
-// 加载指定部分的内容
+
+// 加载指定部分
 function loadSection(index) {
   const contentArea = document.getElementById('contentArea')
   const container = document.querySelector('.flex.w-screen.h-screen')
   const mapContainer = document.querySelector('.map-container')
   const leftCard = document.getElementById('leftCard')
   const rightCard = document.getElementById('rightCard')
-
-  // 判断是否是在行程页面之间切换（非首页相关的切换）
   const isTravelToTravel = index > 0 && currentSection > 0
 
-  // 使用 Promise 来管理动画序列
   const animateTransition = async () => {
-    // 1. 开始退出动画
     leftCard.classList.add('card-exit')
     if (!isTravelToTravel) {
       rightCard.classList.add('card-exit')
-      if (currentSection > 0) {
-        mapContainer.style.opacity = '0'
-      }
+      if (currentSection > 0) mapContainer.style.opacity = '0'
     }
     contentArea.classList.add('fade-out')
 
-    // 2. 等待退出动画完成
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    // 3. 清空内容并准备新内容
+    await new Promise(r => setTimeout(r, 250))
     contentArea.innerHTML = ''
 
-    // 4. 处理地图相关操作
     if (isTravelToTravel) {
       clearMarkers()
       addDayMarkers(index - 1)
       if (markers.length > 0) {
-        const group = L.featureGroup(markers)
-        const bounds = group.getBounds().pad(0.1)
-        map.flyToBounds(bounds, {
-          duration: 1.5,
-          easeLinearity: 0.1,
-          animate: true,
-        })
+        map.flyToBounds(L.featureGroup(markers).getBounds().pad(0.1), { duration: 1.2, easeLinearity: 0.2, animate: true })
       }
-    }
-    else {
+    } else {
       clearMarkers()
     }
 
-    // 5. 加载新内容
     if (index === 0) {
       loadCover()
       container.classList.add('cover-mode')
@@ -336,599 +195,387 @@ function loadSection(index) {
       rightPanel.style.backgroundImage = `url(${travelData.coverImage})`
       rightPanel.style.backgroundSize = 'cover'
       rightPanel.style.backgroundPosition = 'center'
-      rightPanel.style.backgroundRepeat = 'no-repeat'
-      rightPanel.style.transition = 'transform 10s ease'
+      rightPanel.style.transition = 'transform 12s ease-out'
       mapContainer.style.display = 'none'
-    }
-    else {
+    } else {
       container.classList.remove('cover-mode')
       const rightPanel = document.getElementById('rightCard')
       rightPanel.style.backgroundImage = ''
       rightPanel.style.transform = ''
       loadDay(index - 1, index !== 1 || isTravelToTravel)
-
       if (!isTravelToTravel) {
         mapContainer.style.display = 'block'
         mapContainer.style.opacity = '0'
-        if (!isTravelToTravel) {
-          addDayMarkers(index - 1)
-          if (markers.length > 0) {
-            const group = L.featureGroup(markers)
-            map.invalidateSize()
-            map.fitBounds(group.getBounds().pad(0.1), {
-              animate: false,
-            })
-          }
+        addDayMarkers(index - 1)
+        if (markers.length > 0) {
+          map.invalidateSize()
+          map.fitBounds(L.featureGroup(markers).getBounds().pad(0.1), { animate: false })
         }
       }
     }
 
-    // 6. 更新状态
     currentSection = index
+    document.getElementById('currentPage').textContent = index + 1
     updateNavButtons()
 
-    // 7. 开始进入动画
     leftCard.classList.add('card-enter-left')
-    if (!isTravelToTravel) {
-      rightCard.classList.add('card-enter-right')
-    }
+    if (!isTravelToTravel) rightCard.classList.add('card-enter-right')
 
-    // 8. 等待进入动画完成
-    await new Promise(resolve => setTimeout(resolve, 50))
-
-    // 9. 移除动画类
+    await new Promise(r => setTimeout(r, 50))
     leftCard.classList.remove('card-exit', 'card-enter-left')
-    if (!isTravelToTravel) {
-      rightCard.classList.remove('card-exit', 'card-enter-right')
-    }
-
+    if (!isTravelToTravel) rightCard.classList.remove('card-exit', 'card-enter-right')
     contentArea.classList.remove('fade-out')
     contentArea.classList.add('fade-in')
 
-    // 10. 完成过渡
-    await new Promise(resolve => setTimeout(resolve, 500))
+    await new Promise(r => setTimeout(r, 400))
     contentArea.classList.remove('fade-in')
 
     if (index > 0 && !isTravelToTravel) {
       map.invalidateSize()
-      mapContainer.style.transition = 'opacity 0.3s ease-in-out'
+      mapContainer.style.transition = 'opacity 0.4s ease-out'
       mapContainer.style.opacity = '1'
     }
   }
 
-  // 执行动画序列
   animateTransition()
 }
+
 
 // 加载封面
 function loadCover() {
   const contentArea = document.getElementById('contentArea')
-
-  const coverHTML = `
-                <div class="flex flex-col justify-center h-full">
-                    <h1 class="font-snell text-4xl md:text-5xl lg:text-6xl font-bold mb-2 text-primary leading-tight -tracking-wider">${travelData.title}</h1>
-                    <h2 class="font-snell text-2xl md:text-3xl lg:text-4xl font-semibold mb-8 text-text-color -tracking-wide">${travelData.subtitle}</h2>
-                    <p class="text-lg text-light-text leading-relaxed max-w-xl">${travelData.description}</p>
-            </div>
-        `
-
-  contentArea.innerHTML = coverHTML
+  contentArea.innerHTML = `
+    <div class="flex flex-col justify-center h-full">
+      <div class="mb-6">
+        <span class="inline-block px-3 py-1 text-xs font-medium tracking-wider uppercase text-accent bg-accent/10 rounded-full">旅行日记</span>
+      </div>
+      <h1 class="font-snell text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-primary leading-[1.1] tracking-tight">${travelData.title}</h1>
+      <h2 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-medium mb-10 text-primary/70 tracking-tight">${travelData.subtitle}</h2>
+      <p class="text-base text-light-text leading-relaxed max-w-lg font-light">${travelData.description}</p>
+      <div class="mt-12 flex items-center gap-3 text-sm text-light-text">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
+        <span>${travelData.totaldays !== undefined ? travelData.totaldays : travelData.days.length} 天行程</span>
+      </div>
+    </div>
+  `
 }
 
 // 加载行程日
 function loadDay(dayIndex, later = false) {
   const day = travelData.days[dayIndex]
   const contentArea = document.getElementById('contentArea')
+  const dayNum = day.day !== undefined ? day.day : dayIndex
+  
+  let descriptionsHTML = day.descriptions.map(desc => 
+    `<p class="mb-5 text-light-text text-base leading-relaxed font-light">${desc}</p>`
+  ).join('')
 
-  let descriptionsHTML = ''
-  day.descriptions.forEach((desc) => {
-    descriptionsHTML += `<p class="mb-5 text-light-text text-lg leading-relaxed">${desc}</p>`
-  })
-
-  // 先创建不包含照片的内容
-  const dayHTML = `
-        <div class="h-full overflow-y-auto scrollbar-hide">
-          <h3 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-semibold mb-10 mt-8 pt-4 text-primary relative inline-block -tracking-wide after:content-[''] after:absolute after:bottom-[-10px] after:left-0 after:w-[100px] after:h-[3px] after:bg-accent after:rounded-md">${day.title}</h3>
-          ${descriptionsHTML}
-          <div id="photos-container" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 mt-10 mb-8">
-            ${createPlaceholders(day.photos.length)}
+  contentArea.innerHTML = `
+    <div class="h-full overflow-y-auto scrollbar-hide pb-8">
+      <div class="mb-2">
+        <span class="inline-block px-2.5 py-1 text-xs font-medium tracking-wider uppercase text-accent-soft bg-accent-soft/10 rounded-full">Day ${dayNum}</span>
+      </div>
+      <h3 class="font-cormorant text-3xl md:text-4xl lg:text-5xl font-semibold mb-8 text-primary tracking-tight leading-tight">${day.title}</h3>
+      ${descriptionsHTML}
+      <div id="photos-container" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+        ${createPlaceholders(day.photos.length)}
       </div>
     </div>
   `
 
-  contentArea.innerHTML = dayHTML
-
-  // 延迟加载照片，等待地图动画完成
   setTimeout(() => {
-    // 分批加载照片
     const loadPhotoBatch = (startIdx, batchSize) => {
       const endIdx = Math.min(startIdx + batchSize, day.photos.length)
-
-      // 获取所有占位div
       const placeholders = document.querySelectorAll('#photos-container > div')
+      
       for (let i = startIdx; i < endIdx; i++) {
-        if (i >= placeholders.length)
-          break // 安全检查
-
+        if (i >= placeholders.length) break
         const photo = day.photos[i]
         const placeholder = placeholders[i]
-
-        // 创建新的照片元素
+        
         const photoElement = document.createElement('div')
-        photoElement.className = 'relative h-[180px] rounded-bento overflow-hidden cursor-pointer transition-all duration-500 ease-in-out shadow-md hover:translate-y-[-8px] hover:shadow-lg group'
+        photoElement.className = 'relative aspect-[4/3] rounded-bento-sm overflow-hidden cursor-pointer transition-all duration-400 ease-out shadow-soft hover:shadow-bento-hover hover:-translate-y-1 group'
         photoElement.dataset.index = i.toString()
-
         photoElement.innerHTML = `
-              <img src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-all duration-500 ease-in-out group-hover:scale-[1.08]">
-          <div class="absolute inset-x-0 bottom-0 h-[40%] bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-all duration-500 ease-in-out group-hover:opacity-100"></div>
+          <img src="${photo.src}" alt="${photo.alt}" class="w-full h-full object-cover transition-transform duration-500 ease-out group-hover:scale-105">
+          <div class="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100"></div>
+          <div class="absolute bottom-3 left-3 right-3 text-white text-xs font-medium opacity-0 transition-all duration-300 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 truncate">${photo.alt}</div>
         `
-
-        // 添加点击事件
-        photoElement.addEventListener('click', () => {
-          openPhotoView(dayIndex, i)
-        })
-
-        // 替换占位div
+        photoElement.addEventListener('click', () => openPhotoView(dayIndex, i))
         placeholder.parentNode.replaceChild(photoElement, placeholder)
       }
-
-      // 如果还有更多照片要加载，继续加载下一批
-      if (endIdx < day.photos.length) {
-        setTimeout(() => loadPhotoBatch(endIdx, batchSize), 100)
-      }
+      
+      if (endIdx < day.photos.length) setTimeout(() => loadPhotoBatch(endIdx, batchSize), 80)
     }
-
-    // 开始加载第一批照片，每批1张
-    loadPhotoBatch(0, 1)
-  }, later ? 1550 : 300) // 如果是later模式，等待更长时间让地图动画完成
+    loadPhotoBatch(0, 2)
+  }, later ? 1400 : 250)
 }
 
-// 新增：创建占位div的函数
+
+// 创建占位符
 function createPlaceholders(count) {
-  let placeholdersHTML = ''
+  let html = ''
   for (let i = 0; i < count; i++) {
-    placeholdersHTML += `
-      <div class="relative h-[180px] rounded-bento overflow-hidden shadow-md bg-gray-200 animate-pulse">
-        <div class="absolute inset-0 flex items-center justify-center">
-          <svg class="w-12 h-12 text-gray-300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" fill="currentColor" viewBox="0 0 640 512">
-            <path d="M480 80C480 35.82 515.8 0 560 0C604.2 0 640 35.82 640 80C640 124.2 604.2 160 560 160C515.8 160 480 124.2 480 80zM0 456.1C0 445.6 2.964 435.3 8.551 426.4L225.3 81.01C231.9 70.42 243.5 64 256 64C268.5 64 280.1 70.42 286.8 81.01L412.7 281.7L460.9 202.7C464.1 196.1 472.2 192 480 192C487.8 192 495 196.1 499.1 202.7L631.1 419.1C636.9 428.6 640 439.7 640 450.9C640 484.6 612.6 512 578.9 512H55.91C25.03 512 .0006 486.1 .0006 456.1L0 456.1z"/>
-          </svg>
-        </div>
+    html += `
+      <div class="relative aspect-[4/3] rounded-bento-sm overflow-hidden bg-slate-100">
+        <div class="absolute inset-0 bg-gradient-to-r from-slate-100 via-slate-50 to-slate-100 animate-shimmer" style="background-size: 200% 100%"></div>
       </div>
     `
   }
-  return placeholdersHTML
+  return html
 }
 
-// 清除地图上的所有标记
+// 清除标记
 function clearMarkers() {
-  markers.forEach((marker) => {
-    map.removeLayer(marker)
-  })
+  markers.forEach(m => map.removeLayer(m))
   markers = []
 }
 
-// 添加指定天的所有标记
+// 添加标记
 function addDayMarkers(dayIndex) {
   const day = travelData.days[dayIndex]
-
   day.photos.forEach((photo, photoIndex) => {
     if (photo.lat && photo.lng) {
-      const marker = L.marker([photo.lat, photo.lng], {
-        title: photo.alt,
-      }).addTo(map)
-
-      // 创建自定义弹出窗口内容
-      const popupContent = `
-                        <div class="w-[200px] text-center">
-                            <img src="${photo.src}" alt="${photo.alt}" class="w-full rounded-lg mb-2">
-                            <div class="font-bold">${photo.alt}</div>
-                    </div>
-                `
-
-      marker.bindPopup(popupContent)
-
-      // 添加标记点击事件
-      marker.on('click', () => {
-        openPhotoView(dayIndex, photoIndex)
-      })
-
+      const marker = L.marker([photo.lat, photo.lng], { title: photo.alt }).addTo(map)
+      marker.bindPopup(`
+        <div class="w-48 text-center p-1">
+          <img src="${photo.src}" alt="${photo.alt}" class="w-full rounded-lg mb-2">
+          <div class="font-medium text-sm">${photo.alt}</div>
+        </div>
+      `)
+      marker.on('click', () => openPhotoView(dayIndex, photoIndex))
       markers.push(marker)
     }
   })
 }
 
-// 打开照片查看模式
+// 打开照片查看
 function openPhotoView(dayIndex, photoIndex) {
   currentPhotoItems = travelData.days[dayIndex].photos
   currentPhotoIndex = photoIndex
 
-  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
+  const bottomNav = document.getElementById('bottomNav')
   const contentArea = document.getElementById('contentArea')
   const photoViewMode = document.getElementById('photoViewMode')
 
-  // 使用 Promise 管理动画序列
-  const animatePhotoView = async () => {
-    // 1. 隐藏导航和内容
-    navArrows.style.opacity = '0'
-    navArrows.style.visibility = 'hidden'
+  const animate = async () => {
+    bottomNav.style.opacity = '0'
+    bottomNav.style.visibility = 'hidden'
     contentArea.style.opacity = '0'
     contentArea.style.visibility = 'hidden'
 
-    // 2. 准备照片查看模式
     photoViewMode.classList.add('active')
     photoViewMode.classList.remove('invisible')
     photoViewMode.classList.add('visible')
     photoViewMode.style.opacity = '0'
 
-    // 3. 预加载照片
-    const currentPhoto = currentPhotoItems[currentPhotoIndex]
     const img = new Image()
+    await new Promise(r => { img.onload = r; img.src = currentPhotoItems[currentPhotoIndex].src })
 
-    await new Promise((resolve) => {
-      img.onload = resolve
-      img.src = currentPhoto.src
-    })
-
-    // 4. 更新内容
     updatePhotoViewContent()
-
-    // 5. 显示照片查看模式
-    await new Promise(resolve => setTimeout(resolve, 50))
+    await new Promise(r => setTimeout(r, 50))
     photoViewMode.style.opacity = '1'
-
-    // 6. 更新地图视图
-    await new Promise(resolve => setTimeout(resolve, 100))
+    await new Promise(r => setTimeout(r, 100))
     updateMapView()
   }
-
-  animatePhotoView()
+  animate()
 }
 
-// 新增：更新照片查看视图内容（不包含地图操作）
+
+// 更新照片查看内容
 function updatePhotoViewContent() {
   const photoViewImg = document.getElementById('photoViewImg')
   const photoViewCaption = document.getElementById('photoViewCaption')
   const prevPhotoBtn = document.getElementById('prevPhotoBtn')
   const nextPhotoBtn = document.getElementById('nextPhotoBtn')
-
+  const currentPhotoNum = document.getElementById('currentPhotoNum')
+  const totalPhotoNum = document.getElementById('totalPhotoNum')
   const currentPhoto = currentPhotoItems[currentPhotoIndex]
 
   photoViewImg.src = currentPhoto.src
   photoViewImg.alt = currentPhoto.alt
-  if (currentPhoto.caption) {
-    photoViewCaption.classList.remove('hidden')
-    photoViewCaption.textContent = currentPhoto.caption
-  }
-  else {
-    photoViewCaption.classList.add('hidden')
-  }
+  
+  // 更新照片计数器
+  currentPhotoNum.textContent = currentPhotoIndex + 1
+  totalPhotoNum.textContent = currentPhotoItems.length
+  
+  // 更新描述
+  photoViewCaption.textContent = currentPhoto.caption || currentPhoto.alt || ''
 
-  // 更新照片导航按钮状态
-  if (currentPhotoIndex === 0) {
-    prevPhotoBtn.classList.add('opacity-0', 'pointer-events-none')
-  }
-  else {
-    prevPhotoBtn.classList.remove('opacity-0', 'pointer-events-none')
-  }
-
-  if (currentPhotoIndex === currentPhotoItems.length - 1) {
-    nextPhotoBtn.classList.add('opacity-0', 'pointer-events-none')
-  }
-  else {
-    nextPhotoBtn.classList.remove('opacity-0', 'pointer-events-none')
-  }
+  // 更新按钮状态
+  const isFirst = currentPhotoIndex === 0
+  const isLast = currentPhotoIndex === currentPhotoItems.length - 1
+  
+  prevPhotoBtn.classList.toggle('opacity-30', isFirst)
+  prevPhotoBtn.classList.toggle('pointer-events-none', isFirst)
+  nextPhotoBtn.classList.toggle('opacity-30', isLast)
+  nextPhotoBtn.classList.toggle('pointer-events-none', isLast)
 }
 
-// 新增：更新地图视图（从updatePhotoView中分离出来的地图操作部分）
+// 更新地图视图
 function updateMapView() {
   const currentPhoto = currentPhotoItems[currentPhotoIndex]
-
-  // 更新地图视图
   if (currentPhoto.lat && currentPhoto.lng) {
-    // 使用flyTo代替setView实现平滑移动
-    map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, {
-      duration: 1.5, // 动画持续时间（秒）
-      easeLinearity: 0.1, // 动画曲线的线性程度
-      animate: true, // 是否启用动画
-    })
-
-    markers.forEach((marker) => {
-      if (
-        marker.getLatLng().lat === currentPhoto.lat
-        && marker.getLatLng().lng === currentPhoto.lng
-      ) {
-        marker.openPopup()
-      }
+    map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, { duration: 1.2, easeLinearity: 0.2, animate: true })
+    markers.forEach(m => {
+      if (m.getLatLng().lat === currentPhoto.lat && m.getLatLng().lng === currentPhoto.lng) m.openPopup()
     })
   }
 }
 
-// 修改原有的updatePhotoView函数，使用新的分离函数
 function updatePhotoView() {
-  // 先更新内容
   updatePhotoViewContent()
-
-  // 延迟更新地图，避免同时进行大量操作
-  setTimeout(() => {
-    updateMapView()
-  }, 100)
+  setTimeout(updateMapView, 100)
 }
 
-// 关闭照片查看模式
+// 关闭照片查看
 function closePhotoView() {
   const photoViewMode = document.getElementById('photoViewMode')
-
-  const animateClose = async () => {
-    // 1. 开始淡出
+  const animate = async () => {
     photoViewMode.style.opacity = '0'
-
-    // 2. 等待淡出完成
-    await new Promise(resolve => setTimeout(resolve, 300))
-
-    // 3. 重置状态
-    resetPhotoViewClasses()
-
-    // 4. 显示内容和导航
-    showContentAndNavigation()
-
-    // 5. 关闭弹出窗口
-    closeAllMarkerPopups()
-
-    // 6. 更新地图视图
-    await new Promise(resolve => setTimeout(resolve, 200))
-    updateMapBounds()
+    await new Promise(r => setTimeout(r, 250))
+    
+    photoViewMode.classList.remove('active', 'visible')
+    photoViewMode.classList.add('invisible')
+    
+    const contentArea = document.getElementById('contentArea')
+    contentArea.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
+    contentArea.style.visibility = 'visible'
+    contentArea.style.opacity = '1'
+    
+    const bottomNav = document.getElementById('bottomNav')
+    bottomNav.style.opacity = '1'
+    bottomNav.style.visibility = 'visible'
+    
+    markers.forEach(m => m.closePopup())
+    
+    await new Promise(r => setTimeout(r, 200))
+    if (markers.length > 0) {
+      map.flyToBounds(L.featureGroup(markers).getBounds().pad(0.1), { duration: 1.2, easeLinearity: 0.2, animate: true })
+    }
   }
-
-  animateClose()
+  animate()
 }
 
-// 新增：重置照片查看模式的类
-function resetPhotoViewClasses() {
-  const photoViewMode = document.getElementById('photoViewMode')
-  photoViewMode.classList.remove('active')
-  photoViewMode.classList.add('invisible')
-  photoViewMode.classList.remove('visible')
-}
+function navigatePhotoPrev() { if (currentPhotoIndex > 0) { currentPhotoIndex--; updatePhotoView() } }
+function navigatePhotoNext() { if (currentPhotoIndex < currentPhotoItems.length - 1) { currentPhotoIndex++; updatePhotoView() } }
+function navigatePrev() { if (currentSection > 0) loadSection(currentSection - 1) }
+function navigateNext() { if (currentSection < totalSections - 1) loadSection(currentSection + 1) }
 
-// 新增：显示内容区域和导航箭头
-function showContentAndNavigation() {
-  // 完全重置contentArea的样式
-  const contentArea = document.getElementById('contentArea')
-  contentArea.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
-  contentArea.style.visibility = 'visible'
-  contentArea.style.opacity = '1'
-
-  // 显示导航箭头
-  const navArrows = document.querySelector('.fixed.top-\\[7\\%\\]')
-  navArrows.style.opacity = '1'
-  navArrows.style.visibility = 'visible'
-  navArrows.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
-}
-
-// 新增：关闭所有marker的弹出窗口
-function closeAllMarkerPopups() {
-  markers.forEach((marker) => {
-    marker.closePopup()
-  })
-}
-
-// 新增：更新地图边界
-function updateMapBounds() {
-  // 调整地图视图以显示所有标记
-  if (markers.length > 0) {
-    const group = L.featureGroup(markers)
-    const bounds = group.getBounds().pad(0.1)
-
-    // 使用更平滑的过渡效果
-    map.flyToBounds(bounds, {
-      duration: 1.5, // 动画时间
-      easeLinearity: 0.1,
-      animate: true,
-    })
-  }
-}
-
-// 导航到上一张照片
-function navigatePhotoPrev() {
-  if (currentPhotoIndex > 0) {
-    currentPhotoIndex--
-    updatePhotoView()
-  }
-}
-
-// 导航到下一张照片
-function navigatePhotoNext() {
-  if (currentPhotoIndex < currentPhotoItems.length - 1) {
-    currentPhotoIndex++
-    updatePhotoView()
-  }
-}
-
-// 导航到上一部分
-function navigatePrev() {
-  if (currentSection > 0) {
-    loadSection(currentSection - 1)
-  }
-}
-
-// 导航到下一部分
-function navigateNext() {
-  if (currentSection < totalSections - 1) {
-    loadSection(currentSection + 1)
-  }
-}
-
-// 更新导航按钮状态
 function updateNavButtons() {
   const prevBtn = document.getElementById('prevBtn')
   const nextBtn = document.getElementById('nextBtn')
-
-  // 在第一个部分隐藏上一个按钮
-  if (currentSection === 0) {
-    prevBtn.classList.add('opacity-0', 'pointer-events-none')
-    prevBtn.classList.remove('opacity-70')
-  }
-  else {
-    prevBtn.classList.remove('opacity-0', 'pointer-events-none')
-    prevBtn.classList.add('opacity-70')
-  }
-
-  // 在最后一个部分隐藏下一个按钮
-  if (currentSection === totalSections - 1) {
-    nextBtn.classList.add('opacity-0', 'pointer-events-none')
-    nextBtn.classList.remove('opacity-70')
-  }
-  else {
-    nextBtn.classList.remove('opacity-0', 'pointer-events-none')
-    nextBtn.classList.add('opacity-70')
-  }
+  
+  prevBtn.classList.toggle('opacity-0', currentSection === 0)
+  prevBtn.classList.toggle('pointer-events-none', currentSection === 0)
+  prevBtn.classList.toggle('opacity-80', currentSection !== 0)
+  
+  nextBtn.classList.toggle('opacity-0', currentSection === totalSections - 1)
+  nextBtn.classList.toggle('pointer-events-none', currentSection === totalSections - 1)
+  nextBtn.classList.toggle('opacity-80', currentSection !== totalSections - 1)
 }
 
-// 当页面加载完成后初始化
 window.addEventListener('load', init)
-
-// 监听窗口大小变化，处理响应式
-window.addEventListener('resize', () => {
-  handleMobileAccess()
-})
+window.addEventListener('resize', handleMobileAccess)
 </script>
 
+
   <style is:global>
-    @font-face {
-      font-family: "Snell-Black";
-      src: local("Snell Roundhand");
-      font-weight: 900;
-    }
-
-    @font-face {
-      font-family: "EarlySummer";
-      src: local("Early Summer");
-      font-weight: normal;
-    }
-
-    /* 优化动画性能 */
+    /* GPU 加速优化 */
     #leftCard, #rightCard {
       will-change: transform, opacity;
       transform: translateZ(0);
       backface-visibility: hidden;
-      perspective: 1000px;
     }
 
-    /* 使用 transform 代替 opacity 实现更流畅的动画 */
     .card-enter-left {
-      transform: translateX(-20px);
+      transform: translate3d(-30px, 0, 0);
       opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card-enter-right {
-      transform: translateX(20px);
+      transform: translate3d(30px, 0, 0);
       opacity: 0;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
     .card-exit {
-      transform: translateX(0);
       opacity: 0;
       pointer-events: none;
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* 优化内容区域的过渡效果 */
     .content-area {
-      will-change: opacity;
+      will-change: opacity, transform;
       transform: translateZ(0);
     }
 
     .content-area.fade-out {
       opacity: 0;
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translate3d(0, 12px, 0);
+      transition: opacity 0.25s ease-out, transform 0.25s ease-out;
     }
 
     .content-area.fade-in {
       opacity: 1;
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transform: translate3d(0, 0, 0);
+      transition: opacity 0.4s ease-out, transform 0.4s ease-out;
     }
 
-    /* 优化照片查看模式的动画 */
     #photoViewMode {
       will-change: opacity;
       transform: translateZ(0);
-      transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: opacity 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    #photoViewMode.active {
-      opacity: 1;
-    }
+    #photoViewMode.active { opacity: 1; }
 
-    /* 优化照片容器的动画 */
-    #photos-container img {
+    #photos-container > div {
       will-change: transform;
       transform: translateZ(0);
-      transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
-    /* 优化导航按钮的动画 */
-    #prevBtn, #nextBtn {
+    #prevBtn, #nextBtn, #prevPhotoBtn, #nextPhotoBtn {
       will-change: transform, opacity;
       transform: translateZ(0);
-      transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-                  opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    #bottomNav {
+      will-change: opacity;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
 
-    /* 隐藏滚动条样式 */
-    .scrollbar-hide {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
+    /* 滚动条隐藏 */
+    .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+    .scrollbar-hide::-webkit-scrollbar { display: none; }
+
+    /* 玻璃态效果 */
+    .glass-effect {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
     }
 
-    .scrollbar-hide::-webkit-scrollbar {
-      display: none;
+    /* Shimmer 动画 */
+    .animate-shimmer {
+      animation: shimmer 1.5s ease-in-out infinite;
     }
 
-    /* 确保在动画过渡期间也不显示滚动条 */
-    .card-exit::-webkit-scrollbar,
-    .card-enter-left::-webkit-scrollbar,
-    .card-enter-right::-webkit-scrollbar {
-      display: none;
+    @keyframes shimmer {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
     }
 
-    /* 响应式布局优化 */
+    /* 响应式 */
     @media (max-width: 768px) {
-      .flex.w-screen.h-screen {
-        flex-direction: column;
-      }
-
-      #leftCard {
-        width: 100%;
-        height: 100%;
-      }
-
-      #leftCard {
-        order: 1;
-      }
-
-      #rightCard {
-        display: none;
-      }
-
-      #contentArea {
-        padding: 1rem;
-        padding-top: 1.5rem;
-      }
+      .flex.w-screen.h-screen { flex-direction: column; }
+      #leftCard { width: 100%; height: 100%; order: 1; }
+      #rightCard { display: none; }
+      #contentArea { padding: 1.5rem; padding-top: 2rem; }
     }
   </style>
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css"
-  />
-  <script
-    is:inline
-    src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"
-  ></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.css" />
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.js"></script>
 </div>

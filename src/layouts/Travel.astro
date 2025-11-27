@@ -28,7 +28,7 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Playfair+Display:wght@600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Playfair+Display:wght@500;600;700&family=Inter:wght@300;400;500;600&display=swap"
       rel="stylesheet"
     />
     <script is:inline src="/js/tailwind.js"></script>
@@ -37,51 +37,77 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
         theme: {
           extend: {
             colors: {
-              primary: "#4361ee",
-              "primary-light": "#7b96ff",
-              secondary: "#f8f9fa",
-              "text-color": "#2b2d42",
-              "light-text": "#6c757d",
-              accent: "#f72585",
-              background: "#f0f2f5",
+              primary: "#1a1a2e",
+              "primary-light": "#4a4a6a",
+              secondary: "#fafafa",
+              "text-color": "#1a1a2e",
+              "light-text": "#6b7280",
+              accent: "#e63946",
+              "accent-soft": "#f4a261",
+              background: "#f8f9fa",
               "card-bg": "#ffffff",
+              "glass": "rgba(255, 255, 255, 0.85)",
             },
             boxShadow: {
-              bento: "0 10px 30px rgba(0, 0, 0, 0.08)",
+              bento: "0 4px 24px -1px rgba(0, 0, 0, 0.06), 0 2px 8px -1px rgba(0, 0, 0, 0.04)",
+              "bento-hover": "0 20px 40px -8px rgba(0, 0, 0, 0.12), 0 8px 16px -4px rgba(0, 0, 0, 0.06)",
+              "soft": "0 2px 16px rgba(0, 0, 0, 0.04)",
+              "glow": "0 0 40px rgba(230, 57, 70, 0.15)",
             },
             borderRadius: {
-              bento: "16px",
+              bento: "20px",
+              "bento-sm": "12px",
             },
             fontFamily: {
-              snell: [
-                "Snell-Black",
-                "EarlySummer",
-                "Playfair Display",
-                "serif",
-              ],
-              cormorant: [
-                "Snell-Black",
-                "EarlySummer",
-                "Cormorant Garamond",
-                "serif",
-              ],
-              sans: [
-                "Noto Sans",
-                "Segoe UI",
-                "-apple-system",
-                "BlinkMacSystemFont",
-                "sans-serif",
-              ],
+              snell: ["Snell-Black", "EarlySummer", "Playfair Display", "serif"],
+              cormorant: ["Snell-Black", "EarlySummer", "Cormorant Garamond", "serif"],
+              sans: ["Inter", "Noto Sans", "-apple-system", "BlinkMacSystemFont", "sans-serif"],
             },
-            transitionProperty: {
-              bento: "all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1)",
+            animation: {
+              "fade-in": "fadeIn 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "slide-up": "slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "slide-left": "slideLeft 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "slide-right": "slideRight 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "scale-in": "scaleIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards",
+              "float": "float 6s ease-in-out infinite",
+              "shimmer": "shimmer 2s linear infinite",
+            },
+            keyframes: {
+              fadeIn: {
+                "0%": { opacity: "0" },
+                "100%": { opacity: "1" },
+              },
+              slideUp: {
+                "0%": { opacity: "0", transform: "translateY(20px)" },
+                "100%": { opacity: "1", transform: "translateY(0)" },
+              },
+              slideLeft: {
+                "0%": { opacity: "0", transform: "translateX(30px)" },
+                "100%": { opacity: "1", transform: "translateX(0)" },
+              },
+              slideRight: {
+                "0%": { opacity: "0", transform: "translateX(-30px)" },
+                "100%": { opacity: "1", transform: "translateX(0)" },
+              },
+              scaleIn: {
+                "0%": { opacity: "0", transform: "scale(0.95)" },
+                "100%": { opacity: "1", transform: "scale(1)" },
+              },
+              float: {
+                "0%, 100%": { transform: "translateY(0)" },
+                "50%": { transform: "translateY(-10px)" },
+              },
+              shimmer: {
+                "0%": { backgroundPosition: "-200% 0" },
+                "100%": { backgroundPosition: "200% 0" },
+              },
             },
           },
         },
       };
     </script>
 
-    <style>
+    <style is:global>
       @font-face {
         font-family: "Snell-Black";
         src: local("Snell Roundhand");
@@ -94,14 +120,20 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
         font-weight: normal;
       }
 
-      /* 卡片切换动画 */
+      /* 基础过渡 */
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+      }
+
+      /* 卡片动画 - 使用 GPU 加速 */
       .card-enter-left {
-        transform: translateX(-50px);
+        transform: translate3d(-40px, 0, 0);
         opacity: 0;
       }
 
       .card-enter-right {
-        transform: translateX(50px);
+        transform: translate3d(40px, 0, 0);
         opacity: 0;
       }
 
@@ -110,35 +142,58 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
         pointer-events: none;
       }
 
-      /* 内容区域的过渡效果 */
+      /* 内容区域过渡 */
+      .content-area {
+        will-change: opacity, transform;
+      }
+
       .content-area.fade-out {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translate3d(0, 16px, 0);
       }
 
       .content-area.fade-in {
         opacity: 1;
-        transform: translateY(0);
+        transform: translate3d(0, 0, 0);
       }
 
-      /* 隐藏滚动条样式 */
+      /* 隐藏滚动条 */
       .scrollbar-hide {
-        -ms-overflow-style: none; /* IE and Edge */
-        scrollbar-width: none; /* Firefox */
+        -ms-overflow-style: none;
+        scrollbar-width: none;
       }
 
       .scrollbar-hide::-webkit-scrollbar {
-        display: none; /* Chrome, Safari and Opera */
-      }
-
-      /* 确保在动画过渡期间也不显示滚动条 */
-      .card-exit::-webkit-scrollbar,
-      .card-enter-left::-webkit-scrollbar,
-      .card-enter-right::-webkit-scrollbar {
         display: none;
       }
 
-      /* 响应式布局优化 */
+      /* 玻璃态效果 */
+      .glass-effect {
+        background: rgba(255, 255, 255, 0.85);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+      }
+
+      /* 渐变边框 */
+      .gradient-border {
+        position: relative;
+      }
+
+      .gradient-border::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(135deg, rgba(230, 57, 70, 0.3), rgba(244, 162, 97, 0.3));
+        -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        mask-composite: exclude;
+        pointer-events: none;
+      }
+
+      /* 响应式布局 */
       @media (max-width: 768px) {
         .flex.w-screen.h-screen {
           flex-direction: column;
@@ -147,9 +202,6 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
         #leftCard {
           width: 100%;
           height: 100%;
-        }
-
-        #leftCard {
           order: 1;
         }
 
@@ -158,80 +210,78 @@ const { customGoogleAnalyticsJS = '', customUmamiAnalyticsJS = '' } = themeConfi
         }
 
         #contentArea {
-          padding: 1rem;
-          padding-top: 1.5rem;
+          padding: 1.5rem;
+          padding-top: 2rem;
         }
       }
     </style>
+
     <!-- Google Analytics -->
-{googleAnalyticsID && (
-  <>
-    <script
-      is:inline
-      type="text/partytown"
-      src={customGoogleAnalyticsJS || `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsID}`}
-    />
-    <script
-      is:inline
-      type="text/partytown"
-      define:vars={{ googleAnalyticsID, customGoogleAnalyticsJS }}
-    >
-      window.dataLayer = window.dataLayer || []
-      function gtag(){dataLayer.push(arguments);}
-      gtag('js', new Date())
+    {googleAnalyticsID && (
+      <>
+        <script
+          is:inline
+          type="text/partytown"
+          src={customGoogleAnalyticsJS || `https://www.googletagmanager.com/gtag/js?id=${googleAnalyticsID}`}
+        />
+        <script
+          is:inline
+          type="text/partytown"
+          define:vars={{ googleAnalyticsID, customGoogleAnalyticsJS }}
+        >
+          window.dataLayer = window.dataLayer || []
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date())
 
-      if (customGoogleAnalyticsJS) {
-        gtag('config', googleAnalyticsID, {
-          transport_url: new URL(customGoogleAnalyticsJS).origin,
-        })
-      }
-      else {
-        gtag('config', googleAnalyticsID)
-      }
-    </script>
-  </>
-)}
+          if (customGoogleAnalyticsJS) {
+            gtag('config', googleAnalyticsID, {
+              transport_url: new URL(customGoogleAnalyticsJS).origin,
+            })
+          }
+          else {
+            gtag('config', googleAnalyticsID)
+          }
+        </script>
+      </>
+    )}
 
-<!-- Umami Analytics -->
-{umamiAnalyticsID && (
-  <script
-    is:inline
-    type="text/partytown"
-    crossorigin="anonymous"
-    data-website-id={umamiAnalyticsID}
-    src={customUmamiAnalyticsJS || 'https://cloud.umami.is/script.js'}
-    data-cache="true"
-  />
-)}
+    <!-- Umami Analytics -->
+    {umamiAnalyticsID && (
+      <script
+        is:inline
+        type="text/partytown"
+        crossorigin="anonymous"
+        data-website-id={umamiAnalyticsID}
+        src={customUmamiAnalyticsJS || 'https://cloud.umami.is/script.js'}
+        data-cache="true"
+      />
+    )}
   </head>
-  <div class="travel-container">
-    <slot />
-  </div>
 
+  <body class="travel-container">
+    <slot />
+  </body>
 
   <style>
     .travel-container {
-      --primary: #4361ee;
-      --primary-light: #7b96ff;
-      --secondary: #f8f9fa;
-      --text-color: #2b2d42;
-      --light-text: #6c757d;
-      --accent: #f72585;
-      --background: #f0f2f5;
+      --primary: #1a1a2e;
+      --primary-light: #4a4a6a;
+      --secondary: #fafafa;
+      --text-color: #1a1a2e;
+      --light-text: #6b7280;
+      --accent: #e63946;
+      --accent-soft: #f4a261;
+      --background: #f8f9fa;
       --card-bg: #ffffff;
 
       width: 100%;
       height: 100vh;
       overflow: hidden;
       position: relative;
-      background-color: var(--background);
+      background: linear-gradient(135deg, #f8f9fa 0%, #eef2f7 100%);
       color: var(--text-color);
-      font-family:
-        "Noto Sans",
-        "Segoe UI",
-        -apple-system,
-        BlinkMacSystemFont,
-        sans-serif;
+      font-family: "Inter", "Noto Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+      letter-spacing: -0.01em;
     }
   </style>
 </html>

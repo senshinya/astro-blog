@@ -21,7 +21,7 @@ const posts = defineCollection({
     toc: z.boolean().optional().default(themeConfig.global.toc),
     lang: z.enum(['', ...allLocales]).optional().default(''),
     abbrlink: z.string().optional().default('').refine(
-      abbrlink => !abbrlink || /^[a-z0-9\-\/]*$/.test(abbrlink),
+      abbrlink => !abbrlink || /^[a-z0-9\-/]*$/.test(abbrlink),
       { message: 'Abbrlink can only contain lowercase letters, numbers and hyphens' },
     ),
     optimizeImages: z.boolean().default(true),
@@ -42,17 +42,19 @@ const travels = defineCollection({
     published: z.date(),
     subtitle: z.string(),
     posttitle: z.string(),
+    totaldays: z.number().optional(),
     coverImage: z.string(),
     draft: z.boolean().optional().default(false),
     lang: z.enum(['', ...allLocales]).optional().default(''),
     abbrlink: z.string().optional().default('').refine(
-      abbrlink => !abbrlink || /^[a-z0-9\-\/]*$/.test(abbrlink),
+      abbrlink => !abbrlink || /^[a-z0-9\-/]*$/.test(abbrlink),
       { message: 'Abbrlink can only contain lowercase letters, numbers and hyphens' },
     ),
     description: z.string(),
     days: z.array(
       z.object({
         title: z.string(),
+        day: z.number().optional(),
         descriptions: z.array(z.string()),
         photos: z.array(
           z.object({
@@ -60,12 +62,12 @@ const travels = defineCollection({
             alt: z.string(),
             lat: z.number().optional(),
             lng: z.number().optional(),
-            caption: z.string()
-          })
-        )
-      })
-    )
-  })
+            caption: z.string(),
+          }),
+        ),
+      }),
+    ),
+  }),
 })
 
 const friends = defineCollection({
