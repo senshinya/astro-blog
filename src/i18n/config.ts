@@ -7,6 +7,7 @@ export const langMap: Record<string, string[]> = {
   'pl': ['pl-PL'],
   'pt': ['pt-BR'],
   'ru': ['ru-RU'],
+  'zh': ['zh-CN'],
   'zh-tw': ['zh-TW'],
 } as const
 
