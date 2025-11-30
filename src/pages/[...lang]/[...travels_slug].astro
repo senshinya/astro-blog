@@ -1,0 +1,34 @@
+---
+import { getCollection } from 'astro:content'
+import { allLocales } from '@/config'
+import { getLangRouteParam } from '@/i18n/lang'
+import TravelJourney from '../../components/TravelJourney.astro'
+import TravelLayout from '../../layouts/Travel.astro'
+
+export async function getStaticPaths() {
+  const travels = await getCollection('travels')
+
+  return allLocales.flatMap(lang => travels
+    // Show drafts in dev mode only
+    .filter(post => import.meta.env.DEV || !post.data.draft)
+    // Match current language or universal posts
+    .filter(post => post.data.lang === lang || post.data.lang === '')
+    .map((post) => {
+      const slug = post.data.abbrlink || post.id
+      return {
+        params: { lang: getLangRouteParam(lang), travels_slug: slug },
+        props: {
+          entry: post,
+        },
+      }
+    }),
+  )
+}
+
+const { entry } = Astro.props
+const { posttitle } = entry.data;
+---
+
+<TravelLayout title={`${posttitle}`}>
+  <TravelJourney travel={entry} />
+</TravelLayout>

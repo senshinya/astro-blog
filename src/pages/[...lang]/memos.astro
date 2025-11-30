@@ -1,0 +1,19 @@
+---
+import MemosLayout from '@/components/Memos.astro'
+import { allLocales } from '@/config'
+import { getLangRouteParam } from '@/i18n/lang'
+import Layout from '@/layouts/Layout.astro'
+
+export async function getStaticPaths() {
+  return allLocales.map(lang => ({
+    params: { lang: getLangRouteParam(lang) },
+    props: { lang },
+  }))
+}
+---
+
+<Layout>
+  <article class="heti mb-12.6">
+    <MemosLayout />
+  </article>
+</Layout>

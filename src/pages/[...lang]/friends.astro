@@ -1,32 +1,15 @@
 ---
-import { defaultLocale, moreLocales } from '@/config'
-import Comments from '@/components/Comment/Index.astro'
-import Layout from '@/layouts/Layout.astro'
 import { getCollection, render } from 'astro:content'
+import Comments from '@/components/Comment/Index.astro'
+import { allLocales } from '@/config'
+import { getLangRouteParam } from '@/i18n/lang'
+import Layout from '@/layouts/Layout.astro'
 
 export async function getStaticPaths() {
-  type PathItem = {
-    params: { friends: string }
-    props: { lang: string }
-  }
-
-  const paths: PathItem[] = []
-
-  // Default locale
-  paths.push({
-    params: { friends: 'friends/' },
-    props: { lang: defaultLocale },
-  })
-
-  // More locales
-  moreLocales.forEach((lang: string) => {
-    paths.push({
-      params: { friends: `${lang}/friends/` },
-      props: { lang },
-    })
-  })
-
-  return paths
+  return allLocales.map(lang => ({
+    params: { lang: getLangRouteParam(lang) },
+    props: { lang },
+  }))
 }
 
 const { lang } = Astro.props
