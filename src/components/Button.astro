@@ -1,4 +1,5 @@
 ---
+import type { Language } from '@/i18n/config'
 import LanguageSwitcherIcon from '@/assets/icons/language-switcher.svg'
 import SearchIcon from '@/assets/icons/search-icon.svg'
 import ThemeToggleIcon from '@/assets/icons/theme-toggle.svg'
@@ -9,7 +10,7 @@ import { getNextGlobalLangPath, getNextSupportedLangPath } from '@/i18n/path'
 import { ui } from '@/i18n/ui'
 
 interface Props {
-  supportedLangs: string[]
+  supportedLangs: Language[]
 }
 
 const {

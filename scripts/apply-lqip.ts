@@ -1,17 +1,14 @@
 /**
  * Generate and apply LQIP (Low-Quality Image Placeholders) to images
+ * Source: https://frzi.medium.com/lqip-css-73dc6dda2529
  * Usage: pnpm apply-lqip
  */
 
 import type { HTMLElement } from 'node-html-parser'
-import type { Buffer } from 'node:buffer'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import process from 'node:process'
-// @ts-expect-error - No type definitions available
-import quantize from '@lokesh.dhakar/quantize'
 import glob from 'fast-glob'
-import { getPixels } from 'ndarray-pixels'
 import { parse } from 'node-html-parser'
 import sharp from 'sharp'
 
@@ -20,7 +17,7 @@ const assetsDir = 'src/assets'
 const lqipMapPath = 'src/assets/lqip-map.json'
 
 interface LqipMap {
-  [path: string]: number
+  [path: string]: string
 }
 
 interface ImageStats {
@@ -34,218 +31,56 @@ interface FileMapping {
   webUrl: string
 }
 
-/**
- * Convert RGB color to OKLab color space
- * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lib/color/convert.mjs
- */
-function rgbToOkLab(rgb: { r: number, g: number, b: number }) {
-  // Convert to linear RGB
-  const toLinear = (c: number) => {
-    const normalized = Math.max(0, Math.min(255, c)) / 255
-    return normalized >= 0.04045
-      ? ((normalized + 0.055) / 1.055) ** 2.4
-      : normalized / 12.92
-  }
-
-  const [r, g, b] = [rgb.r, rgb.g, rgb.b].map(toLinear)
-
-  const l = Math.cbrt(0.4122214708 * r + 0.5363325363 * g + 0.0514459929 * b)
-  const m = Math.cbrt(0.2119034982 * r + 0.6806995451 * g + 0.1073969566 * b)
-  const s = Math.cbrt(0.0883024619 * r + 0.2817188376 * g + 0.6299787005 * b)
-
-  return {
-    L: 0.2104542553 * l + 0.793617785 * m - 0.0040720468 * s,
-    a: 1.9779984951 * l - 2.428592205 * m + 0.4505937099 * s,
-    b: 0.0259040371 * l + 0.7827717662 * m - 0.808675766 * s,
-  }
+// Pack RGB color into 11 bits (4 bits R, 4 bits G, 3 bits B)
+function packColor11Bit(r: number, g: number, b: number): number {
+  const pr = Math.round((r / 255) * 15)
+  const pg = Math.round((g / 255) * 15)
+  const pb = Math.round((b / 255) * 7)
+  return (pr << 7) | (pg << 3) | pb
 }
 
-/**
- * Extract dominant colors from images and validate options
- * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lib/color/thief.mjs
- */
-function validateOptions({ colorCount = 10, quality = 10 } = {}) {
-  if (colorCount === 1) {
-    throw new Error('colorCount should be between 2 and 20. Use getColor() for single color extraction')
-  }
-
-  return {
-    colorCount: Math.max(2, Math.min(20, Number.isInteger(colorCount) ? colorCount : 10)),
-    quality: Math.max(1, Number.isInteger(quality) && quality > 0 ? quality : 10),
-  }
+// Pack RGB color into 10 bits (3 bits R, 4 bits G, 3 bits B)
+function packColor10Bit(r: number, g: number, b: number): number {
+  const pr = Math.round((r / 255) * 7)
+  const pg = Math.round((g / 255) * 15)
+  const pb = Math.round((b / 255) * 7)
+  return (pr << 7) | (pg << 3) | pb
 }
 
-async function loadImg(img: Buffer | string) {
+async function generateLqipValue(imagePath: string): Promise<string | null> {
   try {
-    const instance = sharp(img)
-    const [buffer, { format }] = await Promise.all([
-      instance.toBuffer(),
-      instance.metadata(),
-    ])
+    const instance = sharp(imagePath)
 
-    if (!format) {
-      throw new Error('Invalid image format')
-    }
-    return await getPixels(buffer, format)
-  }
-  catch (error) {
-    throw new Error(`Image processing failed: ${error}`)
-  }
-}
+    // Resize to 3x3 to get key colors (Top-Left, Center, Bottom-Right)
+    const buffer = await instance
+      .resize(3, 3, { fit: 'fill' })
+      .removeAlpha() // Force RGB output
+      .raw()
+      .toBuffer()
 
-function createPixelArray(pixels: Uint8Array | Uint8ClampedArray, pixelCount: number, quality: number): number[][] {
-  const pixelArray: number[][] = []
-  const maxOffset = pixels.length - 3
-
-  for (let i = 0; i < pixelCount; i += quality) {
-    const offset = i * 4
-    if (offset > maxOffset) {
-      break
-    }
-
-    pixelArray.push([
-      pixels[offset], // r
-      pixels[offset + 1], // g
-      pixels[offset + 2], // b
-    ])
-  }
-
-  return pixelArray
-}
-
-export async function getPalette(img: Buffer | string, colorCount = 10, quality = 10): Promise<number[][]> {
-  try {
-    const options = validateOptions({ colorCount, quality })
-    const imgData = await loadImg(img)
-    const pixelCount = imgData.shape[0] * imgData.shape[1]
-    const pixelArray = createPixelArray(imgData.data, pixelCount, options.quality)
-
-    return quantize(pixelArray, options.colorCount)?.palette() ?? []
-  }
-  catch (error) {
-    if (error instanceof Error && error.message.includes('colorCount')) {
-      throw error
-    }
-    return []
-  }
-}
-
-/**
- * LQIP core algorithm
- * https://github.com/Kalabasa/leanrada.com/blob/7b6739c7c30c66c771fcbc9e1dc8942e628c5024/main/scripts/update/lqip.mjs
- */
-const lqipBaseValue = -(2 ** 19)
-const pixelMaxValue = 0b11
-const lMaxValue = 0b11
-const aMaxValue = 0b111
-const bMaxValue = 0b111
-const maxColorScale = 0b1000
-const bitShifts = {
-  pixelA: 18,
-  pixelB: 16,
-  pixelC: 14,
-  pixelD: 12,
-  pixelE: 10,
-  pixelF: 8,
-  l: 6,
-  a: 3,
-  b: 0,
-} as const
-
-function bitsToLab(ll: number, aaa: number, bbb: number) {
-  const L = (ll / lMaxValue) * 0.6 + 0.2
-  const a = (aaa / maxColorScale) * 0.7 - 0.35
-  const b = ((bbb + 1) / maxColorScale) * 0.7 - 0.35
-  return { L, a, b }
-}
-
-function findOklabBits(targetL: number, targetA: number, targetB: number) {
-  const targetChroma = Math.hypot(targetA, targetB)
-  const scaledTargetA = targetA / (1e-6 + targetChroma ** 0.5)
-  const scaledTargetB = targetB / (1e-6 + targetChroma ** 0.5)
-
-  let bestBits = [0, 0, 0]
-  let bestDifference = Infinity
-
-  for (let lli = 0; lli <= lMaxValue; lli++) {
-    for (let aaai = 0; aaai <= aMaxValue; aaai++) {
-      for (let bbbi = 0; bbbi <= bMaxValue; bbbi++) {
-        const { L, a, b } = bitsToLab(lli, aaai, bbbi)
-        const chroma = Math.hypot(a, b)
-        const scaledA = a / (1e-6 + chroma ** 0.5)
-        const scaledB = b / (1e-6 + chroma ** 0.5)
-
-        const difference = Math.hypot(
-          L - targetL,
-          scaledA - scaledTargetA,
-          scaledB - scaledTargetB,
-        )
-
-        if (difference < bestDifference) {
-          bestDifference = difference
-          bestBits = [lli, aaai, bbbi]
-        }
-      }
-    }
-  }
-
-  return { ll: bestBits[0], aaa: bestBits[1], bbb: bestBits[2] }
-}
-
-async function generateLqipValue(imagePath: string): Promise<number | null> {
-  try {
-    const theSharp = sharp(imagePath)
-    const [stats, previewBuffer, dominantColor] = await Promise.all([
-      theSharp.stats(),
-      theSharp
-        .resize(3, 2, { fit: 'fill' })
-        .sharpen({ sigma: 1 })
-        .removeAlpha()
-        .toFormat('raw', { bitdepth: 8 })
-        .toBuffer(),
-      getPalette(imagePath, 4, 10).then((palette) => {
-        if (!palette?.length) {
-          throw new Error('Failed to extract color palette')
-        }
-        return palette[0]
-      }),
-    ])
-
-    if (!stats.isOpaque) {
-      return null
-    }
-
-    const { L: rawBaseL, a: rawBaseA, b: rawBaseB } = rgbToOkLab({
-      r: dominantColor[0],
-      g: dominantColor[1],
-      b: dominantColor[2],
+    // Extract colors at specific positions
+    // 0: Top-Left, 4: Center, 8: Bottom-Right
+    // Each pixel is 3 bytes (RGB)
+    const getPixel = (index: number) => ({
+      r: buffer[index * 3],
+      g: buffer[index * 3 + 1],
+      b: buffer[index * 3 + 2],
     })
 
-    const { ll, aaa, bbb } = findOklabBits(rawBaseL, rawBaseA, rawBaseB)
-    const { L: baseL } = bitsToLab(ll, aaa, bbb)
-    const pixelValues = Array.from({ length: 6 }, (_, i) => {
-      const offset = i * 3
-      const { L } = rgbToOkLab({
-        r: previewBuffer[offset],
-        g: previewBuffer[offset + 1],
-        b: previewBuffer[offset + 2],
-      })
-      const clampedValue = Math.min(1, Math.max(0, 0.5 + L - baseL))
-      return Math.round(clampedValue * pixelMaxValue)
-    })
+    const c0 = getPixel(0)
+    const c1 = getPixel(4)
+    const c2 = getPixel(8)
 
-    const lqip = lqipBaseValue
-      + ((pixelValues[0] & pixelMaxValue) << bitShifts.pixelA)
-      + ((pixelValues[1] & pixelMaxValue) << bitShifts.pixelB)
-      + ((pixelValues[2] & pixelMaxValue) << bitShifts.pixelC)
-      + ((pixelValues[3] & pixelMaxValue) << bitShifts.pixelD)
-      + ((pixelValues[4] & pixelMaxValue) << bitShifts.pixelE)
-      + ((pixelValues[5] & pixelMaxValue) << bitShifts.pixelF)
-      + ((ll & lMaxValue) << bitShifts.l)
-      + ((aaa & aMaxValue) << bitShifts.a)
-      + (bbb & bMaxValue)
+    // Pack colors: [Color0 11b] [Color1 11b] [Color2 10b]
+    const pc0 = packColor11Bit(c0.r, c0.g, c0.b)
+    const pc1 = packColor11Bit(c1.r, c1.g, c1.b)
+    const pc2 = packColor10Bit(c2.r, c2.g, c2.b)
 
-    return lqip
+    // Combine into a 32-bit integer
+    const combined = (BigInt(pc0) << 21n) | (BigInt(pc1) << 10n) | BigInt(pc2)
+
+    // Convert to 8-digit hex string
+    return combined.toString(16).padStart(8, '0')
   }
   catch (error) {
     console.error(`⚠️ Failed to process image: ${imagePath}`, error)
@@ -305,21 +140,25 @@ function cleanLqipMap(existingMap: LqipMap, fileMappings: FileMapping[]): LqipMa
 
 async function processNewImages(fileMappings: FileMapping[], stats: ImageStats, cleanedMap: LqipMap): Promise<LqipMap> {
   const newMap = { ...cleanedMap }
-
   let processed = 0
-  for (const { filePath, webUrl } of fileMappings) {
-    if (cleanedMap[webUrl] === undefined) {
-      processed++
+  const concurrencyLimit = 10
 
-      if (processed % 10 === 0 || processed === stats.new) {
-        console.log(`🔄 Processing: ${processed}/${stats.new}`)
-      }
-
-      const lqipValue = await generateLqipValue(filePath)
-      if (lqipValue !== null) {
-        newMap[webUrl] = lqipValue
-      }
+  const processFile = async ({ filePath, webUrl }: FileMapping) => {
+    const lqipValue = await generateLqipValue(filePath)
+    if (lqipValue !== null) {
+      newMap[webUrl] = lqipValue
     }
+    processed++
+    if (processed % 10 === 0 || processed === stats.new) {
+      console.log(`🔄 Processing: ${processed}/${stats.new}`)
+    }
+  }
+
+  const toProcess = fileMappings.filter(m => cleanedMap[m.webUrl] === undefined)
+
+  for (let i = 0; i < toProcess.length; i += concurrencyLimit) {
+    const batch = toProcess.slice(i, i + concurrencyLimit)
+    await Promise.all(batch.map(processFile))
   }
 
   console.log(`✅ Generated LQIP styles for ${stats.new} new images`)
@@ -348,8 +187,8 @@ function processImage(img: HTMLElement, lqipMap: LqipMap): boolean {
   }
 
   const newStyle = currentStyle
-    ? `${currentStyle}; --lqip:${lqipValue}`
-    : `--lqip:${lqipValue}`
+    ? `${currentStyle}; --lqip:#${lqipValue}`
+    : `--lqip:#${lqipValue}`
 
   img.setAttribute('style', newStyle)
   return true

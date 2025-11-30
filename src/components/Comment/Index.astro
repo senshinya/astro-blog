@@ -8,19 +8,19 @@ import { themeConfig } from '@/config'
 const { enabled: enableComment } = themeConfig.comment
 
 // Disqus
-// const disqusShortname = themeConfig.comment?.disqus?.shortname ?? ''
+// const disqusShortname = themeConfig.comment.disqus?.shortname ?? ''
 // const showDisqus = enableComment && Boolean(disqusShortname.trim())
 
 // Giscus
-const giscusRepo = themeConfig.comment?.giscus?.repo ?? ''
+const giscusRepo = themeConfig.comment.giscus?.repo ?? ''
 const showGiscus = enableComment && Boolean(giscusRepo.trim())
 
 // Twikoo
-const twikooEnvId = themeConfig.comment?.twikoo?.envId ?? ''
+const twikooEnvId = themeConfig.comment.twikoo?.envId ?? ''
 const showTwikoo = enableComment && Boolean(twikooEnvId.trim())
 
 // Waline
-const walineURL = themeConfig.comment?.waline?.serverURL ?? ''
+const walineURL = themeConfig.comment.waline?.serverURL ?? ''
 const showWaline = enableComment && Boolean(walineURL.trim())
 ---
 

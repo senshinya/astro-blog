@@ -1,4 +1,5 @@
 ---
+import type { Language } from '@/i18n/config'
 import Button from '@/components/Button.astro'
 import Footer from '@/components/Footer.astro'
 import Header from '@/components/Header.astro'
@@ -8,7 +9,7 @@ import GithubCard from '@/components/Widgets/GithubCard.astro'
 import ImageZoom from '@/components/Widgets/ImageZoom.astro'
 import MediaEmbed from '@/components/Widgets/MediaEmbed.astro'
 import SoundEffect from '@/components/Widgets/SoundEffect.astro'
-import themeConfig from '@/config'
+import { themeConfig } from '@/config'
 import Head from '@/layouts/Head.astro'
 import { getPageInfo } from '@/utils/page'
 import '@/styles/comment.css'
@@ -24,13 +25,13 @@ interface Props {
   postTitle?: string
   postDescription?: string
   postSlug?: string
-  supportedLangs?: string[]
+  supportedLangs?: Language[]
 }
 
 const { postTitle, postDescription, postSlug, supportedLangs = [] } = Astro.props
 const { isPost } = getPageInfo(Astro.url.pathname)
 const fontStyle = themeConfig.global.fontStyle === 'serif' ? 'font-serif' : 'font-sans'
-const MarginBottom = isPost && themeConfig.comment?.enabled
+const MarginBottom = isPost && themeConfig.comment.enabled
   ? 'mb-10' // Post page with comment
   : 'mb-12' // Other pages without comment
 ---
@@ -39,7 +40,7 @@ const MarginBottom = isPost && themeConfig.comment?.enabled
   lang={Astro.currentLocale}
   class:list={[
     fontStyle,
-    { 'scroll-smooth': isPost },
+    isPost ? 'scroll-smooth' : '',
   ]}
 >
   <Head {postTitle} {postDescription} {postSlug} />

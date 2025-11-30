@@ -1,5 +1,5 @@
 ---
-import themeConfig from '@/config'
+import { themeConfig } from '@/config'
 import { ui } from '@/i18n/ui'
 import { getPageInfo } from '@/utils/page'
 
@@ -16,19 +16,19 @@ const SubtitleTag = isPost ? 'div' : 'h2'
 
 <header
   class:list={[
+    'lg:(uno-desktop-column top-20) cjk:tracking-wide',
     isPost
     ? 'mb-10.8'
     : 'mb-10.5',
-    'lg:(uno-desktop-column top-20) cjk:tracking-0.02em',
   ]}
 >
   <TitleTag
     class:list={[
+      'font-bold font-title',
       isPost
         ? `mb-2.8 mt-3 text-5.375 c-secondary lg:(mb-1.8 mt-0 text-9 c-primary)`
         : `mb-1.8 w-75% text-8 c-primary lg:(w-full text-9)`,
-      'font-bold font-title',
-      'w-full'
+      'w-full',
     ]}
   >
     <!-- Fix text cropping issues during view transition on iOS by adding a div tag -->
@@ -49,10 +49,10 @@ const SubtitleTag = isPost ? 'div' : 'h2'
   {headerSubtitle && (
     <SubtitleTag
       class:list={[
-        isPost
-          ? `op-0 lg:op-100`
-          : 'w-full',
         'text-3.5 c-secondary font-navbar lg:text-4',
+        isPost
+        ? `op-0 lg:op-100`
+        : 'w-full',
       ]}
       aria-hidden={isPost}
     >

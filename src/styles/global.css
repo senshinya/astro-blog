@@ -3,6 +3,7 @@ html {
   scrollbar-width: thin;
   scrollbar-color: oklch(var(--un-preset-theme-colors-secondary) / 0.25) transparent;
   scrollbar-gutter: stable;
+  text-autospace: normal;
 }
 
 /* Fix Flash Issue On iOS */

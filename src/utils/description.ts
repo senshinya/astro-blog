@@ -1,4 +1,5 @@
 import type { CollectionEntry } from 'astro:content'
+import type { Language } from '@/i18n/config'
 import MarkdownIt from 'markdown-it'
 import { defaultLocale } from '@/config'
 
@@ -23,6 +24,7 @@ const excerptLengths: Record<ExcerptScene, { cjk: number, other: number }> = {
     other: 140,
   },
 }
+
 const htmlEntityMap: Record<string, string> = {
   '&lt;': '<',
   '&gt;': '>',
@@ -33,8 +35,8 @@ const htmlEntityMap: Record<string, string> = {
 }
 
 // Creates a clean text excerpt with length limits by language and scene
-function getExcerpt(text: string, lang: string, scene: ExcerptScene): string {
-  const isCJK = (lang: string) => ['zh', 'zh-tw', 'ja', 'ko'].includes(lang)
+function getExcerpt(text: string, lang: Language, scene: ExcerptScene): string {
+  const isCJK = (lang: Language) => ['zh', 'zh-tw', 'ja', 'ko'].includes(lang)
   const length = isCJK(lang)
     ? excerptLengths[scene].cjk
     : excerptLengths[scene].other
@@ -68,7 +70,7 @@ export function getPostDescription(
   post: CollectionEntry<'posts'>,
   scene: ExcerptScene,
 ): string {
-  const lang = post.data.lang || defaultLocale
+  const lang = (post.data.lang || defaultLocale) as Language
 
   if (post.data.description) {
     // Only truncate for og scene, return full description for other scenes
@@ -77,15 +79,15 @@ export function getPostDescription(
       : post.data.description
   }
 
-  const content = post.body || ''
+  const rawContent = post.body || ''
+  const cleanContent = rawContent
+    .replace(/<!--[\s\S]*?-->/g, '') // Remove HTML comments
+    .replace(/```[\s\S]*?```/g, '') // Remove code blocks
+    .replace(/^\s*#{1,6}\s+\S.*$/gm, '') // Remove Markdown headings
+    .replace(/^\s*::.*$/gm, '') // Remove directive containers
+    .replace(/^\s*>\s*\[!.*\]$/gm, '') // Remove GitHub admonition markers
+    .replace(/\n{2,}/g, '\n\n') // Normalize newlines
 
-  // Remove HTML comments and Markdown headings
-  const cleanedContent = content
-    .replace(/<!--[\s\S]*?-->/g, '')
-    .replace(/^#{1,6}\s+\S.*$/gm, '')
-    .replace(/\n{2,}/g, '\n\n')
-
-  const htmlContent = markdownParser.render(cleanedContent)
-
-  return getExcerpt(htmlContent, lang, scene)
+  const renderedContent = markdownParser.render(cleanContent)
+  return getExcerpt(renderedContent, lang, scene)
 }

@@ -1,4 +1,16 @@
 <script>
+interface GithubRepoData {
+  owner: {
+    avatar_url: string
+  }
+  description: string | null
+  stargazers_count: number
+  forks_count: number
+  license: {
+    spdx_id: string
+  } | null
+}
+
 async function loadRepoData(card: HTMLElement) {
   const repo = card.dataset.repo
   if (!repo) {
@@ -11,7 +23,7 @@ async function loadRepoData(card: HTMLElement) {
   const forks = card.getElementsByClassName('gc-forks-count')[0] as HTMLElement
   const license = card.getElementsByClassName('gc-license-info')[0] as HTMLElement
 
-  function updateCardUI(data: any) {
+  function updateCardUI(data: GithubRepoData) {
     const numberFormat = new Intl.NumberFormat('en', { notation: 'compact', maximumFractionDigits: 1 })
 
     if (avatar && data.owner?.avatar_url) {
@@ -50,7 +62,7 @@ async function loadRepoData(card: HTMLElement) {
         return
       }
 
-      const data = await response.json()
+      const data = await response.json() as GithubRepoData
 
       sessionStorage.setItem(cacheKey, JSON.stringify(data))
       updateCardUI(data)
@@ -60,7 +72,7 @@ async function loadRepoData(card: HTMLElement) {
     }
   }
   else {
-    const data = JSON.parse(cached)
+    const data = JSON.parse(cached) as GithubRepoData
     updateCardUI(data)
   }
 }

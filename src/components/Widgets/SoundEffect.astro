@@ -60,6 +60,13 @@ class SoundEffectManager {
 
   private initPromise: Promise<void> | null = null
 
+  // Preload all sound files during browser idle time
+  constructor() {
+    if (!isMobileDevice() && 'requestIdleCallback' in window) {
+      requestIdleCallback(() => this.initialize())
+    }
+  }
+
   // Fetch, decode and cache a single sound file
   private async fetchAndCacheSound(type: SoundType, index: number): Promise<void> {
     if (!this.audioContext) {

@@ -40,22 +40,23 @@ async function handleCodeCopy(button: HTMLButtonElement) {
     return
   }
 
-  let codeElement: HTMLElement | null = null;
+  let codeElement: HTMLElement | null = null
 
   // 检查是否在折叠的代码块中
-  const codeWrapper = button.closest('.code-collapse-wrapper');
-  
+  const codeWrapper = button.closest('.code-collapse-wrapper')
+
   if (codeWrapper) {
     // 如果在折叠代码块中，优先获取完整代码
-    const fullCodeElement = codeWrapper.querySelector('.code-collapse-full pre code') as HTMLElement;
-    const previewCodeElement = codeWrapper.querySelector('.code-collapse-preview pre code') as HTMLElement;
-    
+    const fullCodeElement = codeWrapper.querySelector('.code-collapse-full pre code') as HTMLElement
+    const previewCodeElement = codeWrapper.querySelector('.code-collapse-preview pre code') as HTMLElement
+
     // 优先使用完整代码，如果没有则使用预览代码
-    codeElement = fullCodeElement || previewCodeElement || null;
-  } else {
+    codeElement = fullCodeElement || previewCodeElement || null
+  }
+  else {
     // 如果不在折叠代码块中，使用原来的逻辑
-    const element = button.parentElement?.querySelector('pre code');
-    codeElement = element as HTMLElement | null;
+    const element = button.parentElement?.querySelector('pre code')
+    codeElement = element as HTMLElement | null
   }
 
   const codeText = codeElement?.textContent ?? ''
@@ -67,13 +68,13 @@ async function handleCodeCopy(button: HTMLButtonElement) {
     await navigator.clipboard.writeText(codeText)
 
     // Clear existing timeout to prevent icon state conflicts on multiple clicks
-    const existingTimeout = activeTimeouts.get(button);
+    const existingTimeout = activeTimeouts.get(button)
     if (existingTimeout) {
-      clearTimeout(existingTimeout);
+      clearTimeout(existingTimeout)
     }
 
-    button.innerHTML = copyIcons.success;
-    button.classList.add('copy-success');
+    button.innerHTML = copyIcons.success
+    button.classList.add('copy-success')
 
     // Set timeout to revert to copy icon after 1.5s
     const timeoutId = setTimeout(() => {
@@ -85,7 +86,7 @@ async function handleCodeCopy(button: HTMLButtonElement) {
       }
     }, 1500)
 
-    activeTimeouts.set(button, timeoutId);
+    activeTimeouts.set(button, timeoutId)
   }
   catch (error) {
     console.error('Failed to copy code', error)
@@ -93,12 +94,15 @@ async function handleCodeCopy(button: HTMLButtonElement) {
 }
 
 function handleCodeCopyClick(e: MouseEvent) {
-  const button = e.target instanceof Element && e.target.closest('.code-copy-button')
-
-  if (!button) {
+  const target = e.target
+  if (!(target instanceof Element)) {
     return
   }
 
+  const button = target.closest('.code-copy-button')
+  if (!button) {
+    return
+  }
   handleCodeCopy(button as HTMLButtonElement)
 }
 

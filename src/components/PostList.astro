@@ -1,25 +1,20 @@
 ---
-import type { CollectionEntry } from 'astro:content'
+import type { Language } from '@/i18n/config'
+import type { Post } from '@/types'
 import PinIcon from '@/assets/icons/pin-icon.svg'
 import PostDate from '@/components/PostDate.astro'
 import { defaultLocale } from '@/config'
 import { getPostDescription } from '@/utils/description'
 import { isHomePage } from '@/utils/page'
 
-type Post = CollectionEntry<'posts'> & {
-  remarkPluginFrontmatter: {
-    minutes: number
-  }
+export interface Props {
+  posts: Post[]
+  lang: Language
+  pinned?: boolean
 }
 
 const { posts, lang, pinned = false } = Astro.props
 const isHome = isHomePage(Astro.url.pathname)
-
-export interface Props {
-  posts: Post[]
-  lang: string
-  pinned?: boolean
-}
 
 function getPostPath(post: Post) {
   const slug = post.data.abbrlink || post.id
@@ -38,14 +33,18 @@ function getPostPath(post: Post) {
 
     return (
       <li
-        class="mb-5.5"
-        lg={isHome ? 'mb-10' : ''}
+        class:list={[
+          'mb-5.5',
+          isHome ? 'lg:mb-10' : '',
+        ]}
       >
         {/* post title */}
         <h3 class="inline transition-colors hover:c-primary">
           <a
-            class="cjk:tracking-0.02em"
-            lg={isHome ? 'font-medium text-4.5' : ''}
+            class:list={[
+              'cjk:tracking-wide',
+              isHome ? 'lg:font-medium lg:text-4.5' : '',
+            ]}
             href={getPostPath(post)}
             transition:name={`post-${slug}${lang ? `-${lang}` : ''}`}
             data-disable-theme-transition

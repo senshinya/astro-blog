@@ -1,4 +1,5 @@
-import { base, defaultLocale, moreLocales } from '@/config'
+import type { Language } from '@/i18n/config'
+import { allLocales, base, defaultLocale } from '@/config'
 import { getLangFromPath, getNextGlobalLang } from '@/i18n/lang'
 
 /**
@@ -8,7 +9,7 @@ import { getLangFromPath, getNextGlobalLang } from '@/i18n/lang'
  * @param lang Current language code
  * @returns Path to tag page
  */
-export function getTagPath(tagName: string, lang: string): string {
+export function getTagPath(tagName: string, lang: Language): string {
   const tagPath = lang === defaultLocale
     ? `/tags/${tagName}/`
     : `/${lang}/tags/${tagName}/`
@@ -23,7 +24,7 @@ export function getTagPath(tagName: string, lang: string): string {
  * @param lang Current language code
  * @returns Path to post page
  */
-export function getPostPath(slug: string, lang: string): string {
+export function getPostPath(slug: string, lang: Language): string {
   const postPath = lang === defaultLocale
     ? `/posts/${slug}/`
     : `/${lang}/posts/${slug}/`
@@ -38,7 +39,7 @@ export function getPostPath(slug: string, lang: string): string {
  * @param currentLang Current language code
  * @returns Localized path with language prefix
  */
-export function getLocalizedPath(path: string, currentLang?: string) {
+export function getLocalizedPath(path: string, currentLang?: Language) {
   const normalizedPath = path.replace(/^\/|\/$/g, '')
   const lang = currentLang ?? getLangFromPath(path)
 
@@ -58,7 +59,7 @@ export function getLocalizedPath(path: string, currentLang?: string) {
  * @param nextLang Next language code to switch to
  * @returns Path for next language
  */
-export function getNextLangPath(currentPath: string, currentLang: string, nextLang: string): string {
+export function getNextLangPath(currentPath: string, currentLang: Language, nextLang: Language): string {
   const pathWithoutBase = base && currentPath.startsWith(base)
     ? currentPath.slice(base.length)
     : currentPath
@@ -89,14 +90,14 @@ export function getNextGlobalLangPath(currentPath: string): string {
  * @param supportedLangs List of supported language codes
  * @returns Path for next supported language
  */
-export function getNextSupportedLangPath(currentPath: string, supportedLangs: string[]): string {
+export function getNextSupportedLangPath(currentPath: string, supportedLangs: Language[]): string {
   if (supportedLangs.length === 0) {
     return getNextGlobalLangPath(currentPath)
   }
 
   // Sort supported languages by global priority
-  const langPriority = new Map(
-    [defaultLocale, ...moreLocales].map((lang, index) => [lang, index]),
+  const langPriority = new Map<Language, number>(
+    allLocales.map((lang, index) => [lang, index]),
   )
   const sortedLangs = [...supportedLangs].sort(
     (a, b) => (langPriority.get(a) ?? 0) - (langPriority.get(b) ?? 0),

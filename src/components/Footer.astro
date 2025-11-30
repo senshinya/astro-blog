@@ -7,9 +7,10 @@ const siteUrl = url
 const { links: socialLinks, startYear } = themeConfig.footer
 
 const currentYear = new Date().getFullYear()
-const year = Number(startYear) === currentYear ? startYear : `${startYear}-${currentYear}`
+const year = Number(startYear) === currentYear
+  ? startYear
+  : `${startYear}-${currentYear}`
 
-// i18n RSS Feed Path
 const currentLang = getLangFromPath(Astro.url.pathname)
 const links = socialLinks.map(({ name, url, ...rest }) => {
   if (name === 'RSS') {
@@ -27,8 +28,8 @@ const footerLinkClass = 'highlight-hover py-0.8 transition-colors after:bottom-0
 ---
 
 <footer
-  class="text-center text-3 leading-1.25em font-navbar lg:(text-center text-3.5)"
-  lg="uno-desktop-column bottom-20"
+  class="text-center text-3 leading-1.25em font-navbar"
+  lg="text-center uno-desktop-column bottom-20 text-3.5"
 >
   <p>
     {links.map((link, index) => (
@@ -43,7 +44,7 @@ const footerLinkClass = 'highlight-hover py-0.8 transition-colors after:bottom-0
   </p>
 
   <p>
-    Powered by <a class={footerLinkClass} href="https://astro.build/" target="_blank" rel="noopener noreferrer">Astro</a> and <a class={footerLinkClass} href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer">Retypeset</a>
+    Powered by <a class="highlight-hover py-0.8 transition-colors after:bottom-0.35em hover:c-primary" href="https://astro.build/" target="_blank" rel="noopener noreferrer" data-umami-event="outbound-link-click" data-umami-event-url="https://astro.build/">Astro</a> and <a class="highlight-hover py-0.8 transition-colors after:bottom-0.35em hover:c-primary" href="https://github.com/radishzzz/astro-theme-retypeset" target="_blank" rel="noopener noreferrer" data-umami-event="outbound-link-click" data-umami-event-url="https://github.com/radishzzz/astro-theme-retypeset">Retypeset</a>
   </p>
 
   <p>

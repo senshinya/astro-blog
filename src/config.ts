@@ -10,7 +10,7 @@ export const themeConfig: ThemeConfig = {
     // site description
     description: '互联网自留地',
     // use i18n title/subtitle/description from src/i18n/ui.ts instead of static ones above
-    i18nTitle: true, // true, false
+    i18nTitle: true, // true | false
     // author name
     author: 'shinya',
     // site url
@@ -27,7 +27,7 @@ export const themeConfig: ThemeConfig = {
   // COLOR SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   color: {
     // default theme mode
-    mode: 'auto', // light, dark, auto
+    mode: 'auto', // light | dark | auto
     light: {
       // primary color
       // used for title, hover, etc
@@ -58,27 +58,27 @@ export const themeConfig: ThemeConfig = {
   // GLOBAL SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   global: {
     // default language
-    locale: 'zh', // de, en, es, fr, ja, ko, pl, pt, ru, zh, zh-tw
+    locale: 'zh', // de | en | es | fr | ja | ko | pl | pt | ru | zh | zh-tw
     // more languages
     // not fill in the locale code above again
     moreLocales: ['en', 'ja'], // ['zh', 'zh-tw', 'ja', 'en', 'es', 'ru']
-    // font styles for post text
-    fontStyle: 'sans', // sans, serif
-    // date format for posts
-    dateFormat: 'YYYY-MM-DD', // YYYY-MM-DD, MM-DD-YYYY, DD-MM-YYYY, MONTH DAY YYYY, DAY MONTH YYYY
-    // table of contents for posts
-    toc: true, // true, false
-    // KaTeX math rendering
-    katex: true, // true, false
+    // post font style
+    fontStyle: 'sans', // sans | serif
+    // post date format
+    dateFormat: 'YYYY-MM-DD', // YYYY-MM-DD | MM-DD-YYYY | DD-MM-YYYY | MMM D YYYY | D MMM YYYY
+    // enable table of contents
+    toc: true, // true | false
+    // enable katex math rendering
+    katex: true, // true | false
     // reduce motion
-    reduceMotion: false, // true, false
+    reduceMotion: false, // true | false
   },
   // GLOBAL SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> START
   comment: {
     // enable comment system
-    enabled: true, // true, false
+    enabled: true, // true | false
     // giscus
     // https://giscus.app/
     giscus: {
@@ -110,9 +110,9 @@ export const themeConfig: ThemeConfig = {
         // more emojis: https://waline.js.org/en/guide/features/emoji.html
       ],
       // gif search
-      search: false, // true, false
+      search: false, // true | false
       // image uploader
-      imageUploader: false, // true, false
+      imageUploader: false, // true | false
     },
   },
   // COMMENT SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
@@ -151,7 +151,7 @@ export const themeConfig: ThemeConfig = {
       userID: '132434919554075648',
     },
     // apiflash access key
-    // automatically generate website screenshots for open graph images
+    // generate website screenshots for open graph images
     // get your access key at: https://apiflash.com/
     apiflashKey: 'ff9b7afed894421fa9e862e15d5a306c',
   },
@@ -195,8 +195,6 @@ export const themeConfig: ThemeConfig = {
   },
   // PRELOAD SETTINGS >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> END
 }
-
-export default themeConfig
 
 export const base = themeConfig.site.base === '/' ? '' : themeConfig.site.base.replace(/\/$/, '')
 export const defaultLocale = themeConfig.global.locale
