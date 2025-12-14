@@ -7,5 +7,6 @@ export default antfu({
   ignores: [
     'src/layouts/Travel.astro',
     'src/components/TravelJourney.astro',
+    'scripts/*',
   ],
 })

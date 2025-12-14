@@ -104,7 +104,7 @@ async function translateArticle(content) {
     try {
         // 使用Chat Completions API
         const completion = await openai.chat.completions.create({
-            model: "gpt-4.1-mini", // 或者使用其他可用模型
+            model: "gpt-5-mini", // 或者使用其他可用模型
             messages: [
                 {
                     role: "system",
@@ -115,7 +115,6 @@ async function translateArticle(content) {
                     content: `${content}`
                 }
             ],
-            temperature: 0.3
         });
 
         return completion.choices[0].message.content.trim();

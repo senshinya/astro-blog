@@ -111,7 +111,7 @@ async function generateDescription(title, content) {
 
         // 使用Chat Completions API而不是Responses API
         const completion = await openai.chat.completions.create({
-            model: "gpt-4o-mini", // 或者使用其他可用模型
+            model: "gpt-5-mini", // 或者使用其他可用模型
             messages: [
                 {
                     role: "system",
@@ -122,9 +122,14 @@ async function generateDescription(title, content) {
                     content: `以自然、随性、不做作的方式，根据下方标题和内容开头写一段50到100字的描述。不要使用介绍、总结、打招呼或互动语气，避免套路化和刻意吸引。直接展开内容，风格流畅简洁，只输出正文描述，不加引号或多余说明。\n\n标题：${title}\n\n内容开头：${context}`
                 }
             ],
-            temperature: 0.7,
-            max_tokens: 1000
+            max_completion_tokens: 10000
         });
+
+        // 防御性检查 API 返回结构
+        if (!completion?.choices?.length || !completion.choices[0]?.message?.content) {
+            console.error('API 返回结构异常:', JSON.stringify(completion, null, 2));
+            return '';
+        }
 
         return completion.choices[0].message.content.trim();
     } catch (error) {
