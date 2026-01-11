@@ -218,8 +218,10 @@ function loadSection(index) {
     document.getElementById('currentPage').textContent = index + 1
     updateNavButtons()
 
-    leftCard.classList.add('card-enter-left')
-    if (!isTravelToTravel) rightCard.classList.add('card-enter-right')
+    if (!isTravelToTravel) {
+      leftCard.classList.add('card-enter-left')
+      rightCard.classList.add('card-enter-right')
+    }
 
     await new Promise(r => setTimeout(r, 50))
     leftCard.classList.remove('card-exit', 'card-enter-left')
