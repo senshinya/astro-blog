@@ -1,20 +1,11 @@
 ---
 const { travel } = Astro.props;
+const coverImage = travel.data.coverImage;
 ---
 
 <div class="travel-journey">
-  <!-- 移动端提示 -->
-  <div id="mobileNotice" class="fixed inset-0 z-50 hidden flex-col items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-8 text-center">
-    <div class="glass-effect rounded-3xl p-10 shadow-bento max-w-sm">
-      <div class="mb-6 inline-flex items-center justify-center w-20 h-20 rounded-2xl bg-gradient-to-br from-accent/10 to-accent-soft/10">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-        </svg>
-      </div>
-      <h2 class="mb-3 text-2xl font-semibold text-primary tracking-tight">请在电脑端访问</h2>
-      <p class="text-light-text text-sm leading-relaxed">此页面需要更大的屏幕才能获得最佳体验</p>
-    </div>
-  </div>
+  <!-- 移动端首页背景图 -->
+  <div id="mobileBg" class="fixed inset-0 z-0 hidden bg-cover bg-center" style={`background-image: url(${coverImage})`}></div>
 
   <!-- Bento Grid 布局 -->
   <div id="mainContent" class="h-screen w-screen gap-6 bg-transparent p-6">
@@ -88,23 +79,40 @@ const { travel } = Astro.props;
   </div>
 
   <script is:inline define:vars={{ travelData: travel.data }}>
-// 检测移动设备
+// 检测移动设备 (pad 及以下，1024px)
 function isMobileDevice() {
-  return window.innerWidth < 768 || /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
+  return window.innerWidth < 1024
 }
 
-// 处理移动设备访问
-function handleMobileAccess() {
-  if (isMobileDevice()) {
-    document.getElementById('mobileNotice').classList.remove('hidden')
-    document.getElementById('mobileNotice').classList.add('flex')
-    document.getElementById('mainContent').classList.add('hidden')
-    const bottomNav = document.getElementById('bottomNav')
-    if (bottomNav) bottomNav.classList.add('hidden')
-    return true
+// 处理移动/桌面布局切换
+function handleLayoutSwitch() {
+  const isMobile = isMobileDevice()
+  const mobileBg = document.getElementById('mobileBg')
+  const leftCard = document.getElementById('leftCard')
+  const rightCard = document.getElementById('rightCard')
+  const mainContent = document.getElementById('mainContent')
+  
+  if (isMobile) {
+    // 移动端布局
+    mainContent.classList.add('mobile-layout')
+    mainContent.classList.remove('flex')
+    leftCard.classList.add('mobile-card')
+    rightCard.classList.add('hidden')
+    // 首页时显示背景图
+    if (currentSection === 0) {
+      mobileBg.classList.remove('hidden')
+      leftCard.classList.add('mobile-cover-card')
+    }
+  } else {
+    // 桌面端布局
+    mobileBg.classList.add('hidden')
+    mainContent.classList.remove('mobile-layout')
+    mainContent.classList.add('flex')
+    leftCard.classList.remove('mobile-card', 'mobile-cover-card')
+    rightCard.classList.remove('hidden')
   }
-  document.getElementById('mainContent').classList.add('flex')
-  return false
+  
+  return isMobile
 }
 
 
@@ -112,15 +120,22 @@ function handleMobileAccess() {
 let currentSection = 0
 const totalSections = travelData.days.length + 1
 let map, markers = [], currentPhotoItems = [], currentPhotoIndex = 0
+let isMobile = false
+let mapInitialized = false
 
 // 初始化
 function init() {
-  if (handleMobileAccess()) return
+  isMobile = handleLayoutSwitch()
   
   // 更新页面指示器
   document.getElementById('totalPages').textContent = totalSections
   
-  initMap()
+  // 仅在桌面端初始化地图
+  if (!isMobile) {
+    initMap()
+    mapInitialized = true
+  }
+  
   loadSection(0)
   
   document.getElementById('prevBtn').addEventListener('click', navigatePrev)
@@ -136,12 +151,24 @@ function init() {
   document.getElementById('nextPhotoBtn').addEventListener('click', navigatePhotoNext)
   document.getElementById('closePhotoBtn').addEventListener('click', closePhotoView)
   
-  // 触摸导航
+  // 触摸导航 - 水平滑动
+  let touchStartX = 0
   let touchStartY = 0
-  document.addEventListener('touchstart', (e) => { touchStartY = e.touches[0].clientY })
+  document.addEventListener('touchstart', (e) => { 
+    touchStartX = e.touches[0].clientX
+    touchStartY = e.touches[0].clientY 
+  })
   document.addEventListener('touchend', (e) => {
-    const diff = touchStartY - e.changedTouches[0].clientY
-    if (Math.abs(diff) > 50) diff > 0 ? navigateNext() : navigatePrev()
+    const diffX = touchStartX - e.changedTouches[0].clientX
+    const diffY = touchStartY - e.changedTouches[0].clientY
+    
+    // 优先检测水平滑动（移动端更自然）
+    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+      diffX > 0 ? navigateNext() : navigatePrev()
+    } else if (!isMobile && Math.abs(diffY) > 50) {
+      // 桌面端保留垂直滑动
+      diffY > 0 ? navigateNext() : navigatePrev()
+    }
   })
   
   updateNavButtons()
@@ -149,27 +176,31 @@ function init() {
 
 // 初始化地图
 function initMap() {
+  if (isMobile || mapInitialized) return
+  
   map = L.map('map', { zoomControl: false, preferCanvas: true, renderer: L.canvas() })
   L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
   }).addTo(map)
   L.control.zoom({ position: 'bottomright' }).addTo(map)
   map.setView([35.0116, 135.7681], 12, { animate: false })
+  mapInitialized = true
 }
 
 
 // 加载指定部分
 function loadSection(index) {
   const contentArea = document.getElementById('contentArea')
-  const container = document.querySelector('.flex.w-screen.h-screen')
+  const container = document.querySelector('.flex.w-screen.h-screen, .mobile-layout')
   const mapContainer = document.querySelector('.map-container')
   const leftCard = document.getElementById('leftCard')
   const rightCard = document.getElementById('rightCard')
+  const mobileBg = document.getElementById('mobileBg')
   const isTravelToTravel = index > 0 && currentSection > 0
 
   const animateTransition = async () => {
     leftCard.classList.add('card-exit')
-    if (!isTravelToTravel) {
+    if (!isMobile && !isTravelToTravel) {
       rightCard.classList.add('card-exit')
       if (currentSection > 0) mapContainer.style.opacity = '0'
     }
@@ -178,32 +209,44 @@ function loadSection(index) {
     await new Promise(r => setTimeout(r, 250))
     contentArea.innerHTML = ''
 
-    if (isTravelToTravel) {
+    if (!isMobile && isTravelToTravel) {
       clearMarkers()
       addDayMarkers(index - 1)
       if (markers.length > 0) {
         map.flyToBounds(L.featureGroup(markers).getBounds().pad(0.1), { duration: 1.2, easeLinearity: 0.2, animate: true })
       }
-    } else {
+    } else if (!isMobile) {
       clearMarkers()
     }
 
     if (index === 0) {
       loadCover()
-      container.classList.add('cover-mode')
-      const rightPanel = document.getElementById('rightCard')
-      rightPanel.style.backgroundImage = `url(${travelData.coverImage})`
-      rightPanel.style.backgroundSize = 'cover'
-      rightPanel.style.backgroundPosition = 'center'
-      rightPanel.style.transition = 'transform 12s ease-out'
-      mapContainer.style.display = 'none'
+      if (container) container.classList.add('cover-mode')
+      if (isMobile) {
+        // 移动端首页：显示背景图，卡片透明
+        mobileBg.classList.remove('hidden')
+        leftCard.classList.add('mobile-cover-card')
+      } else {
+        const rightPanel = document.getElementById('rightCard')
+        rightPanel.style.backgroundImage = `url(${travelData.coverImage})`
+        rightPanel.style.backgroundSize = 'cover'
+        rightPanel.style.backgroundPosition = 'center'
+        rightPanel.style.transition = 'transform 12s ease-out'
+        mapContainer.style.display = 'none'
+      }
     } else {
-      container.classList.remove('cover-mode')
-      const rightPanel = document.getElementById('rightCard')
-      rightPanel.style.backgroundImage = ''
-      rightPanel.style.transform = ''
+      if (container) container.classList.remove('cover-mode')
+      if (isMobile) {
+        // 移动端非首页：隐藏背景图，卡片不透明
+        mobileBg.classList.add('hidden')
+        leftCard.classList.remove('mobile-cover-card')
+      } else {
+        const rightPanel = document.getElementById('rightCard')
+        rightPanel.style.backgroundImage = ''
+        rightPanel.style.transform = ''
+      }
       loadDay(index - 1, index !== 1 || isTravelToTravel)
-      if (!isTravelToTravel) {
+      if (!isMobile && !isTravelToTravel) {
         mapContainer.style.display = 'block'
         mapContainer.style.opacity = '0'
         addDayMarkers(index - 1)
@@ -218,21 +261,21 @@ function loadSection(index) {
     document.getElementById('currentPage').textContent = index + 1
     updateNavButtons()
 
-    if (!isTravelToTravel) {
+    if (!isMobile && !isTravelToTravel) {
       leftCard.classList.add('card-enter-left')
       rightCard.classList.add('card-enter-right')
     }
 
     await new Promise(r => setTimeout(r, 50))
     leftCard.classList.remove('card-exit', 'card-enter-left')
-    if (!isTravelToTravel) rightCard.classList.remove('card-exit', 'card-enter-right')
+    if (!isMobile && !isTravelToTravel) rightCard.classList.remove('card-exit', 'card-enter-right')
     contentArea.classList.remove('fade-out')
     contentArea.classList.add('fade-in')
 
     await new Promise(r => setTimeout(r, 400))
     contentArea.classList.remove('fade-in')
 
-    if (index > 0 && !isTravelToTravel) {
+    if (!isMobile && index > 0 && !isTravelToTravel) {
       map.invalidateSize()
       mapContainer.style.transition = 'opacity 0.4s ease-out'
       mapContainer.style.opacity = '1'
@@ -246,14 +289,15 @@ function loadSection(index) {
 // 加载封面
 function loadCover() {
   const contentArea = document.getElementById('contentArea')
+  const mobileClass = isMobile ? 'mobile-cover' : ''
   contentArea.innerHTML = `
-    <div class="flex flex-col justify-center h-full">
+    <div class="flex flex-col justify-center h-full ${mobileClass}">
       <div class="mb-6">
         <span class="inline-block px-3 py-1 text-xs font-medium tracking-wider uppercase text-accent bg-accent/10 rounded-full">旅行日记</span>
       </div>
-      <h1 class="font-snell text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-primary leading-[1.1] tracking-tight">${travelData.title}</h1>
-      <h2 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-medium mb-10 text-primary/70 tracking-tight">${travelData.subtitle}</h2>
-      <p class="text-base text-light-text leading-relaxed max-w-lg font-light">${travelData.description}</p>
+      <h1 class="font-snell text-5xl md:text-6xl lg:text-7xl font-bold mb-4 text-primary leading-[1.1] tracking-tight mobile-title">${travelData.title}</h1>
+      <h2 class="font-cormorant text-2xl md:text-3xl lg:text-4xl font-medium mb-10 text-primary/70 tracking-tight mobile-subtitle">${travelData.subtitle}</h2>
+      <p class="text-base text-light-text leading-relaxed max-w-lg font-light mobile-desc">${travelData.description}</p>
       <div class="mt-12 flex items-center gap-3 text-sm text-light-text">
         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
         <span>${travelData.totaldays !== undefined ? travelData.totaldays : travelData.days.length} 天行程</span>
@@ -267,6 +311,7 @@ function loadDay(dayIndex, later = false) {
   const day = travelData.days[dayIndex]
   const contentArea = document.getElementById('contentArea')
   const dayNum = day.day !== undefined ? day.day : dayIndex
+  const gridCols = isMobile ? 'grid-cols-2' : 'grid-cols-2 md:grid-cols-3'
   
   let descriptionsHTML = day.descriptions.map(desc => 
     `<p class="mb-5 text-light-text text-base leading-relaxed font-light">${desc}</p>`
@@ -277,9 +322,9 @@ function loadDay(dayIndex, later = false) {
       <div class="mb-2">
         <span class="inline-block px-2.5 py-1 text-xs font-medium tracking-wider uppercase text-accent-soft bg-accent-soft/10 rounded-full">Day ${dayNum}</span>
       </div>
-      <h3 class="font-cormorant text-3xl md:text-4xl lg:text-5xl font-semibold mb-8 text-primary tracking-tight leading-tight">${day.title}</h3>
+      <h3 class="font-cormorant text-3xl md:text-4xl lg:text-5xl font-semibold mb-8 text-primary tracking-tight leading-tight mobile-day-title">${day.title}</h3>
       ${descriptionsHTML}
-      <div id="photos-container" class="grid grid-cols-2 md:grid-cols-3 gap-4 mt-10">
+      <div id="photos-container" class="grid ${gridCols} gap-4 mt-10">
         ${createPlaceholders(day.photos.length)}
       </div>
     </div>
@@ -329,12 +374,14 @@ function createPlaceholders(count) {
 
 // 清除标记
 function clearMarkers() {
+  if (isMobile || !map) return
   markers.forEach(m => map.removeLayer(m))
   markers = []
 }
 
 // 添加标记
 function addDayMarkers(dayIndex) {
+  if (isMobile || !map) return
   const day = travelData.days[dayIndex]
   day.photos.forEach((photo, photoIndex) => {
     if (photo.lat && photo.lng) {
@@ -416,6 +463,7 @@ function updatePhotoViewContent() {
 
 // 更新地图视图
 function updateMapView() {
+  if (isMobile || !map) return
   const currentPhoto = currentPhotoItems[currentPhotoIndex]
   if (currentPhoto.lat && currentPhoto.lng) {
     map.flyTo([currentPhoto.lat, currentPhoto.lng], 16, { duration: 1.2, easeLinearity: 0.2, animate: true })
@@ -441,19 +489,27 @@ function closePhotoView() {
     photoViewMode.classList.add('invisible')
     
     const contentArea = document.getElementById('contentArea')
-    contentArea.style.transition = 'opacity 0.3s ease, visibility 0.3s ease'
     contentArea.style.visibility = 'visible'
     contentArea.style.opacity = '1'
+    
+    // 清除内联样式，避免影响后续 CSS 类动画
+    setTimeout(() => {
+      contentArea.style.transition = ''
+      contentArea.style.visibility = ''
+      contentArea.style.opacity = ''
+    }, 300)
     
     const bottomNav = document.getElementById('bottomNav')
     bottomNav.style.opacity = '1'
     bottomNav.style.visibility = 'visible'
     
-    markers.forEach(m => m.closePopup())
-    
-    await new Promise(r => setTimeout(r, 200))
-    if (markers.length > 0) {
-      map.flyToBounds(L.featureGroup(markers).getBounds().pad(0.1), { duration: 1.2, easeLinearity: 0.2, animate: true })
+    if (!isMobile && map) {
+      markers.forEach(m => m.closePopup())
+      
+      await new Promise(r => setTimeout(r, 200))
+      if (markers.length > 0) {
+        map.flyToBounds(L.featureGroup(markers).getBounds().pad(0.1), { duration: 1.2, easeLinearity: 0.2, animate: true })
+      }
     }
   }
   animate()
@@ -478,7 +534,25 @@ function updateNavButtons() {
 }
 
 window.addEventListener('load', init)
-window.addEventListener('resize', handleMobileAccess)
+window.addEventListener('resize', () => {
+  const wasMobile = isMobile
+  isMobile = handleLayoutSwitch()
+  
+  // 如果从移动端切换到桌面端，初始化地图
+  if (wasMobile && !isMobile && !mapInitialized) {
+    initMap()
+    if (currentSection > 0) {
+      const mapContainer = document.querySelector('.map-container')
+      mapContainer.style.display = 'block'
+      mapContainer.style.opacity = '1'
+      addDayMarkers(currentSection - 1)
+      if (markers.length > 0) {
+        map.invalidateSize()
+        map.fitBounds(L.featureGroup(markers).getBounds().pad(0.1), { animate: false })
+      }
+    }
+  }
+})
 </script>
 
 
@@ -569,12 +643,132 @@ window.addEventListener('resize', handleMobileAccess)
       100% { background-position: 200% 0; }
     }
 
-    /* 响应式 */
-    @media (max-width: 768px) {
-      .flex.w-screen.h-screen { flex-direction: column; }
-      #leftCard { width: 100%; height: 100%; order: 1; }
-      #rightCard { display: none; }
-      #contentArea { padding: 1.5rem; padding-top: 2rem; }
+    /* 移动端布局 (pad 及以下 < 1024px) */
+    @media (max-width: 1023px) {
+      /* 主容器移动端布局 */
+      .mobile-layout {
+        display: flex;
+        flex-direction: column;
+        padding: 1rem;
+        gap: 0;
+      }
+      
+      /* 左侧卡片移动端样式 */
+      .mobile-card {
+        width: 100% !important;
+        height: 100% !important;
+        border-radius: 1.5rem;
+      }
+      
+      /* 移动端首页卡片透明样式 */
+      .mobile-cover-card {
+        background: rgba(255, 255, 255, 0.55) !important;
+        backdrop-filter: blur(8px) !important;
+        -webkit-backdrop-filter: blur(8px) !important;
+      }
+      
+      /* 内容区域移动端样式 */
+      .mobile-card #contentArea {
+        padding: 1.5rem !important;
+        padding-top: 2rem !important;
+        padding-bottom: 5rem !important;
+      }
+      
+      /* 封面移动端样式 */
+      .mobile-cover {
+        text-align: center;
+        padding: 1rem;
+      }
+      
+      .mobile-cover .mobile-title {
+        font-size: 2.5rem !important;
+        line-height: 1.2 !important;
+      }
+      
+      .mobile-cover .mobile-subtitle {
+        font-size: 1.5rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+      
+      .mobile-cover .mobile-desc {
+        max-width: 100%;
+        font-size: 0.9rem;
+      }
+      
+      .mobile-cover > div:last-child {
+        justify-content: center;
+        margin-top: 2rem !important;
+      }
+      
+      /* 行程日标题移动端样式 */
+      .mobile-day-title {
+        font-size: 1.75rem !important;
+        margin-bottom: 1.5rem !important;
+      }
+      
+      /* 照片查看模式移动端样式 */
+      #photoViewMode {
+        border-radius: 1.5rem;
+      }
+      
+      #photoViewMode > div:first-child {
+        padding: 1rem;
+      }
+      
+      #photoViewMode img {
+        border-radius: 1rem;
+      }
+      
+      /* 底部导航移动端样式 */
+      #bottomNav {
+        bottom: 1rem;
+        padding: 0.75rem;
+      }
+      
+      #bottomNav #prevBtn,
+      #bottomNav #nextBtn {
+        width: 2.5rem;
+        height: 2.5rem;
+      }
+      
+      /* 照片网格移动端样式 */
+      #photos-container {
+        gap: 0.75rem !important;
+        margin-top: 1.5rem !important;
+      }
+      
+      #photos-container > div {
+        border-radius: 0.75rem;
+      }
+    }
+
+    /* 小屏手机适配 */
+    @media (max-width: 480px) {
+      .mobile-layout {
+        padding: 0.75rem;
+      }
+      
+      .mobile-card #contentArea {
+        padding: 1rem !important;
+        padding-top: 1.5rem !important;
+        padding-bottom: 4.5rem !important;
+      }
+      
+      .mobile-cover .mobile-title {
+        font-size: 2rem !important;
+      }
+      
+      .mobile-cover .mobile-subtitle {
+        font-size: 1.25rem !important;
+      }
+      
+      .mobile-day-title {
+        font-size: 1.5rem !important;
+      }
+      
+      #bottomNav {
+        bottom: 0.75rem;
+      }
     }
   </style>
 
