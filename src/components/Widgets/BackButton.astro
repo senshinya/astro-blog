@@ -18,10 +18,11 @@ import GoBackIcon from '@/assets/icons/go-back.svg';
 <!-- Go Back Script >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> -->
 <script>
 function handleBackButtonClick(e: MouseEvent) {
-  const target = e.target instanceof Element ? e.target : null
-  const button = target?.closest('#back-button')
+  if (!(e.target instanceof Element)) {
+    return
+  }
 
-  if (!button) {
+  if (!e.target.closest('#back-button')) {
     return
   }
 
@@ -38,5 +39,5 @@ function handleBackButtonClick(e: MouseEvent) {
   }
 }
 
-document.addEventListener('click', handleBackButtonClick, { passive: true })
+document.addEventListener('click', handleBackButtonClick)
 </script>

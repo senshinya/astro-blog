@@ -25,7 +25,6 @@ const matchedLang = Object.keys(giscusLocaleMap).find(code => pathWithoutBase.st
 const lang = (matchedLang ?? defaultLocale) as keyof typeof giscusLocaleMap
 
 const giscusConfig = {
-  base,
   repo,
   repoId,
   category,
@@ -49,13 +48,11 @@ const giscusConfig = {
 <script>
 let giscusContainer: HTMLElement | null = null
 
-function getThemeUrl(base: string) {
+function getThemeUrl() {
   const isDark = document.documentElement.classList.contains('dark')
-  const origin = window.location.origin
-
   return isDark
-    ? `${origin}${base}/giscus/theme-dark.css`
-    : `${origin}${base}/giscus/theme-light.css`
+    ? `https://cdn.jsdelivr.net/gh/radishzzz/astro-theme-retypeset@master/public/giscus/theme-dark.css`
+    : `https://cdn.jsdelivr.net/gh/radishzzz/astro-theme-retypeset@master/public/giscus/theme-light.css`
 }
 
 function updateGiscusTheme() {
@@ -69,9 +66,8 @@ function updateGiscusTheme() {
   }
 
   try {
-    const { base } = JSON.parse(giscusContainer.dataset.config)
     giscusWindow.postMessage(
-      { giscus: { setConfig: { theme: getThemeUrl(base) } } },
+      { giscus: { setConfig: { theme: getThemeUrl() } } },
       'https://giscus.app',
     )
   }
@@ -90,12 +86,12 @@ function setupGiscus() {
 
   try {
     const config = JSON.parse(giscusContainer.dataset.config)
-    const { base, category, ...restConfig } = config
+    const { category, ...restConfig } = config
 
     const dataAttributes: Record<string, string> = {
       ...restConfig,
       ...(category && { category }),
-      theme: getThemeUrl(base),
+      theme: getThemeUrl(),
     }
 
     const script = document.createElement('script')
@@ -108,13 +104,9 @@ function setupGiscus() {
   catch (error) {
     console.error('[Giscus] Failed to initialize:', error)
   }
-
-  document.addEventListener('theme-changed', updateGiscusTheme)
 }
 
 function cleanupGiscus() {
-  document.removeEventListener('theme-changed', updateGiscusTheme)
-
   if (giscusContainer) {
     giscusContainer.innerHTML = ''
     giscusContainer = null
@@ -123,4 +115,5 @@ function cleanupGiscus() {
 
 document.addEventListener('astro:page-load', setupGiscus)
 document.addEventListener('astro:before-swap', cleanupGiscus)
+document.addEventListener('theme-changed', updateGiscusTheme)
 </script>

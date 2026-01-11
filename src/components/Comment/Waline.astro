@@ -57,7 +57,7 @@ async function setupWaline() {
   try {
     const config = JSON.parse(walineContainer.dataset.config)
     const { walineJS, walineCSS, ...restConfig } = config
-    const { init } = await import(walineJS)
+    const { init } = await import(/* @vite-ignore */ walineJS)
 
     walineInstance = init({
       el: '#waline',

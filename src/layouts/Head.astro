@@ -105,7 +105,7 @@ const pageImage = postSlug
 (function () {
   // Check if current theme is dark
   // Priority: localStorage theme > default theme > system preference
-  function isDarkMode() {
+  function isCurrentDark() {
     const currentTheme = localStorage.getItem('theme')
     if (currentTheme) {
       return currentTheme === 'dark'
@@ -121,7 +121,7 @@ const pageImage = postSlug
 
   // Initialize theme
   function initTheme(doc = document) {
-    const isDark = isDarkMode()
+    const isDark = isCurrentDark()
     doc.documentElement.classList.toggle('dark', isDark)
 
     // Update meta theme-color tag
@@ -132,7 +132,7 @@ const pageImage = postSlug
   }
 
   // Check and init motion preference
-  // Reduce motion when: site config || user preference || no view transition support
+  // Condition: theme config || system preference || browser capability
   function initMotionPref(doc = document) {
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const supportsViewTransitions = 'startViewTransition' in doc

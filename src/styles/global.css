@@ -53,25 +53,39 @@ h4:hover .heading-anchor-link svg:hover {
   --at-apply: 'op-80';
 }
 
+/* Image Zoom >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
+.zoom-overlay {
+  --at-apply: 'fixed left-0 top-0 z-999 hidden h-full w-full cursor-zoom-out bg-background/95 op-0 transition-opacity duration-300';
+}
+.zoom-img {
+  --at-apply: 'fixed z-1000 cursor-zoom-out transition-transform duration-300';
+}
+
 /* Code Copy Button >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> */
 .code-copy-button {
-  --at-apply: 'absolute right-2.2 top-2.2 z-99 aspect-square w-8 cursor-pointer uno-round-border border-secondary/15';
-  --at-apply: 'bg-background c-secondary/80 op-0 hover:(border-primary/15 c-primary/80)';
-  transition: opacity 300ms ease-out, background-color 150ms ease-out;
+  --at-apply: 'absolute right-2.2 top-2.2 z-99 grid aspect-square w-8 cursor-pointer place-items-center uno-round-border';
+  --at-apply: 'border-secondary/15 bg-background c-secondary/80 op-0 hover:(border-primary/15 c-primary/80)';
+  transition: opacity 0.15s ease-out, background-color 0.15s ease-out;
 }
 .code-block-wrapper:hover .code-copy-button {
   --at-apply: 'op-100';
 }
-.code-copy-button.copy-success {
+.icon-copy,
+.icon-check {
+  --at-apply: '[grid-area:1/1] aspect-square w-50%';
+}
+.icon-check {
+  --at-apply: 'op-0';
+}
+.code-copy-button.copied {
   --at-apply: 'border-none bg-emerald-600 c-background';
 }
-html.dark .code-copy-button.copy-success {
+html.dark .code-copy-button.copied {
   --at-apply: 'bg-emerald-500';
 }
-.code-copy-button svg {
-  --at-apply: 'mx-auto aspect-square w-50%';
+.code-copy-button.copied .icon-copy {
+  --at-apply: 'op-0';
 }
-.code-copy-button svg,
-.code-copy-button svg path {
-  --at-apply: 'pointer-events-none';
+.code-copy-button.copied .icon-check {
+  --at-apply: 'op-100';
 }

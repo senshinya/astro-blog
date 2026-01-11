@@ -156,8 +156,14 @@ lite-youtube > .lty-playbtn {
 .bilibili-player {
   --at-apply: 'aspect-video w-full';
 }
+.spotify-embed {
+  --at-apply: 'w-full rounded-3';
+}
 .twitter-tweet {
   --at-apply: 'mx-auto';
+}
+.codepen-embed {
+  --at-apply: 'aspect-video min-h-75 w-full';
 }
 
 /* Mermaid */

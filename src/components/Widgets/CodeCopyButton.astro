@@ -1,42 +1,13 @@
 <script>
-const copyIcons = {
-  copy:
-    `<svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="M6.9.8v18h14.5V.8zm12.8 16h-11v-14h11z"/>
-      <path d="M4.3 21.2V5.6l-1.7.5v17.1h14.3l.6-2z"/>
-    </svg>`,
-  success:
-    `<svg
-      viewBox="0 0 24 24"
-      fill="currentColor"
-    >
-      <path d="m23.1 6.4-1.3-1.3L9.4 16.6l-6.3-5.4-1.2 1.2L9.4 20z"/>
-    </svg>`,
-}
+const timeoutMap = new WeakMap<Element, number>()
 
-// Track timeout references for each button to manage icon state transitions
-const activeTimeouts = new WeakMap<HTMLButtonElement, ReturnType<typeof setTimeout>>()
-
-// Initialize copy buttons with icons
-function setupCodeCopyButtons() {
-  const buttons = document.querySelectorAll<HTMLButtonElement>('.code-copy-button')
-
-  if (buttons.length === 0) {
+async function handleCodeCopyClick(e: MouseEvent) {
+  if (!(e.target instanceof Element)) {
     return
   }
 
-  buttons.forEach((button) => {
-    button.innerHTML = copyIcons.copy
-  })
-}
-
-// Handle copy button click
-async function handleCodeCopy(button: HTMLButtonElement) {
-  // Prevent duplicate clicks while showing success state
-  if (button.classList.contains('copy-success')) {
+  const button = e.target.closest('.code-copy-button')
+  if (!button) {
     return
   }
 
@@ -55,7 +26,7 @@ async function handleCodeCopy(button: HTMLButtonElement) {
   }
   else {
     // 如果不在折叠代码块中，使用原来的逻辑
-    const element = button.parentElement?.querySelector('pre code')
+    const element = button.parentElement?.querySelector('pre > code')
     codeElement = element as HTMLElement | null
   }
 
@@ -64,49 +35,32 @@ async function handleCodeCopy(button: HTMLButtonElement) {
     return
   }
 
+  // Copy text to clipboard
   try {
     await navigator.clipboard.writeText(codeText)
-
-    // Clear existing timeout to prevent icon state conflicts on multiple clicks
-    const existingTimeout = activeTimeouts.get(button)
-    if (existingTimeout) {
-      clearTimeout(existingTimeout)
-    }
-
-    button.innerHTML = copyIcons.success
-    button.classList.add('copy-success')
-
-    // Set timeout to revert to copy icon after 1.5s
-    const timeoutId = setTimeout(() => {
-      // Skip if element removed from DOM
-      if (button.isConnected) {
-        button.innerHTML = copyIcons.copy
-        button.classList.remove('copy-success')
-        activeTimeouts.delete(button)
-      }
-    }, 1500)
-
-    activeTimeouts.set(button, timeoutId)
   }
   catch (error) {
-    console.error('Failed to copy code', error)
-  }
-}
-
-function handleCodeCopyClick(e: MouseEvent) {
-  const target = e.target
-  if (!(target instanceof Element)) {
+    console.error('[CodeCopyButton] Failed to copy:', error)
     return
   }
 
-  const button = target.closest('.code-copy-button')
-  if (!button) {
-    return
+  // Add copied state
+  button.classList.add('copied')
+
+  // Clear existing timeout to prevent state flickering
+  const existingTimeout = timeoutMap.get(button)
+  if (existingTimeout) {
+    clearTimeout(existingTimeout)
   }
-  handleCodeCopy(button as HTMLButtonElement)
+
+  // Reset state after 1.5s
+  const timeoutId = window.setTimeout(() => {
+    button.classList.remove('copied')
+    timeoutMap.delete(button)
+  }, 1500)
+
+  timeoutMap.set(button, timeoutId)
 }
 
-document.addEventListener('astro:page-load', setupCodeCopyButtons)
-document.addEventListener('click', handleCodeCopyClick, { passive: true })
-setupCodeCopyButtons()
+document.addEventListener('click', handleCodeCopyClick)
 </script>

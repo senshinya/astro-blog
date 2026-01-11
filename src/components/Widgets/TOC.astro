@@ -131,13 +131,13 @@ a:target-current {
 </style>
 
 <script>
-const cssSupport = CSS.supports('selector(:target-current)')
 const is2xl = window.matchMedia('(min-width: 1536px)')
 
 let ticking = false
 let lastLink: Element | null = null
 
-function updateScroll() {
+// Find and scroll to the active link
+function scrollToActiveLink() {
   const tocList = document.getElementById('toc-links-list')
   if (!tocList) {
     ticking = false
@@ -153,14 +153,33 @@ function updateScroll() {
   ticking = false
 }
 
+// Throttle scroll events
+function handleScroll() {
+  if (!ticking && is2xl.matches) {
+    window.requestAnimationFrame(scrollToActiveLink)
+    ticking = true
+  }
+}
+
+// Initialize scroll listener
 function setupAutoScroll() {
-  if (!cssSupport || !is2xl.matches || ticking) {
+  ticking = false
+  lastLink = null
+
+  const tocList = document.getElementById('toc-links-list')
+  if (!tocList || !CSS.supports('selector(:target-current)')) {
     return
   }
 
-  window.requestAnimationFrame(updateScroll)
-  ticking = true
+  document.addEventListener('scroll', handleScroll, { passive: true })
 }
 
-document.addEventListener('scroll', setupAutoScroll, { passive: true })
+// Cleanup listener and reset state
+function cleanupAutoScroll() {
+  document.removeEventListener('scroll', handleScroll)
+  lastLink = null
+}
+
+document.addEventListener('astro:page-load', setupAutoScroll)
+document.addEventListener('astro:before-swap', cleanupAutoScroll)
 </script>

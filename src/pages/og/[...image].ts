@@ -18,7 +18,8 @@ const pages = Object.fromEntries(
 )
 
 // Configure Open Graph image generation route
-export const { getStaticPaths, GET } = OGImageRoute({
+// eslint-disable-next-line antfu/no-top-level-await
+export const { getStaticPaths, GET } = await OGImageRoute({
   param: 'image',
   pages,
   getImageOptions: (_path, page) => ({

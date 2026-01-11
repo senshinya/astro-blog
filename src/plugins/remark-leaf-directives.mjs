@@ -71,14 +71,11 @@ const embedHandlers = {
     return `
     <figure>
       <iframe
-        src="//player.bilibili.com/player.html?isOutside=true&bvid=${bvid}&p=1&autoplay=0&muted=0"
         class="bilibili-player"
+        src="//player.bilibili.com/player.html?isOutside=true&bvid=${bvid}&p=1&autoplay=0&muted=0"
         title="Bilibili video player"
-        scrolling="no"
-        border="0"
-        frameborder="no"
-        framespacing="0"
-        allowfullscreen="true"
+        allowfullscreen
+        loading="lazy"
       ></iframe>
     </figure>
     `
@@ -86,19 +83,78 @@ const embedHandlers = {
 
   // Tweet Card
   tweet: (node) => {
-    const tweetUrl = node.attributes?.url ?? ''
-    if (!tweetUrl) {
+    const url = node.attributes?.url ?? ''
+    if (!url) {
       console.warn(`Missing Tweet URL`)
       return false
     }
 
-    const twitterUrl = tweetUrl.replace(/(\w+:\/\/)?x\.com\//g, '$1twitter.com/')
+    const tweetUrl = url.replace(/(\w+:\/\/)?x\.com\//g, '$1twitter.com/')
 
     return `
     <figure>
       <blockquote class="twitter-tweet" data-dnt="true">
-        <a href="${twitterUrl}"></a>
+        <a href="${tweetUrl}"></a>
       </blockquote>
+    </figure>
+    `
+  },
+
+  // CodePen
+  codepen: (node) => {
+    const url = node.attributes?.url ?? ''
+    if (!url) {
+      console.warn(`Missing CodePen URL`)
+      return false
+    }
+
+    const match = url.match(/codepen\.io\/([^/]+)\/pen\/([^/?#]+)/)
+    if (!match) {
+      console.warn(`Invalid CodePen URL: ${url}`)
+      return false
+    }
+
+    const [, user, slug] = match
+
+    return `
+    <figure>
+      <iframe
+        class="codepen-embed"
+        src="https://codepen.io/${user}/embed/${slug}?default-tab=result"
+        title="CodePen Embed"
+        loading="lazy"
+      ></iframe>
+    </figure>
+    `
+  },
+
+  // Spotify
+  spotify: (node) => {
+    const url = node.attributes?.url ?? ''
+    if (!url) {
+      console.warn(`Missing Spotify URL`)
+      return false
+    }
+
+    const match = url.match(/open\.spotify\.com\/(track|album|playlist|artist|episode|show)\/([^/?#]+)/)
+    if (!match) {
+      console.warn(`Invalid Spotify URL: ${url}`)
+      return false
+    }
+
+    const [, type, id] = match
+    const height = ['track', 'episode', 'show'].includes(type) ? 152 : 352
+
+    return `
+    <figure>
+      <iframe
+        class="spotify-embed"
+        src="https://open.spotify.com/embed/${type}/${id}"
+        title="Spotify Embed"
+        height="${height}"
+        allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+        loading="lazy"
+      ></iframe>
     </figure>
     `
   },

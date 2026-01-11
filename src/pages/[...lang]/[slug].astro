@@ -94,7 +94,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
       <h1 class="post-title">
         <span
           transition:name={`post-${slug}${currentLang ? `-${currentLang}` : ''}`}
-          data-disable-theme-transition
+          data-disable-theme-toggle-transition
         >
           {post.data.title}
         </span>
@@ -106,7 +106,7 @@ const { Content, headings, remarkPluginFrontmatter } = await render(post)
       id="post-date"
       class="mb-17.2 block c-primary font-time"
       transition:name={`time-${slug}${currentLang ? `-${currentLang}` : ''}`}
-      data-disable-theme-transition
+      data-disable-theme-toggle-transition
     >
       <PostDate
         date={post.data.published}

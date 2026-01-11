@@ -30,7 +30,7 @@ export function rehypeImageProcessor() {
   return (tree) => {
     visit(tree, 'element', (node, index, parent) => {
       // Skip non-paragraph elements, empty paragraphs, and orphaned nodes
-      if (node.tagName !== 'p' || !node.children?.length || !parent) {
+      if (node.tagName !== 'p' || !node.children || node.children.length === 0 || !parent) {
         return
       }
 

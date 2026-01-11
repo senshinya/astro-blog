@@ -5,12 +5,12 @@
   }
 }
 
-::view-transition-new(animation-theme-toggle) {
+::view-transition-new(theme-toggle-transition) {
   z-index: 99;
   clip-path: inset(0 0 0 0);
   animation: reveal 0.7s cubic-bezier(0.4, 0, 0.2, 1);
 }
-::view-transition-old(animation-theme-toggle) {
+::view-transition-old(theme-toggle-transition) {
   z-index: -1;
   animation: none;
 }
@@ -23,7 +23,7 @@ html:not(.dark) {
 }
 
 /* Disable animations for special elements during theme switching */
-html[data-theme-changing] [data-disable-theme-transition] {
+html[data-theme-changing] [data-disable-theme-toggle-transition] {
   view-transition-name: none !important;
 }
 
